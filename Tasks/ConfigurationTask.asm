@@ -1,0 +1,358 @@
+$INCLUDE (config.inc)
+
+CONF SEGMENT CODE
+rseg CONF
+
+PUBLIC OPT_HANDLER
+PUBLIC OPT1_HANDLER
+PUBLIC OPT2_HANDLER
+PUBLIC OPT3_HANDLER
+
+EXTRN CODE(LED6_Show_MENU)
+EXTRN CODE(LED6_Show_NO_INPUT)
+EXTRN CODE(LED6_Show_ERR011)
+EXTRN CODE(LED6_Show_OPT2_INIT)
+EXTRN CODE(LED6_Show_OPT3_INIT)
+EXTRN CODE(LED6_Show_FALSEX)
+
+; OPT state main handler (manages sub-states internally)
+OPT_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, OPT_INIT
+    MOV A, 061h
+    CJNE A, #00h, OPT_HANDLE_KEY
+    AJMP OPT_MODE
+
+OPT_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    SJMP OPT_MODE
+
+OPT_MODE:
+    ; 显示菜单
+    LCALL LED6_Show_MENU
+    RET
+
+OPT_HANDLE_KEY:
+    MOV A, 060h
+    ANL A, #0Fh
+    CJNE A, #0Ah, OPT_CHECK_KEY1
+    LCALL OPT_CHECK_ALL_INPUTS
+    RET
+
+OPT_CHECK_KEY1:
+    MOV A, 060h
+    ANL A, #0Fh
+    CJNE A, #01h, OPT_CHECK_KEY2
+    MOV 070h, #OPT1_ST
+    MOV 061h, #00h
+    RET
+
+OPT_CHECK_KEY2:
+    MOV A, 060h
+    ANL A, #0Fh
+    CJNE A, #02h, OPT_CHECK_KEY3
+    MOV 070h, #OPT2_ST
+    MOV 061h, #00h
+    RET
+
+OPT_CHECK_KEY3:
+    MOV A, 060h
+    ANL A, #0Fh
+    CJNE A, #03h, OPT_HANDLE_KEY_SKIP
+    MOV 070h, #OPT3_ST
+    MOV 061h, #00h
+    RET
+
+OPT_HANDLE_KEY_SKIP:
+    MOV 061h, #00h
+    RET
+
+OPT_CHECK_ALL_INPUTS:
+    MOV A, 050h
+    JZ OPT_INPUT_INCOMPLETE
+    MOV A, 052h
+    JZ OPT_INPUT_INCOMPLETE
+    MOV A, 054h
+    JZ OPT_INPUT_INCOMPLETE
+
+    MOV 070h, #RUN_ST
+    MOV 061h, #00h
+    RET
+
+OPT_INPUT_INCOMPLETE:
+    LCALL LED6_Show_ERR011
+
+    MOV R3, #04h
+OPT_ERROR_DELAY_OUTER:
+    MOV R4, #0F0h
+OPT_ERROR_DELAY_LOOP:
+    MOV R5, #0FFh
+OPT_ERROR_DELAY_INNER:
+    NOP
+    NOP
+    NOP
+    DJNZ R5, OPT_ERROR_DELAY_INNER
+    DJNZ R4, OPT_ERROR_DELAY_LOOP
+    DJNZ R3, OPT_ERROR_DELAY_OUTER
+
+    MOV 061h, #00h
+    RET
+
+; ---------------------
+; OPT1 handler
+; ---------------------
+OPT1_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, OPT1_INIT
+    MOV A, 061h
+    CJNE A, #00h, OPT1_INPUT_HANDLE_KEY
+    SJMP OPT1_INPUT_MODE
+
+OPT1_INPUT_MODE:
+    RET
+
+OPT1_INPUT_HANDLE_KEY:
+    MOV A, 060h
+    ANL A, #0Fh
+    MOV R7, A
+    CLR C
+    SUBB A, #0Ah
+    JNC OPT1_INPUT_SPECIAL_KEY
+
+    ; 数字键
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV A, R7
+    MOV @R0, A
+
+    ; 限制输入两位
+    MOV A, 03Bh
+    CJNE A, #02h, OPT1_INPUT_DEC
+    SJMP OPT1_INPUT_DONE
+
+OPT1_INPUT_DEC:
+    DEC 03Bh
+
+OPT1_INPUT_DONE:
+    MOV 061h, #00h
+    RET
+
+OPT1_INPUT_SPECIAL_KEY:
+    MOV A, 060h
+    CJNE A, #0Bh, OPT1_INPUT_CHECK_CONFIRM
+    ; B键回退
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    INC 03Bh
+    MOV A, 03Bh
+    CLR C
+    SUBB A, #04h
+    JNC OPT1_INPUT_BACKSPACE_LIMIT
+    MOV 061h, #00h
+    RET
+
+OPT1_INPUT_BACKSPACE_LIMIT:
+    MOV 03Bh, #03h
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    MOV 061h, #00h
+    RET
+
+OPT1_INPUT_CHECK_CONFIRM:
+    MOV A, 060h
+    CJNE A, #0Ah, OPT1_INPUT_SKIP_CONFIRM
+    MOV A, 033h
+    MOV 050h, A
+    MOV A, 032h
+    MOV 051h, A
+    MOV 061h, #00h
+    MOV 070h, #OPT_ST
+    RET
+
+OPT1_INPUT_SKIP_CONFIRM:
+    MOV 061h, #00h
+    RET
+
+OPT1_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    LCALL LED6_Show_NO_INPUT
+    MOV 03Bh, #03h
+    RET
+
+; ---------------------
+; OPT2 handler
+; ---------------------
+OPT2_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, OPT2_INIT
+    MOV A, 061h
+    CJNE A, #00h, OPT2_INPUT_HANDLE_KEY
+    SJMP OPT2_INPUT_MODE
+
+OPT2_INPUT_MODE:
+    RET
+
+OPT2_INPUT_HANDLE_KEY:
+    MOV A, 060h
+    ANL A, #0Fh
+    MOV R7, A
+    CLR C
+    SUBB A, #0Ah
+    JNC OPT2_INPUT_SPECIAL_KEY
+
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV A, R7
+    MOV @R0, A
+
+    MOV A, 03Bh
+    CJNE A, #01h, OPT2_INPUT_DEC
+    SJMP OPT2_INPUT_DONE
+
+OPT2_INPUT_DEC:
+    DEC 03Bh
+
+OPT2_INPUT_DONE:
+    MOV 061h, #00h
+    RET
+
+OPT2_INPUT_SPECIAL_KEY:
+    MOV A, 060h
+    CJNE A, #0Bh, OPT2_INPUT_CHECK_CONFIRM
+
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    INC 03Bh
+    MOV A, 03Bh
+    CLR C
+    SUBB A, #04h
+    JNC OPT2_INPUT_BACKSPACE_LIMIT
+    MOV 061h, #00h
+    RET
+
+OPT2_INPUT_BACKSPACE_LIMIT:
+    MOV 03Bh, #03h
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    MOV 061h, #00h
+    RET
+
+OPT2_INPUT_CHECK_CONFIRM:
+    MOV A, 060h
+    CJNE A, #0Ah, OPT2_INPUT_SKIP_CONFIRM
+    MOV A, 033h
+    MOV 052h, A
+    MOV A, 032h
+    MOV 053h, A
+    MOV 061h, #00h
+    MOV 070h, #OPT_ST
+    RET
+
+OPT2_INPUT_SKIP_CONFIRM:
+    MOV 061h, #00h
+    RET
+
+OPT2_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    LCALL LED6_Show_OPT2_INIT
+    MOV 03Bh, #03h
+    RET
+
+; ---------------------
+; OPT3 handler
+; ---------------------
+OPT3_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, OPT3_INIT
+    MOV A, 061h
+    CJNE A, #00h, OPT3_INPUT_HANDLE_KEY
+    SJMP OPT3_INPUT_MODE
+
+OPT3_INPUT_MODE:
+    RET
+
+OPT3_INPUT_HANDLE_KEY:
+    MOV A, 060h
+    ANL A, #0Fh
+    MOV R7, A
+    CLR C
+    SUBB A, #0Ah
+    JNC OPT3_INPUT_SPECIAL_KEY
+
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV A, R7
+    MOV @R0, A
+
+    MOV A, 03Bh
+    CJNE A, #04h, OPT3_INPUT_DEC
+    SJMP OPT3_INPUT_DONE
+
+OPT3_INPUT_DEC:
+    DEC 03Bh
+
+OPT3_INPUT_DONE:
+    MOV 061h, #00h
+    RET
+
+OPT3_INPUT_SPECIAL_KEY:
+    MOV A, 060h
+    CJNE A, #0Bh, OPT3_INPUT_CHECK_CONFIRM
+
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    INC 03Bh
+    MOV A, 03Bh
+    CLR C
+    SUBB A, #05h
+    JNC OPT3_INPUT_BACKSPACE_LIMIT
+    MOV 061h, #00h
+    RET
+
+OPT3_INPUT_BACKSPACE_LIMIT:
+    MOV 03Bh, #04h
+    MOV A, 03Bh
+    ADD A, #030h
+    MOV R0, A
+    MOV @R0, #010h
+    MOV 061h, #00h
+    RET
+
+OPT3_INPUT_CHECK_CONFIRM:
+    MOV A, 060h
+    CJNE A, #0Ah, OPT3_INPUT_SKIP_CONFIRM
+
+    MOV A, 034h
+    MOV 054h, A
+    MOV 061h, #00h
+    MOV 070h, #OPT_ST
+    RET
+
+OPT3_INPUT_SKIP_CONFIRM:
+    MOV 061h, #00h
+    RET
+
+OPT3_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    LCALL LED6_Show_OPT3_INIT
+    MOV 03Bh, #04h
+    RET
+
+END

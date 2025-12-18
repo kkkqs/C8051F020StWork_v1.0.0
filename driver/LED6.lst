@@ -1,0 +1,217 @@
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 19:20:06 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\driver\LED6.asm SET(SMALL) DEBUG PRINT(.\Listings
+                      \..\..\..\Git\C8051F020StWork\driver\LED6.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; driver/LED6.asm
+                       2     ; Utility routines to update 6-digit 7-seg display buffer (0x30..0x35)
+                       3     ; Usage:
+                       4     ; 1) Caller sets DPTR to the pattern label (6 bytes: buffer 0x30..0x35 order),
+                       5     ;    then LCALL LED6_CopyFromDPTR
+                       6     ; 2) Or call the convenience LCALL LED6_Show_ERR011 to display Err011
+                       7     
+                       8             PUBLIC  LED6_CopyFromDPTR
+                       9             PUBLIC  LED6_Show_ERR011
+                      10             PUBLIC  LED6_Show_MENU
+                      11             PUBLIC  LED6_Show_NO_INPUT
+                      12             PUBLIC  LED6_Clear
+                      13             PUBLIC  LED6_Show_PASS_INIT
+                      14             PUBLIC  LED6_Show_OPT2_INIT
+                      15             PUBLIC  LED6_Show_OPT3_INIT
+                      16             PUBLIC  LED6_Show_FALSEX
+                      17     
+                      18     LED6    SEGMENT CODE
+----                  19     rseg    LED6
+                      20     
+0000                  21     LED6_CopyFromDPTR:
+0000 C0D0             22             PUSH PSW
+0002 C0E0             23             PUSH ACC
+0004 C0F0             24             PUSH B
+0006 C000             25             PUSH 00h    ; save R0
+0008 C002             26             PUSH 02h    ; save R2
+000A C003             27             PUSH 03h    ; save R3
+000C C082             28             PUSH DPL
+000E C083             29             PUSH DPH
+                      30     
+0010 7830             31             MOV R0, #030h    ; dest addr (buffer start)
+0012 7A00             32             MOV R2, #00h     ; offset into code data
+0014 7B06             33             MOV R3, #06      ; 6 bytes to copy
+                      34     
+0016                  35     LED6_COPY_LOOP:
+0016 EA               36             MOV A, R2
+0017 93               37             MOVC A, @A+DPTR
+0018 F6               38             MOV @R0, A
+0019 08               39             INC R0
+001A 0A               40             INC R2
+001B DBF9             41             DJNZ R3, LED6_COPY_LOOP
+                      42     
+001D D083             43             POP DPH
+001F D082             44             POP DPL
+0021 D003             45             POP 03h
+0023 D002             46             POP 02h
+0025 D000             47             POP 00h
+0027 D0F0             48             POP B
+0029 D0E0             49             POP ACC
+002B D0D0             50             POP PSW
+002D 22               51             RET
+                      52     
+002E                  53     LED6_Show_ERR011:
+002E C082             54             PUSH DPL
+0030 C083             55             PUSH DPH
+0032 900000   F       56             MOV DPTR, #ERR011
+0035 120000   F       57             LCALL LED6_CopyFromDPTR
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 19:20:06 PAGE     2
+
+0038 D083             58             POP DPH
+003A D082             59             POP DPL
+003C 22               60             RET
+                      61     
+                      62     ; Patterns (6 bytes per pattern), stored in order corresponding to buffer addresses 0x30..0
+                             x35
+                      63     ; Example: ERR011 (matches the manual sequence used previously in main.ASM)
+003D                  64     ERR011:
+003D 01010012         65             DB 01h,01h,00h,012h,012h,00Eh
+0041 120E                    
+                      66     
+                      67     ; MENU pattern: 6 bytes for buffer 0x30..0x35 (right->left = 30..35)
+                      68     ; according to OPT_MODE: 35:1.(0x15),34:n(0x1E),33:2.(0x16),32:r(0x12),31:3.(0x17),30:C(0x0
+                             C)
+0043                  69     MENU:
+0043 0C171216         70             DB 00Ch,017h,012h,016h,01Eh,015h
+0047 1E15                    
+                      71     
+                      72     ; NO_INPUT pattern: "no._d_d__" example from OPT1_INIT
+0049                  73     NO_INPUT:
+0049 21211010         74             DB 021h,021h,010h,010h,020h,01Eh
+004D 201E                    
+                      75     
+                      76     ; CLEAR pattern: all blanks (0x10)
+004F                  77     CLEAR:
+004F 10101010         78             DB 010h,010h,010h,010h,010h,010h
+0053 1010                    
+                      79     
+                      80     ; PASS_INIT: buffer 30..35 = [010,010,010,010,010,011]
+0055                  81     PASS_INIT:
+0055 10101010         82             DB 010h,010h,010h,010h,010h,011h
+0059 1011                    
+                      83     
+                      84     ; OPT2_INIT: buffer 30..35 = [021,010,010,010,013,012]
+005B                  85     OPT2_INIT:
+005B 21101010         86             DB 021h,010h,010h,010h,013h,012h
+005F 1312                    
+                      87     
+                      88     ; OPT3_INIT: buffer 30..35 = [021,021,021,021,010,022]
+0061                  89     OPT3_INIT:
+0061 21212121         90             DB 021h,021h,021h,021h,010h,022h
+0065 1022                    
+                      91     
+0067                  92     LED6_Show_MENU:
+0067 C082             93             PUSH DPL
+0069 C083             94             PUSH DPH
+006B 900000   F       95             MOV DPTR,#MENU
+006E 120000   F       96             LCALL LED6_CopyFromDPTR
+0071 D083             97             POP DPH
+0073 D082             98             POP DPL
+0075 22               99             RET
+                     100     
+0076                 101     LED6_Show_NO_INPUT:
+0076 C082            102             PUSH DPL
+0078 C083            103             PUSH DPH
+007A 900000   F      104             MOV DPTR,#NO_INPUT
+007D 120000   F      105             LCALL LED6_CopyFromDPTR
+0080 D083            106             POP DPH
+0082 D082            107             POP DPL
+0084 22              108             RET
+                     109     
+0085                 110     LED6_Show_PASS_INIT:
+0085 C082            111             PUSH DPL
+0087 C083            112             PUSH DPH
+0089 900000   F      113             MOV DPTR,#PASS_INIT
+008C 120000   F      114             LCALL LED6_CopyFromDPTR
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 19:20:06 PAGE     3
+
+008F D083            115             POP DPH
+0091 D082            116             POP DPL
+0093 22              117             RET
+                     118     
+0094                 119     LED6_Show_OPT2_INIT:
+0094 C082            120             PUSH DPL
+0096 C083            121             PUSH DPH
+0098 900000   F      122             MOV DPTR,#OPT2_INIT
+009B 120000   F      123             LCALL LED6_CopyFromDPTR
+009E D083            124             POP DPH
+00A0 D082            125             POP DPL
+00A2 22              126             RET
+                     127     
+00A3                 128     LED6_Show_OPT3_INIT:
+00A3 C082            129             PUSH DPL
+00A5 C083            130             PUSH DPH
+00A7 900000   F      131             MOV DPTR,#OPT3_INIT
+00AA 120000   F      132             LCALL LED6_CopyFromDPTR
+00AD D083            133             POP DPH
+00AF D082            134             POP DPL
+00B1 22              135             RET
+                     136     
+00B2                 137     LED6_Clear:
+00B2 C082            138             PUSH DPL
+00B4 C083            139             PUSH DPH
+00B6 900000   F      140             MOV DPTR,#CLEAR
+00B9 120000   F      141             LCALL LED6_CopyFromDPTR
+00BC D083            142             POP DPH
+00BE D082            143             POP DPL
+00C0 22              144             RET
+                     145     
+                     146     ; FALSEX: dynamic last digit from RAM 03Ah
+00C1                 147     LED6_Show_FALSEX:
+00C1 75350F          148             MOV 035h, #00Fh
+00C4 75340A          149             MOV 034h, #00Ah
+00C7 753313          150             MOV 033h, #013h
+00CA 753205          151             MOV 032h, #005h
+00CD 75310E          152             MOV 031h, #00Eh
+00D0 E53A            153             MOV A, 03Ah
+00D2 F530            154             MOV 030h, A
+00D4 22              155             RET
+                     156     
+                     157     END
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 19:20:06 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E              T Y P E  V A L U E   ATTRIBUTES
+
+ACC . . . . . . . .  D ADDR   00E0H   A   
+B . . . . . . . . .  D ADDR   00F0H   A   
+CLEAR . . . . . . .  C ADDR   004FH   R   SEG=LED6
+DPH . . . . . . . .  D ADDR   0083H   A   
+DPL . . . . . . . .  D ADDR   0082H   A   
+ERR011. . . . . . .  C ADDR   003DH   R   SEG=LED6
+LED6. . . . . . . .  C SEG    00D5H       REL=UNIT
+LED6_CLEAR. . . . .  C ADDR   00B2H   R   SEG=LED6
+LED6_COPYFROMDPTR .  C ADDR   0000H   R   SEG=LED6
+LED6_COPY_LOOP. . .  C ADDR   0016H   R   SEG=LED6
+LED6_SHOW_ERR011. .  C ADDR   002EH   R   SEG=LED6
+LED6_SHOW_FALSEX. .  C ADDR   00C1H   R   SEG=LED6
+LED6_SHOW_MENU. . .  C ADDR   0067H   R   SEG=LED6
+LED6_SHOW_NO_INPUT.  C ADDR   0076H   R   SEG=LED6
+LED6_SHOW_OPT2_INIT  C ADDR   0094H   R   SEG=LED6
+LED6_SHOW_OPT3_INIT  C ADDR   00A3H   R   SEG=LED6
+LED6_SHOW_PASS_INIT  C ADDR   0085H   R   SEG=LED6
+MENU. . . . . . . .  C ADDR   0043H   R   SEG=LED6
+NO_INPUT. . . . . .  C ADDR   0049H   R   SEG=LED6
+OPT2_INIT . . . . .  C ADDR   005BH   R   SEG=LED6
+OPT3_INIT . . . . .  C ADDR   0061H   R   SEG=LED6
+PASS_INIT . . . . .  C ADDR   0055H   R   SEG=LED6
+PSW . . . . . . . .  D ADDR   00D0H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

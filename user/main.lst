@@ -1,0 +1,482 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\user\main.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\user\main.ASM SET(SMALL) DEBUG PRINT(.\Listings\.
+                      .\..\..\Git\C8051F020StWork\user\main.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\user\main.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     
+0000                   2     ORG 0000h
+0000 020000   F        3             LJMP MAIN
+                       4     
+000B                   5     ORG 000Bh
+000B 020000   F        6             LJMP TIMER0_ISR
+                       7     
+001B                   8     ORG 001Bh
+001B 020000   F        9             LJMP TIMER1_ISR
+                      10     
+                      11     ;$include (config.inc)
+                +1    12     ; Shared configuration tables
+                +1    13     ; placed at project root, included by ASM modules
+                +1    14     CONFIG SEGMENT CODE
+----            +1    15     rseg CONFIG
+                +1    16             
+                +1    17             
+                +1    18             
+                +1    19     ; ״̬��������
+  0000          +1    20     RUN_ST  EQU     00h
+  0001          +1    21     OPT_ST  EQU     01h
+  0002          +1    22     PASS_ST EQU     02h
+  0011          +1    23     OPT1_ST EQU     11h
+  0012          +1    24     OPT2_ST EQU     12h
+  0013          +1    25     OPT3_ST EQU     13h
+                +1    26             
+                +1    27             
+                +1    28             
+                +1    29             
+                +1    30             
+0000            +1    31     SEG_TABLE:
+0000 C0F9A4B0   +1    32             DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,
+                             0F7h,00Ch,0AFH,047H
+0004 999282F8                
+0008 80908883                
+000C C6A1868E                
+0010 F70CAF47                
+0014 40792430   +1    33             DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
+0018 19120278                
+001C 0010                    
+001E ABA323FF   +1    34             DB 0ABH,0A3H,023H,0FFH,046h
+0022 46                      
+                +1    35     
+0023            +1    36     BITMASK_TABLE:
+0023 20100804   +1    37             DB 020h,010h,008h,004h,002h,001h
+0027 0201                    
+                +1    38     
+0029            +1    39     PASSWORD_TABLE:
+0029 01020304   +1    40             DB 01h,02h,03h,04h,05h
+002D 05                      
+                +1    41     
+                +1    42     
+                +1    43     
+                      44     
+                      45     
+                      46     
+                      47     ; 变量分配同前
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     2
+
+                      48     ; 0x30~0x35: 显示缓存 (6 Bytes)
+                      49     
+                      50     EXTRN   CODE(MatrixKey)
+                      51     EXTRN   CODE(LED6_Clear)
+                      52     EXTRN   CODE(LED6_Show_MENU)
+                      53     EXTRN   CODE(LED6_Show_NO_INPUT)
+                      54     EXTRN   CODE(LED6_Show_ERR011)
+                      55     EXTRN   CODE(LED6_Show_PASS_INIT)
+                      56     EXTRN   CODE(LED6_Show_OPT2_INIT)
+                      57     EXTRN   CODE(LED6_Show_OPT3_INIT)
+                      58     EXTRN   CODE(LED6_Show_FALSEX)
+                      59     EXTRN   CODE(RUN_HANDLER)
+                      60     EXTRN   CODE(OPT_HANDLER)
+                      61     EXTRN   CODE(OPT1_HANDLER)
+                      62     EXTRN   CODE(OPT2_HANDLER)
+                      63     EXTRN   CODE(OPT3_HANDLER)
+0700                  64     ORG 0700h
+                      65     EXTRN   CODE(TIMER0_ISR)
+                      66     EXTRN   CODE(TIMER1_ISR)
+0700                  67     MAIN:
+0700 7580FF           68             MOV P0, #0FFh
+0703 75A000           69             MOV P2, #00h
+                      70             
+                      71             ; 初始化显示缓冲 (6位)
+0706 120000   F       72             LCALL LED6_Clear
+                      73             
+0709 753800           74             MOV 038h, #00h
+                      75     
+070C 757000           76             MOV 070h, #00h
+070F 757100           77             MOV 071h, #00h
+                      78     
+0712 7544FF           79             MOV 044h, #0FFh
+0715 754500           80             MOV 045h, #00h
+0718 7546FF           81             MOV 046h, #0FFh
+071B 754700           82             MOV 047h, #00h
+071E 754800           83             MOV 048h, #00h
+0721 753A03           84             MOV 03Ah, #03h
+                      85             
+                      86             
+0724 758911           87             MOV TMOD, #011h
+0727 758DFC           88             MOV TH1, #0FCh
+072A 758B18           89             MOV TL1, #018h
+072D 758CD8           90             MOV TH0, #0D8h
+0730 758AF0           91             MOV TL0, #0F0h
+0733 75A88A           92             MOV IE,  #08Ah
+0736 D28E             93             SETB TR1      
+0738 D28C             94             SETB TR0      
+                      95     
+073A                  96     LOOP:
+073A 120000   F       97             LCALL MatrixKey 
+073D B54404           98             CJNE A,044h,MXK_SAMPLE_CHANGED
+0740 0545             99             INC 045h
+0742 8005            100             SJMP MXK_AFTER_STABLE_CHECK
+                     101     
+0744                 102     MXK_SAMPLE_CHANGED:
+0744 F544            103             MOV 044h, A
+0746 754501          104             MOV 045h, #01
+                     105     
+0749                 106     MXK_AFTER_STABLE_CHECK:
+0749 E545            107             MOV A, 045h
+074B B40347          108             CJNE A,#03,MXK_STATE_CHECK
+074E 8000            109             SJMP MXK_CHECK_CONF
+                     110     
+0750                 111     MXK_CHECK_CONF:
+0750 E546            112             MOV A, 046h
+0752 B54402          113             CJNE A,044h,MXK_CONF_CHANGED
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     3
+
+0755 803E            114             SJMP MXK_STATE_CHECK
+                     115     
+0757                 116     MXK_CONF_CHANGED:
+0757 E544            117             MOV A, 044h
+0759 F546            118             MOV 046h, A
+075B E548            119             MOV A, 048h
+075D B40208          120             CJNE A, #02h, MXK_CONF_CHECK_RELEASE
+0760 754700          121             MOV 047h, #00h
+0763 754800          122             MOV 048h, #00h
+0766 802D            123             SJMP MXK_STATE_CHECK
+                     124     
+0768                 125     MXK_CONF_CHECK_RELEASE:
+0768 E544            126             MOV A, 044h
+076A B4FF19          127             CJNE A,#0FFh,MXK_CONF_PRESSED
+076D E547            128             MOV A, 047h
+076F C3              129             CLR C
+0770 9464            130             SUBB A, #064h
+0772 5002            131             JNC MXK_LONG_PRESS
+0774 8008            132             SJMP MXK_SHORT_PRESS
+                     133     
+0776                 134     MXK_LONG_PRESS:
+0776 754700          135             MOV 047h, #00h
+0779 754800          136             MOV 048h, #00h
+077C 8017            137             SJMP MXK_STATE_CHECK
+                     138     
+077E                 139     MXK_SHORT_PRESS:
+077E 754700          140             MOV 047h, #00h
+0781 754800          141             MOV 048h, #00h
+0784 800F            142             SJMP MXK_STATE_CHECK
+                     143     
+0786                 144     MXK_CONF_PRESSED:
+0786 E544            145             MOV A, 044h
+0788 540F            146             ANL A, #0Fh
+078A F560            147             MOV 060h, A
+078C 756101          148             MOV 061h, #01h
+078F 754700          149             MOV 047h, #00h
+0792 754800          150             MOV 048h, #00h
+                     151     
+0795                 152     MXK_STATE_CHECK:
+0795 E570            153             MOV A, 070h
+0797 B40005          154             CJNE A,#RUN_ST, CHECK_OPT
+079A 120000   F      155             LCALL RUN_HANDLER
+079D 809B            156             SJMP LOOP
+079F                 157     CHECK_OPT:
+079F B40105          158             CJNE A,#OPT_ST, CHECK_OPT1
+07A2 120000   F      159             LCALL OPT_HANDLER
+07A5 0100     F      160             AJMP LOOP
+07A7                 161     CHECK_OPT1:
+07A7 B41105          162             CJNE A,#OPT1_ST, CHECK_OPT2
+07AA 120000   F      163             LCALL OPT1_HANDLER
+07AD 0100     F      164             AJMP LOOP
+07AF                 165     CHECK_OPT2:
+07AF B41205          166             CJNE A,#OPT2_ST, CHECK_OPT3
+07B2 120000   F      167             LCALL OPT2_HANDLER
+07B5 0100     F      168             AJMP LOOP
+07B7                 169     CHECK_OPT3:
+07B7 B41305          170             CJNE A,#OPT3_ST, CHECK_PASS
+07BA 120000   F      171             LCALL OPT3_HANDLER
+07BD 0100     F      172             AJMP LOOP
+07BF                 173     CHECK_PASS:
+07BF B40205          174             CJNE A,#PASS_ST, SKIP_PASS
+07C2 120000   F      175             LCALL PASS_HANDLER
+07C5 0100     F      176             AJMP LOOP
+07C7                 177     SKIP_PASS:
+07C7 0100     F      178             AJMP LOOP
+                     179     
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     4
+
+                     180             ; TIMER ISRs moved to bsp/timer0.asm and bsp/timer1.asm (PUBLIC symbols)
+                     181     
+                     182     ;-----------------------------
+                     183     ; 状态机
+                     184     ;-----------------------------
+                     185     
+                     186             ; RUN and OPT handlers moved to Tasks/ modules
+                     187     
+                     188     
+07C9                 189     PASS_HANDLER:
+07C9 E571            190                     MOV A, 071h
+07CB B5704F          191                     CJNE A, 070h, PASS_INIT
+07CE E561            192                     MOV A, 061h
+07D0 B40002          193                     CJNE A, #00h, PASS_HANDLE_KEY
+07D3 8056            194                     SJMP PASS_MODE
+                     195     
+07D5                 196     PASS_HANDLE_KEY:
+07D5 E560            197                     MOV A, 060h
+07D7 540F            198                     ANL A, #0Fh
+07D9 FF              199                     MOV R7, A
+07DA C3              200                     CLR C
+07DB 940A            201                     SUBB A, #0Ah
+07DD 5015            202                     JNC PASS_SKIP_UPDATE
+                     203     
+                     204                     ; 数字键
+07DF E539            205                     MOV A, 039h
+07E1 2430            206             ADD A, #030h
+07E3 F8              207             MOV R0, A
+07E4 EF              208                     MOV A, R7
+07E5 F6              209             MOV @R0, A
+                     210     
+07E6 E539            211                     MOV A, 039h
+07E8 B4FF02          212                     CJNE A, #0FFh, PASS_KEY_DEC
+07EB 8002            213                     SJMP PASS_KEY_DONE
+                     214     
+07ED                 215     PASS_KEY_DEC:
+07ED 1539            216             DEC 039H
+                     217     
+07EF                 218     PASS_KEY_DONE:
+07EF 756100          219                     MOV 061h, #00h
+07F2 8037            220                     SJMP PASS_MODE
+                     221     
+07F4                 222     PASS_SKIP_UPDATE:
+07F4 E560            223                     MOV A, 060h
+07F6 B40B32          224                     CJNE A, #0Bh, PASS_MODE
+                     225                     ; B键回退
+07F9 0539            226                     INC 039h
+07FB E539            227                     MOV A, 039h
+07FD C3              228                     CLR C
+07FE 9405            229                     SUBB A, #05h
+0800 500C            230                     JNC PASS_BACKSPACE_LIMIT ; 恢复为 4
+0802 E539            231                     MOV A, 039h
+0804 2430            232                     ADD A, #030h
+0806 F8              233                     MOV R0, A
+0807 7610            234                     MOV @R0, #010h
+0809 756100          235                     MOV 061h, #00h
+080C 801D            236                     SJMP PASS_MODE
+                     237     
+080E                 238     PASS_BACKSPACE_LIMIT:
+080E 753904          239                     MOV 039h, #04h
+0811 E539            240                     MOV A, 039h
+0813 2430            241                     ADD A, #030h
+0815 F8              242                     MOV R0, A
+0816 7610            243                     MOV @R0, #010h
+0818 756100          244                     MOV 061h, #00h
+081B 800E            245                     SJMP PASS_MODE
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     5
+
+                     246     
+081D                 247     PASS_INIT:
+081D E570            248                     MOV A, 070h
+081F F571            249                     MOV 071h, A      
+0821 757002          250                     MOV 070h, #PASS_ST
+                     251                     
+                     252                     ; 显示 "P._____" (6位)
+                     253                     ; 35: P. (0x11)
+                     254                     ; 34~30: _
+0824 120000   F      255                     LCALL LED6_Show_PASS_INIT
+0827 753904          256                     MOV 039h, #04h     ; 光标位置 4 (Buffer 34h)
+082A 22              257                     RET
+                     258     
+082B                 259     PASS_MODE:
+082B E561            260                     MOV A, 061h
+082D B40001          261                     CJNE A, #00h, PASS_MODE_CHECK_KEY
+0830 22              262                     RET
+                     263     
+0831                 264     PASS_MODE_CHECK_KEY:
+0831 E560            265                     MOV A, 060h
+0833 B40A13          266                     CJNE A, #0Ah, PASS_MODE_SKIP_CONFIRM
+                     267                     
+0836 E539            268                     MOV A, 039h
+0838 B4FF07          269                     CJNE A, #0FFh, PASS_CONFIRM_INCOMPLETE
+083B 120000   F      270                     LCALL PASS_VERIFY_PASSWORD
+083E 756100          271                     MOV 061h, #00h
+0841 22              272                     RET
+                     273     
+0842                 274     PASS_CONFIRM_INCOMPLETE:
+0842 120000   F      275                     LCALL PASS_SHOW_ERROR
+0845 756100          276                     MOV 061h, #00h
+0848 22              277                     RET
+                     278     
+0849                 279     PASS_MODE_SKIP_CONFIRM:
+0849 756100          280                     MOV 061h, #00h
+084C 22              281                     RET
+                     282     
+084D                 283     PASS_VERIFY_PASSWORD:
+                     284                     ; 验证 5 位密码 (Buffer 34..30) vs Table 0..4
+084D 7804            285                     MOV R0, #04h    ; Buffer Index
+084F 7B00            286                     MOV R3, #00h    ; Table Index
+                     287     
+0851                 288     PASS_VERIFY_LOOP:
+0851 E8              289                     MOV A, R0
+0852 2430            290                     ADD A, #030h
+0854 F9              291                     MOV R1, A
+0855 E7              292                     MOV A, @R1      
+0856 FA              293                     MOV R2, A       
+                     294                     
+0857 900000   F      295                     MOV DPTR, #PASSWORD_TABLE
+085A EB              296                     MOV A, R3
+085B 93              297                     MOVC A, @A+DPTR 
+                     298                     
+085C B50202          299                     CJNE A, 02h, PASS_VERIFY_FAIL_CHECK
+085F 800B            300                     SJMP PASS_VERIFY_NEXT
+                     301     
+0861                 302     PASS_VERIFY_FAIL_CHECK:
+0861 EA              303                     MOV A, R2
+0862 F5F0            304                     MOV B, A
+0864 EB              305                     MOV A, R3
+0865 900000   F      306                     MOV DPTR, #PASSWORD_TABLE
+0868 93              307                     MOVC A, @A+DPTR
+0869 B5F00A          308                     CJNE A, B, PASS_VERIFY_FAIL
+                     309     
+086C                 310     PASS_VERIFY_NEXT:
+086C 18              311                     DEC R0
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     6
+
+086D 0B              312                     INC R3
+086E EB              313                     MOV A, R3
+086F B405DF          314                     CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
+0872 120000   F      315                     LCALL PASS_SHOW_SUCCESS
+0875 22              316                     RET
+                     317     
+0876                 318     PASS_VERIFY_FAIL:
+0876 120000   F      319                     LCALL PASS_SHOW_ERROR
+0879 22              320                     RET
+                     321     
+087A                 322     PASS_SHOW_ERROR:
+087A 153A            323                     DEC 03Ah
+087C E53A            324                     MOV A, 03Ah
+087E 6014            325                     JZ PASS_ERROR_LOCKED
+                     326                     
+                     327                     ; 显示 FALSEX (6位)
+                     328                     ; 35: F (0x0F)
+                     329                     ; 34: A (0x0A)
+                     330                     ; 33: L (0x13)
+                     331                     ; 32: S (0x05)
+                     332                     ; 31: E (0x0E)
+                     333                     ; 30: Count
+0880 120000   F      334                     LCALL LED6_Show_FALSEX
+                     335                     
+0883 7B06            336                     MOV R3, #06h
+0885                 337     PASS_ERROR_DELAY_OUTER:
+0885 7CF0            338                     MOV R4, #0F0h
+0887                 339     PASS_ERROR_DELAY_LOOP:
+0887 7DFF            340                     MOV R5, #0FFh
+0889                 341     PASS_ERROR_DELAY_INNER:
+0889 00              342                     NOP
+088A 00              343                     NOP
+088B 00              344                     NOP
+088C DDFB            345                     DJNZ R5, PASS_ERROR_DELAY_INNER
+088E DCF7            346                     DJNZ R4, PASS_ERROR_DELAY_LOOP
+0890 DBF3            347                     DJNZ R3, PASS_ERROR_DELAY_OUTER
+                     348                     
+0892 0100     F      349                     AJMP PASS_INIT
+                     350     
+0894                 351     PASS_ERROR_LOCKED:
+                     352             ; Err011 (locked) - use LED6 helper
+0894 120000   F      353             LCALL LED6_Show_ERR011
+0897 0100     F      354             AJMP PASS_ERROR_LOCKED
+                     355     
+0899                 356     PASS_SHOW_SUCCESS:
+0899 757001          357                     MOV 070h, #OPT_ST
+089C 22              358                     RET
+                     359     
+                     360     END
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     7
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                  T Y P E  V A L U E   ATTRIBUTES
+
+B . . . . . . . . . . .  D ADDR   00F0H   A   
+BITMASK_TABLE . . . . .  C ADDR   0023H   R   SEG=CONFIG
+CHECK_OPT . . . . . . .  C ADDR   079FH   R   SEG=CONFIG
+CHECK_OPT1. . . . . . .  C ADDR   07A7H   R   SEG=CONFIG
+CHECK_OPT2. . . . . . .  C ADDR   07AFH   R   SEG=CONFIG
+CHECK_OPT3. . . . . . .  C ADDR   07B7H   R   SEG=CONFIG
+CHECK_PASS. . . . . . .  C ADDR   07BFH   R   SEG=CONFIG
+CONFIG. . . . . . . . .  C SEG    089DH       REL=UNIT
+IE. . . . . . . . . . .  D ADDR   00A8H   A   
+LED6_CLEAR. . . . . . .  C ADDR   -----       EXT
+LED6_SHOW_ERR011. . . .  C ADDR   -----       EXT
+LED6_SHOW_FALSEX. . . .  C ADDR   -----       EXT
+LED6_SHOW_MENU. . . . .  C ADDR   -----       EXT
+LED6_SHOW_NO_INPUT. . .  C ADDR   -----       EXT
+LED6_SHOW_OPT2_INIT . .  C ADDR   -----       EXT
+LED6_SHOW_OPT3_INIT . .  C ADDR   -----       EXT
+LED6_SHOW_PASS_INIT . .  C ADDR   -----       EXT
+LOOP. . . . . . . . . .  C ADDR   073AH   R   SEG=CONFIG
+MAIN. . . . . . . . . .  C ADDR   0700H   R   SEG=CONFIG
+MATRIXKEY . . . . . . .  C ADDR   -----       EXT
+MXK_AFTER_STABLE_CHECK.  C ADDR   0749H   R   SEG=CONFIG
+MXK_CHECK_CONF. . . . .  C ADDR   0750H   R   SEG=CONFIG
+MXK_CONF_CHANGED. . . .  C ADDR   0757H   R   SEG=CONFIG
+MXK_CONF_CHECK_RELEASE.  C ADDR   0768H   R   SEG=CONFIG
+MXK_CONF_PRESSED. . . .  C ADDR   0786H   R   SEG=CONFIG
+MXK_LONG_PRESS. . . . .  C ADDR   0776H   R   SEG=CONFIG
+MXK_SAMPLE_CHANGED. . .  C ADDR   0744H   R   SEG=CONFIG
+MXK_SHORT_PRESS . . . .  C ADDR   077EH   R   SEG=CONFIG
+MXK_STATE_CHECK . . . .  C ADDR   0795H   R   SEG=CONFIG
+OPT1_HANDLER. . . . . .  C ADDR   -----       EXT
+OPT1_ST . . . . . . . .  N NUMB   0011H   A   
+OPT2_HANDLER. . . . . .  C ADDR   -----       EXT
+OPT2_ST . . . . . . . .  N NUMB   0012H   A   
+OPT3_HANDLER. . . . . .  C ADDR   -----       EXT
+OPT3_ST . . . . . . . .  N NUMB   0013H   A   
+OPT_HANDLER . . . . . .  C ADDR   -----       EXT
+OPT_ST. . . . . . . . .  N NUMB   0001H   A   
+P0. . . . . . . . . . .  D ADDR   0080H   A   
+P2. . . . . . . . . . .  D ADDR   00A0H   A   
+PASSWORD_TABLE. . . . .  C ADDR   0029H   R   SEG=CONFIG
+PASS_BACKSPACE_LIMIT. .  C ADDR   080EH   R   SEG=CONFIG
+PASS_CONFIRM_INCOMPLETE  C ADDR   0842H   R   SEG=CONFIG
+PASS_ERROR_DELAY_INNER.  C ADDR   0889H   R   SEG=CONFIG
+PASS_ERROR_DELAY_LOOP .  C ADDR   0887H   R   SEG=CONFIG
+PASS_ERROR_DELAY_OUTER.  C ADDR   0885H   R   SEG=CONFIG
+PASS_ERROR_LOCKED . . .  C ADDR   0894H   R   SEG=CONFIG
+PASS_HANDLER. . . . . .  C ADDR   07C9H   R   SEG=CONFIG
+PASS_HANDLE_KEY . . . .  C ADDR   07D5H   R   SEG=CONFIG
+PASS_INIT . . . . . . .  C ADDR   081DH   R   SEG=CONFIG
+PASS_KEY_DEC. . . . . .  C ADDR   07EDH   R   SEG=CONFIG
+PASS_KEY_DONE . . . . .  C ADDR   07EFH   R   SEG=CONFIG
+PASS_MODE . . . . . . .  C ADDR   082BH   R   SEG=CONFIG
+PASS_MODE_CHECK_KEY . .  C ADDR   0831H   R   SEG=CONFIG
+PASS_MODE_SKIP_CONFIRM.  C ADDR   0849H   R   SEG=CONFIG
+PASS_SHOW_ERROR . . . .  C ADDR   087AH   R   SEG=CONFIG
+PASS_SHOW_SUCCESS . . .  C ADDR   0899H   R   SEG=CONFIG
+PASS_SKIP_UPDATE. . . .  C ADDR   07F4H   R   SEG=CONFIG
+PASS_ST . . . . . . . .  N NUMB   0002H   A   
+PASS_VERIFY_FAIL. . . .  C ADDR   0876H   R   SEG=CONFIG
+PASS_VERIFY_FAIL_CHECK.  C ADDR   0861H   R   SEG=CONFIG
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 19:16:01 PAGE     8
+
+PASS_VERIFY_LOOP. . . .  C ADDR   0851H   R   SEG=CONFIG
+PASS_VERIFY_NEXT. . . .  C ADDR   086CH   R   SEG=CONFIG
+PASS_VERIFY_PASSWORD. .  C ADDR   084DH   R   SEG=CONFIG
+RUN_HANDLER . . . . . .  C ADDR   -----       EXT
+RUN_ST. . . . . . . . .  N NUMB   0000H   A   
+SEG_TABLE . . . . . . .  C ADDR   0000H   R   SEG=CONFIG
+SKIP_PASS . . . . . . .  C ADDR   07C7H   R   SEG=CONFIG
+TH0 . . . . . . . . . .  D ADDR   008CH   A   
+TH1 . . . . . . . . . .  D ADDR   008DH   A   
+TIMER0_ISR. . . . . . .  C ADDR   -----       EXT
+TIMER1_ISR. . . . . . .  C ADDR   -----       EXT
+TL0 . . . . . . . . . .  D ADDR   008AH   A   
+TL1 . . . . . . . . . .  D ADDR   008BH   A   
+TMOD. . . . . . . . . .  D ADDR   0089H   A   
+TR0 . . . . . . . . . .  B ADDR   0088H.4 A   
+TR1 . . . . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
