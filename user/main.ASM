@@ -1,3 +1,13 @@
+$INCLUDE (config.inc)
+
+EXTRN CODE(MatrixKey)
+EXTRN CODE(Timer1_Init)
+EXTRN CODE(Timer0_Init)
+EXTRN CODE(TIMER0_ISR)
+EXTRN CODE(TIMER1_ISR)
+EXTRN CODE(LED6_ApplyTable)
+	
+	
 ORG 0000h
 	LJMP MAIN
 
@@ -7,189 +17,14 @@ ORG 000Bh
 ORG 001Bh
 	LJMP TIMER1_ISR
 
-$INCLUDE (config.inc)
-
-; P2.0-P2.5 控制 6 位数码管
-; 假设 P2.0 为最左侧 (Digit 5, Buffer 0x35)
-; 假设 P2.5 为最右侧 (Digit 0, Buffer 0x30)
-; 扫描顺序 Buffer 0x30 -> 0x35
-BITMASK_TABLE:
-	DB 020h,010h,008h,004h,002h,001h
-    ; Buffer Index: 0(30h) -> P2.5, ..., 5(35h) -> P2.0
-
-PASSWORD_TABLE:
-	DB 01h,02h,03h,04h,05h
-	; 默认密码 12345
-
-; 状态常量定义
-RUN_ST	EQU	00h
-OPT_ST	EQU	01h
-PASS_ST	EQU	02h
-OPT1_ST	EQU	11h
-OPT2_ST	EQU	12h
-OPT3_ST	EQU	13h
-
-; 变量分配同前
-; 0x30~0x35: 显示缓存 (6 Bytes)
-
-MatrixKey:
-				MOV A,#0FFh    ; 默认返回 0xFF 表示无键按下
-				MOV P1,#0FFh
-
-				CLR P1.3
-				JB P1.7,MK_SK1
-				AJMP MXK_1_CHECK
-MK_SK1:
-				JB P1.6,MK_SK2
-				AJMP MXK_5_CHECK
-MK_SK2:
-				JB P1.5,MK_SK3
-				AJMP MXK_9_CHECK
-MK_SK3:
-				JB P1.4,MK_SK4
-				AJMP MXK_13_CHECK
-MK_SK4:
-				MOV P1,#0FFh
-
-				CLR P1.2
-				JB P1.7,MK_SK5
-				AJMP MXK_2_CHECK
-MK_SK5:
-				JB P1.6,MK_SK6
-				AJMP MXK_6_CHECK
-MK_SK6:
-				JB P1.5,MK_SK7
-				AJMP MXK_10_CHECK
-MK_SK7:
-				JB P1.4,MK_SK8
-				AJMP MXK_14_CHECK
-MK_SK8:
-				MOV P1,#0FFh
-
-				CLR P1.1
-				JB P1.7,MK_SK9
-				AJMP MXK_3_CHECK
-MK_SK9:
-				JB P1.6,MK_SK10
-				AJMP MXK_7_CHECK
-MK_SK10:
-				JB P1.5,MK_SK11
-				AJMP MXK_11_CHECK
-MK_SK11:
-				JB P1.4,MK_SK12
-				AJMP MXK_15_CHECK
-MK_SK12:
-				MOV P1,#0FFh
-
-				CLR P1.0
-				JB P1.7,MK_SK13
-				AJMP MXK_4_CHECK
-MK_SK13:
-				JB P1.6,MK_SK14
-				AJMP MXK_8_CHECK
-MK_SK14:
-				JB P1.5,MK_SK15
-				AJMP MXK_12_CHECK
-MK_SK15:
-				JB P1.4,MK_SK16
-				AJMP MXK_16_CHECK
-MK_SK16:
-				MOV P1,#0FFh
-				RET
-
-MXK_1_CHECK:
-				MOV A,#0Fh
-				MOV 040h,#01
-				MOV 041h,#01
-				RET
-MXK_5_CHECK:
-				MOV A,#0Eh
-				MOV 040h,#01
-				MOV 041h,#02
-				RET
-MXK_9_CHECK:
-				MOV A,#0Dh
-				MOV 040h,#01
-				MOV 041h,#03
-				RET
-MXK_13_CHECK:
-				MOV A,#0Ch
-				MOV 040h,#01
-				MOV 041h,#04
-				RET
-MXK_2_CHECK:
-				MOV A,#0Bh
-				MOV 040h,#02
-				MOV 041h,#01
-				RET
-MXK_6_CHECK:
-				MOV A,#0Ah
-				MOV 040h,#02
-				MOV 041h,#02
-				RET
-MXK_10_CHECK:
-				MOV A,#09
-				MOV 040h,#02
-				MOV 041h,#03
-				RET
-MXK_14_CHECK:
-				MOV A,#08
-				MOV 040h,#02
-				MOV 041h,#04
-				RET
-MXK_3_CHECK:
-				MOV A,#07
-				MOV 040h,#03
-				MOV 041h,#01
-				RET
-MXK_7_CHECK:
-				MOV A,#06
-				MOV 040h,#03
-				MOV 041h,#02
-				RET
-MXK_11_CHECK:
-				MOV A,#05
-				MOV 040h,#03
-				MOV 041h,#03
-				RET
-MXK_15_CHECK:
-				MOV A,#04
-				MOV 040h,#03
-				MOV 041h,#04
-				RET
-MXK_4_CHECK:
-				MOV A,#03
-				MOV 040h,#04
-				MOV 041h,#01
-				RET
-MXK_8_CHECK:
-				MOV A,#02
-				MOV 040h,#04
-				MOV 041h,#02
-				RET
-MXK_12_CHECK:
-				MOV A,#01
-				MOV 040h,#04
-				MOV 041h,#03
-				RET
-MXK_16_CHECK:
-				MOV A,#00
-				MOV 040h,#04
-				MOV 041h,#04
-				RET
-
 	ORG 0700h
 MAIN:
 	MOV P0, #0FFh
 	MOV P2, #00h
 	
-	; 初始化显示缓冲 (6位)
-	MOV 030h, #010h
-	MOV 031h, #010h
-	MOV 032h, #010h
-	MOV 033h, #010h
-	MOV 034h, #010h
-	MOV 035h, #010h
+	; 初始化显示缓冲 (6位) => 使用 LED6 表 00 (DISPLAY_INIT_BLANK)
+	MOV A, #00h
+	LCALL LED6_ApplyTable
 	
 	MOV 038h, #00h
 
@@ -202,72 +37,13 @@ MAIN:
 	MOV 047h, #00h
 	MOV 048h, #00h
 	MOV 03Ah, #03h
-	
-	
-	MOV TMOD, #011h
-	MOV TH1, #0FCh
-	MOV TL1, #018h
-	MOV TH0, #0D8h
-	MOV TL0, #0F0h
-	MOV IE,  #08Ah
-	SETB TR1      
-	SETB TR0      
+
+	LCALL Timer1_Init
+	LCALL Timer0_Init
 
 LOOP:
-	LCALL MatrixKey 
-	CJNE A,044h,MXK_SAMPLE_CHANGED
-	INC 045h
-	SJMP MXK_AFTER_STABLE_CHECK
-
-MXK_SAMPLE_CHANGED:
-	MOV 044h, A
-	MOV 045h, #01
-
-MXK_AFTER_STABLE_CHECK:
-	MOV A, 045h
-	CJNE A,#03,MXK_STATE_CHECK
-	SJMP MXK_CHECK_CONF
-
-MXK_CHECK_CONF:
-	MOV A, 046h
-	CJNE A,044h,MXK_CONF_CHANGED
-	SJMP MXK_STATE_CHECK
-
-MXK_CONF_CHANGED:
-	MOV A, 044h
-	MOV 046h, A
-	MOV A, 048h
-	CJNE A, #02h, MXK_CONF_CHECK_RELEASE
-	MOV 047h, #00h
-	MOV 048h, #00h
-	SJMP MXK_STATE_CHECK
-
-MXK_CONF_CHECK_RELEASE:
-	MOV A, 044h
-	CJNE A,#0FFh,MXK_CONF_PRESSED
-	MOV A, 047h
-	CLR C
-	SUBB A, #064h
-	JNC MXK_LONG_PRESS
-	SJMP MXK_SHORT_PRESS
-
-MXK_LONG_PRESS:
-	MOV 047h, #00h
-	MOV 048h, #00h
-	SJMP MXK_STATE_CHECK
-
-MXK_SHORT_PRESS:
-	MOV 047h, #00h
-	MOV 048h, #00h
-	SJMP MXK_STATE_CHECK
-
-MXK_CONF_PRESSED:
-	MOV A, 044h
-	ANL A, #0Fh
-	MOV 060h, A
-	MOV 061h, #01h
-	MOV 047h, #00h
-	MOV 048h, #00h
+	EXTRN CODE(KeyInput_Process)
+	LCALL KeyInput_Process
 
 MXK_STATE_CHECK:
 	MOV A, 070h
@@ -297,100 +73,6 @@ CHECK_PASS:
 SKIP_PASS:
 	AJMP LOOP
 
-TIMER1_ISR:
-	PUSH PSW
-	PUSH ACC
-	PUSH B
-	PUSH DPL
-	PUSH DPH
-	PUSH 00h
-	PUSH 01h
-
-	MOV TH1, #0FCh
-	MOV TL1, #018h
-
-	MOV P0, #0FFh
-	MOV P2, #00h
-
-	; 0..5 循环
-	MOV A, 038h
-	MOV R2, A         ; R2 = index
-	ADD A, #030h
-	MOV R0, A
-	MOV A, @R0        ; 读 Buffer
-	MOV B, A
-
-	MOV DPTR, #SEG_TABLE
-	MOV A, B
-	MOVC A, @A+DPTR   
-	MOV B, A          
-
-	MOV DPTR, #BITMASK_TABLE
-	MOV A, R2         
-	MOVC A, @A+DPTR
-	MOV R1, A
-
-	MOV A, B
-	MOV P0, A
-	MOV A, R1
-	MOV P2, A
-
-	INC 038h
-	MOV A, 038h
-	CJNE A, #06, ISR_EXIT ; 6 位数码管
-	MOV 038h, #00h
-
-ISR_EXIT:
-	POP 01h
-	POP 00h
-	POP DPH
-	POP DPL
-	POP B
-	POP ACC
-	POP PSW
-	RETI
-
-TIMER0_ISR:
-	PUSH PSW
-	PUSH ACC
-	PUSH B
-
-	MOV TH0, #0D8h
-	MOV TL0, #0F0h
-
-	MOV A, 046h
-	CJNE A, #0FFh, T0_KEY_HELD
-	SJMP T0_EXIT
-
-T0_KEY_HELD:
-	MOV A, 047h
-	CJNE A, #0FFh, T0_INC
-	SJMP T0_EXIT
-T0_INC:
-	INC 047h
-	MOV A, 047h
-	CLR C
-	SUBB A, #064h
-	JNC T0_LONG_REACHED
-	SJMP T0_EXIT
-
-T0_LONG_REACHED:
-	MOV A, 048h
-	CJNE A, #00h, T0_EXIT
-	MOV A, 060h
-	ANL A, #0Fh
-	ORL A, #080h
-	MOV 060h, A
-	MOV 061h, #01h
-	MOV 048h, #02h
-	MOV 047h, #064h
-	SJMP T0_EXIT
-
-T0_EXIT:
-	POP B
-	POP ACC
-	POP PSW
-	RETI
 
 ;-----------------------------
 ; 状态机
@@ -421,12 +103,9 @@ RUN_INIT:
 		SJMP RUN_MODE
 
 RUN_MODE:
-		MOV 030h, #010h
-		MOV 031h, #010h
-		MOV 032h, #010h
-		MOV 033h, #010h
-		MOV 034h, #010h
-		MOV 035h, #010h
+	; RUN 模式显示空白 (TABLE_DISPLAY_RUN_BLANK id=01)
+	MOV A, #01h
+	LCALL LED6_ApplyTable
 		MOV 039h, #04h ; 密码光标初始化位置 (for later use)
 		RET
 
@@ -450,12 +129,9 @@ OPT_MODE:
         ; 32: r  (0x12)
         ; 31: 3. (0x17)
         ; 30: C  (0x0C)
-        MOV 035h, #015h  
-        MOV 034h, #01Eh
-        MOV 033h, #016h
-        MOV 032h, #012h
-        MOV 031h, #017h
-        MOV 030h, #00Ch
+		; 主菜单显示 (TABLE_MENU_MAIN_OPT id=02)
+		MOV A, #02h
+		LCALL LED6_ApplyTable
         RET
 
 OPT_HANDLE_KEY:
@@ -506,13 +182,9 @@ OPT_CHECK_ALL_INPUTS:
 		RET
 
 OPT_INPUT_INCOMPLETE:
-		; 显示 Err011 (6位)
-		MOV 035h, #00Eh    ; E
-		MOV 034h, #012h   ; r
-		MOV 033h, #012h   ; r
-		MOV 032h, #00h    ; 0
-		MOV 031h, #01h    ; 1
-		MOV 030h, #01h    ; 1
+	; 显示 Err011 (TABLE_OPT_ERR011 id=03)
+	MOV A, #03h
+	LCALL LED6_ApplyTable
 		
 		MOV R3, #04h
 OPT_ERROR_DELAY_OUTER:
@@ -622,12 +294,9 @@ OPT1_INIT:
 		; 32: _ (input 2)
 		; 31: _
 		; 30: _
-		MOV 035h, #01Eh
-		MOV 034h, #020h
-		MOV 033h, #010h
-		MOV 032h, #010h
-		MOV 031h, #021h
-		MOV 030h, #021h
+		; OPT1 提示 (TABLE_OPT1_PROMPT id=04)
+		MOV A, #04h
+		LCALL LED6_ApplyTable
 		MOV 03Bh, #03h    ; 光标从 33h 开始 (Buffer Index 3)
 		RET
 
@@ -718,12 +387,9 @@ OPT2_INIT:
 		; 32: _
 		; 31: _
 		; 30: _
-		MOV 035h, #012h
-		MOV 034h, #013h
-		MOV 033h, #010h
-		MOV 032h, #010h
-		MOV 031h, #010h
-		MOV 030h, #021h
+		; OPT2 提示 (TABLE_OPT2_PROMPT id=05)
+		MOV A, #05h
+		LCALL LED6_ApplyTable
 		MOV 03Bh, #03h    ; 光标从 33h 开始
 		RET
 
@@ -817,12 +483,9 @@ OPT3_INIT:
 		; 0. (20), 1. (21) ... 9. (29)
 		; n (30), o (31), o. (32), OFF (33), C. (34)
 		
-		MOV 035h, #022h   ; Index 34 ('C.')
-		MOV 034h, #010h   ; _
-		MOV 033h, #021h
-		MOV 032h, #021h
-		MOV 031h, #021h
-		MOV 030h, #021h
+		; OPT3 提示 (TABLE_OPT3_PROMPT id=06)
+		MOV A, #06h
+		LCALL LED6_ApplyTable
 		MOV 03Bh, #04h    ; 光标从 34h 开始
 		RET
 
@@ -893,13 +556,9 @@ PASS_INIT:
 		; 显示 "P._____" (6位)
 		; 35: P. (0x11)
 		; 34~30: _
-		MOV 035h, #011h
-		MOV 034h, #010h
-		MOV 033h, #010h
-		MOV 032h, #010h
-		MOV 031h, #010h
-		MOV 030h, #010h
-		
+		; PASS 模式显示 (TABLE_PASS_PROMPT id=07)
+		MOV A, #07h
+		LCALL LED6_ApplyTable
 		MOV 039h, #04h     ; 光标位置 4 (Buffer 34h)
 		RET
 
@@ -971,18 +630,9 @@ PASS_SHOW_ERROR:
 		MOV A, 03Ah
 		JZ PASS_ERROR_LOCKED
 		
-		; 显示 FALSEX (6位)
-		; 35: F (0x0F)
-		; 34: A (0x0A)
-		; 33: L (0x13)
-		; 32: S (0x05)
-		; 31: E (0x0E)
-		; 30: Count
-		MOV 035h, #00Fh
-		MOV 034h, #00Ah
-		MOV 033h, #013h
-		MOV 032h, #005h
-		MOV 031h, #00Eh
+		; 显示 FALSEX (TABLE_PASS_ERROR_FALSEX id=08)，最后一位由剩余次数填充
+		MOV A, #08h
+		LCALL LED6_ApplyTable
 		MOV A, 03Ah
 		MOV 030h, A
 		
@@ -1002,13 +652,9 @@ PASS_ERROR_DELAY_INNER:
 		AJMP PASS_INIT
 
 PASS_ERROR_LOCKED:
-		; Err011
-		MOV 030h, #01h 
-		MOV 031h, #01h 
-		MOV 032h, #00h 
-		MOV 033h, #012h
-		MOV 034h, #012h
-		MOV 035h, #00Eh
+	; 锁定显示（TABLE_PASS_ERROR_LOCKED id=09）
+	MOV A, #09h
+	LCALL LED6_ApplyTable
 		AJMP PASS_ERROR_LOCKED
 
 PASS_SHOW_SUCCESS:

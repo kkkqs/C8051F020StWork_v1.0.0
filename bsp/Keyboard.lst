@@ -1,0 +1,215 @@
+A51 MACRO ASSEMBLER  KEYBOARD                                                             12/18/2025 22:45:00 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\Keyboard.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\bsp\Keyboard.asm SET(SMALL) DEBUG PRINT(.\Listing
+                      s\..\..\..\Git\C8051F020StWork\bsp\Keyboard.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\Keyboard.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; 提供入口: MatrixKey (调用后 A 返回键码，040h/041h 保存行/列信息)
+                       2     
+                       3     KBD SEGMENT CODE
+----                   4     rseg KBD
+                       5     PUBLIC MatrixKey
+                       6     
+0000                   7     MatrixKey:
+0000 74FF              8                     MOV A,#0FFh    ; 默认返回 0xFF 表示无键按下
+0002 7590FF            9                     MOV P1,#0FFh
+                      10     
+0005 C293             11                     CLR P1.3
+0007 209702           12                     JB P1.7,MK_SK1
+000A 0100     F       13                     AJMP MXK_1_CHECK
+000C                  14     MK_SK1:
+000C 209602           15                     JB P1.6,MK_SK2
+000F 0100     F       16                     AJMP MXK_5_CHECK
+0011                  17     MK_SK2:
+0011 209502           18                     JB P1.5,MK_SK3
+0014 0100     F       19                     AJMP MXK_9_CHECK
+0016                  20     MK_SK3:
+0016 209402           21                     JB P1.4,MK_SK4
+0019 0100     F       22                     AJMP MXK_13_CHECK
+001B                  23     MK_SK4:
+001B 7590FF           24                     MOV P1,#0FFh
+                      25     
+001E C292             26                     CLR P1.2
+0020 209702           27                     JB P1.7,MK_SK5
+0023 0100     F       28                     AJMP MXK_2_CHECK
+0025                  29     MK_SK5:
+0025 209602           30                     JB P1.6,MK_SK6
+0028 0100     F       31                     AJMP MXK_6_CHECK
+002A                  32     MK_SK6:
+002A 209502           33                     JB P1.5,MK_SK7
+002D 0100     F       34                     AJMP MXK_10_CHECK
+002F                  35     MK_SK7:
+002F 209402           36                     JB P1.4,MK_SK8
+0032 0100     F       37                     AJMP MXK_14_CHECK
+0034                  38     MK_SK8:
+0034 7590FF           39                     MOV P1,#0FFh
+                      40     
+0037 C291             41                     CLR P1.1
+0039 209702           42                     JB P1.7,MK_SK9
+003C 0100     F       43                     AJMP MXK_3_CHECK
+003E                  44     MK_SK9:
+003E 209602           45                     JB P1.6,MK_SK10
+0041 0100     F       46                     AJMP MXK_7_CHECK
+0043                  47     MK_SK10:
+0043 209502           48                     JB P1.5,MK_SK11
+0046 0100     F       49                     AJMP MXK_11_CHECK
+0048                  50     MK_SK11:
+0048 209402           51                     JB P1.4,MK_SK12
+004B 0100     F       52                     AJMP MXK_15_CHECK
+004D                  53     MK_SK12:
+004D 7590FF           54                     MOV P1,#0FFh
+                      55     
+0050 C290             56                     CLR P1.0
+0052 209702           57                     JB P1.7,MK_SK13
+A51 MACRO ASSEMBLER  KEYBOARD                                                             12/18/2025 22:45:00 PAGE     2
+
+0055 0100     F       58                     AJMP MXK_4_CHECK
+0057                  59     MK_SK13:
+0057 209602           60                     JB P1.6,MK_SK14
+005A 0100     F       61                     AJMP MXK_8_CHECK
+005C                  62     MK_SK14:
+005C 209502           63                     JB P1.5,MK_SK15
+005F 0100     F       64                     AJMP MXK_12_CHECK
+0061                  65     MK_SK15:
+0061 209402           66                     JB P1.4,MK_SK16
+0064 0100     F       67                     AJMP MXK_16_CHECK
+0066                  68     MK_SK16:
+0066 7590FF           69                     MOV P1,#0FFh
+0069 22               70                     RET
+                      71     
+006A                  72     MXK_1_CHECK:
+006A 740F             73                     MOV A,#0Fh
+006C 754001           74                     MOV 040h,#01
+006F 754101           75                     MOV 041h,#01
+0072 22               76                     RET
+0073                  77     MXK_5_CHECK:
+0073 740E             78                     MOV A,#0Eh
+0075 754001           79                     MOV 040h,#01
+0078 754102           80                     MOV 041h,#02
+007B 22               81                     RET
+007C                  82     MXK_9_CHECK:
+007C 740D             83                     MOV A,#0Dh
+007E 754001           84                     MOV 040h,#01
+0081 754103           85                     MOV 041h,#03
+0084 22               86                     RET
+0085                  87     MXK_13_CHECK:
+0085 740C             88                     MOV A,#0Ch
+0087 754001           89                     MOV 040h,#01
+008A 754104           90                     MOV 041h,#04
+008D 22               91                     RET
+008E                  92     MXK_2_CHECK:
+008E 740B             93                     MOV A,#0Bh
+0090 754002           94                     MOV 040h,#02
+0093 754101           95                     MOV 041h,#01
+0096 22               96                     RET
+0097                  97     MXK_6_CHECK:
+0097 740A             98                     MOV A,#0Ah
+0099 754002           99                     MOV 040h,#02
+009C 754102          100                     MOV 041h,#02
+009F 22              101                     RET
+00A0                 102     MXK_10_CHECK:
+00A0 7409            103                     MOV A,#09
+00A2 754002          104                     MOV 040h,#02
+00A5 754103          105                     MOV 041h,#03
+00A8 22              106                     RET
+00A9                 107     MXK_14_CHECK:
+00A9 7408            108                     MOV A,#08
+00AB 754002          109                     MOV 040h,#02
+00AE 754104          110                     MOV 041h,#04
+00B1 22              111                     RET
+00B2                 112     MXK_3_CHECK:
+00B2 7407            113                     MOV A,#07
+00B4 754003          114                     MOV 040h,#03
+00B7 754101          115                     MOV 041h,#01
+00BA 22              116                     RET
+00BB                 117     MXK_7_CHECK:
+00BB 7406            118                     MOV A,#06
+00BD 754003          119                     MOV 040h,#03
+00C0 754102          120                     MOV 041h,#02
+00C3 22              121                     RET
+00C4                 122     MXK_11_CHECK:
+00C4 7405            123                     MOV A,#05
+A51 MACRO ASSEMBLER  KEYBOARD                                                             12/18/2025 22:45:00 PAGE     3
+
+00C6 754003          124                     MOV 040h,#03
+00C9 754103          125                     MOV 041h,#03
+00CC 22              126                     RET
+00CD                 127     MXK_15_CHECK:
+00CD 7404            128                     MOV A,#04
+00CF 754003          129                     MOV 040h,#03
+00D2 754104          130                     MOV 041h,#04
+00D5 22              131                     RET
+00D6                 132     MXK_4_CHECK:
+00D6 7403            133                     MOV A,#03
+00D8 754004          134                     MOV 040h,#04
+00DB 754101          135                     MOV 041h,#01
+00DE 22              136                     RET
+00DF                 137     MXK_8_CHECK:
+00DF 7402            138                     MOV A,#02
+00E1 754004          139                     MOV 040h,#04
+00E4 754102          140                     MOV 041h,#02
+00E7 22              141                     RET
+00E8                 142     MXK_12_CHECK:
+00E8 7401            143                     MOV A,#01
+00EA 754004          144                     MOV 040h,#04
+00ED 754103          145                     MOV 041h,#03
+00F0 22              146                     RET
+00F1                 147     MXK_16_CHECK:
+00F1 7400            148                     MOV A,#00
+00F3 754004          149                     MOV 040h,#04
+00F6 754104          150                     MOV 041h,#04
+00F9 22              151                     RET
+                     152     END
+A51 MACRO ASSEMBLER  KEYBOARD                                                             12/18/2025 22:45:00 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+KBD. . . . . . . .  C SEG    00FAH       REL=UNIT
+MATRIXKEY. . . . .  C ADDR   0000H   R   SEG=KBD
+MK_SK1 . . . . . .  C ADDR   000CH   R   SEG=KBD
+MK_SK10. . . . . .  C ADDR   0043H   R   SEG=KBD
+MK_SK11. . . . . .  C ADDR   0048H   R   SEG=KBD
+MK_SK12. . . . . .  C ADDR   004DH   R   SEG=KBD
+MK_SK13. . . . . .  C ADDR   0057H   R   SEG=KBD
+MK_SK14. . . . . .  C ADDR   005CH   R   SEG=KBD
+MK_SK15. . . . . .  C ADDR   0061H   R   SEG=KBD
+MK_SK16. . . . . .  C ADDR   0066H   R   SEG=KBD
+MK_SK2 . . . . . .  C ADDR   0011H   R   SEG=KBD
+MK_SK3 . . . . . .  C ADDR   0016H   R   SEG=KBD
+MK_SK4 . . . . . .  C ADDR   001BH   R   SEG=KBD
+MK_SK5 . . . . . .  C ADDR   0025H   R   SEG=KBD
+MK_SK6 . . . . . .  C ADDR   002AH   R   SEG=KBD
+MK_SK7 . . . . . .  C ADDR   002FH   R   SEG=KBD
+MK_SK8 . . . . . .  C ADDR   0034H   R   SEG=KBD
+MK_SK9 . . . . . .  C ADDR   003EH   R   SEG=KBD
+MXK_10_CHECK . . .  C ADDR   00A0H   R   SEG=KBD
+MXK_11_CHECK . . .  C ADDR   00C4H   R   SEG=KBD
+MXK_12_CHECK . . .  C ADDR   00E8H   R   SEG=KBD
+MXK_13_CHECK . . .  C ADDR   0085H   R   SEG=KBD
+MXK_14_CHECK . . .  C ADDR   00A9H   R   SEG=KBD
+MXK_15_CHECK . . .  C ADDR   00CDH   R   SEG=KBD
+MXK_16_CHECK . . .  C ADDR   00F1H   R   SEG=KBD
+MXK_1_CHECK. . . .  C ADDR   006AH   R   SEG=KBD
+MXK_2_CHECK. . . .  C ADDR   008EH   R   SEG=KBD
+MXK_3_CHECK. . . .  C ADDR   00B2H   R   SEG=KBD
+MXK_4_CHECK. . . .  C ADDR   00D6H   R   SEG=KBD
+MXK_5_CHECK. . . .  C ADDR   0073H   R   SEG=KBD
+MXK_6_CHECK. . . .  C ADDR   0097H   R   SEG=KBD
+MXK_7_CHECK. . . .  C ADDR   00BBH   R   SEG=KBD
+MXK_8_CHECK. . . .  C ADDR   00DFH   R   SEG=KBD
+MXK_9_CHECK. . . .  C ADDR   007CH   R   SEG=KBD
+P1 . . . . . . . .  D ADDR   0090H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

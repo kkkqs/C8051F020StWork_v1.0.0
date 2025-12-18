@@ -1,0 +1,92 @@
+A51 MACRO ASSEMBLER  TIMER0                                                               12/18/2025 23:03:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\timer0.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\bsp\timer0.asm SET(SMALL) DEBUG PRINT(.\Listings\
+                      ..\..\..\Git\C8051F020StWork\bsp\timer0.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\timer0.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     TMR0 SEGMENT CODE
+----                   2     rseg TMR0
+                       3     PUBLIC Timer0_Init
+                       4     PUBLIC TIMER0_ISR
+                       5     
+0000                   6     Timer0_Init:
+                       7         ; 设置 Timer0 初始值（与 original main.ASM 保持一致）
+0000 758CD8            8         MOV TH0, #0D8h
+0003 758AF0            9         MOV TL0, #0F0h
+0006 D28C             10         SETB TR0
+0008 22               11         RET
+                      12     
+0009                  13     TIMER0_ISR:
+0009 C0D0             14         PUSH PSW
+000B C0E0             15         PUSH ACC
+000D C0F0             16         PUSH B
+                      17     
+000F 758CD8           18         MOV TH0, #0D8h
+0012 758AF0           19         MOV TL0, #0F0h
+                      20     
+0015 E546             21         MOV A, 046h
+0017 B4FF02           22         CJNE A, #0FFh, T0_KEY_HELD
+001A 802A             23         SJMP T0_EXIT
+                      24     
+001C                  25     T0_KEY_HELD:
+001C E547             26         MOV A, 047h
+001E B4FF02           27         CJNE A, #0FFh, T0_INC
+0021 8023             28         SJMP T0_EXIT
+0023                  29     T0_INC:
+0023 0547             30         INC 047h
+0025 E547             31         MOV A, 047h
+0027 C3               32         CLR C
+0028 9464             33         SUBB A, #064h
+002A 5002             34         JNC T0_LONG_REACHED
+002C 8018             35         SJMP T0_EXIT
+                      36     
+002E                  37     T0_LONG_REACHED:
+002E E548             38         MOV A, 048h
+0030 B40013           39         CJNE A, #00h, T0_EXIT
+0033 E560             40         MOV A, 060h
+0035 540F             41         ANL A, #0Fh
+0037 4480             42         ORL A, #080h
+0039 F560             43         MOV 060h, A
+003B 756101           44         MOV 061h, #01h
+003E 754802           45         MOV 048h, #02h
+0041 754764           46         MOV 047h, #064h
+0044 8000             47         SJMP T0_EXIT
+                      48     
+0046                  49     T0_EXIT:
+0046 D0F0             50         POP B
+0048 D0E0             51         POP ACC
+004A D0D0             52         POP PSW
+004C 32               53         RETI
+                      54     
+                      55     END
+A51 MACRO ASSEMBLER  TIMER0                                                               12/18/2025 23:03:07 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+T0_EXIT. . . . . .  C ADDR   0046H   R   SEG=TMR0
+T0_INC . . . . . .  C ADDR   0023H   R   SEG=TMR0
+T0_KEY_HELD. . . .  C ADDR   001CH   R   SEG=TMR0
+T0_LONG_REACHED. .  C ADDR   002EH   R   SEG=TMR0
+TH0. . . . . . . .  D ADDR   008CH   A   
+TIMER0_INIT. . . .  C ADDR   0000H   R   SEG=TMR0
+TIMER0_ISR . . . .  C ADDR   0009H   R   SEG=TMR0
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMR0 . . . . . . .  C SEG    004DH       REL=UNIT
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

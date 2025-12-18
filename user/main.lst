@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     1
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -8,1113 +8,762 @@ ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\user\main
 
 LOC  OBJ            LINE     SOURCE
 
-0000                   1     ORG 0000h
-0000 020700            2             LJMP MAIN
-                       3     
-000B                   4     ORG 000Bh
-000B 020829            5             LJMP TIMER0_ISR
-                       6     
-001B                   7     ORG 001Bh
-001B 0207D8            8             LJMP TIMER1_ISR
-                       9     
-                      10     ;$include (config.inc)
-                +1    11     ; config.inc - 7-segment 映射表
-                +1    12     ; 每一项的格式: INDEX - SYMBOL - HEX_VALUE
-                +1    13     ; 索引从 0 开始，供 main.ASM 中通过偏移访问 (MOVC @A+DPTR)
-                +1    14     ; 00 - '0'  - 0C0h
-                +1    15     ; 01 - '1'  - 0F9h
-                +1    16     ; 02 - '2'  - 0A4h
-                +1    17     ; 03 - '3'  - 0B0h
-                +1    18     ; 04 - '4'  - 099h
-                +1    19     ; 05 - '5'  - 092h
-                +1    20     ; 06 - '6'  - 082h
-                +1    21     ; 07 - '7'  - 0F8h
-                +1    22     ; 08 - '8'  - 080h
-                +1    23     ; 09 - '9'  - 090h
-                +1    24     ; 10 - 'A'  - 088h
-                +1    25     ; 11 - 'b'  - 083h
-                +1    26     ; 12 - 'C'  - 0C6h
-                +1    27     ; 13 - 'd'  - 0A1h
-                +1    28     ; 14 - 'E'  - 086h
-                +1    29     ; 15 - 'F'  - 08Eh
-                +1    30     ; 16 - '_'  - 0F7h
-                +1    31     ; 17 - 'P.' - 00Ch
-                +1    32     ; 18 - 'r'  - 0AFh
-                +1    33     ; 19 - 'L'  - 047h
-                +1    34     ; 20 - '0.' - 040h
-                +1    35     ; 21 - '1.' - 079h
-                +1    36     ; 22 - '2.' - 024h
-                +1    37     ; 23 - '3.' - 030h
-                +1    38     ; 24 - '4.' - 019h
-                +1    39     ; 25 - '5.' - 012h
-                +1    40     ; 26 - '6.' - 002h
-                +1    41     ; 27 - '7.' - 078h
-                +1    42     ; 28 - '8.' - 000h
-                +1    43     ; 29 - '9.' - 010h
-                +1    44     ; 30 - 'n'  - 0ABh
-                +1    45     ; 31 - 'o'  - 0A3h
-                +1    46     ; 32 - 'o.' - 023h
-                +1    47     ; 33 - OFF  - 0FFh    ; 熄灭 (全部段关闭)
-                +1    48     ; 34 - 'C.' - 046h    ; 自定义 C 带小数点
-                +1    49     
-001E            +1    50     SEG_TABLE:
-001E C0F9A4B0   +1    51         DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,0F7h
+                       1     ;$include (config.inc)
+                +1     2     ; 索引从 0 开始，供 main.ASM 中通过偏移访问 (MOVC @A+DPTR)
+                +1     3     ; 00 - '0'  - 0C0h
+                +1     4     ; 01 - '1'  - 0F9h
+                +1     5     ; 02 - '2'  - 0A4h
+                +1     6     ; 03 - '3'  - 0B0h
+                +1     7     ; 04 - '4'  - 099h
+                +1     8     ; 05 - '5'  - 092h
+                +1     9     ; 06 - '6'  - 082h
+                +1    10     ; 07 - '7'  - 0F8h
+                +1    11     ; 08 - '8'  - 080h
+                +1    12     ; 09 - '9'  - 090h
+                +1    13     ; 10 - 'A'  - 088h
+                +1    14     ; 11 - 'b'  - 083h
+                +1    15     ; 12 - 'C'  - 0C6h
+                +1    16     ; 13 - 'd'  - 0A1h
+                +1    17     ; 14 - 'E'  - 086h
+                +1    18     ; 15 - 'F'  - 08Eh
+                +1    19     ; 16 - '_'  - 0F7h
+                +1    20     ; 17 - 'P.' - 00Ch
+                +1    21     ; 18 - 'r'  - 0AFh
+                +1    22     ; 19 - 'L'  - 047h
+                +1    23     ; 20 - '0.' - 040h
+                +1    24     ; 21 - '1.' - 079h
+                +1    25     ; 22 - '2.' - 024h
+                +1    26     ; 23 - '3.' - 030h
+                +1    27     ; 24 - '4.' - 019h
+                +1    28     ; 25 - '5.' - 012h
+                +1    29     ; 26 - '6.' - 002h
+                +1    30     ; 27 - '7.' - 078h
+                +1    31     ; 28 - '8.' - 000h
+                +1    32     ; 29 - '9.' - 010h
+                +1    33     ; 30 - 'n'  - 0ABh
+                +1    34     ; 31 - 'o'  - 0A3h
+                +1    35     ; 32 - 'o.' - 023h
+                +1    36     ; 33 - OFF  - 0FFh    ; 熄灭 (全部段关闭)
+                +1    37     ; 34 - 'C.' - 046h    ; 自定义 C 带小数点
+                +1    38     
+0000            +1    39     SEG_TABLE:
+0000 C0F9A4B0   +1    40         DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,0F7h
                              ,00Ch,0AFh,047h
-0022 999282F8                
-0026 80908883                
-002A C6A1868E                
-002E F70CAF47                
-0032 40792430   +1    52         DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     2
+0004 999282F8                
+0008 80908883                
+000C C6A1868E                
+0010 F70CAF47                
+0014 40792430   +1    41         DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
+0018 19120278                
+001C 0010                    
+001E ABA323FF   +1    42         DB 0ABh,0A3h,023h,0FFh,046h
+0022 46                      
+                +1    43     
+0023            +1    44     BITMASK_TABLE:
+0023 20100804   +1    45         DB 020h,010h,008h,004h,002h,001h
+0027 0201                    
+                +1    46     
+0029            +1    47     PASSWORD_TABLE:
+0029 01020304   +1    48         DB 01h,02h,03h,04h,05h
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     2
 
-0036 19120278                
-003A 0010                    
-003C ABA323FF   +1    53         DB 0ABh,0A3h,023h,0FFh,046h
-0040 46                      
-                      54     
-                      55     
-                      56     ; P2.0-P2.5 控制 6 位数码管
-                      57     ; 假设 P2.0 为最左侧 (Digit 5, Buffer 0x35)
-                      58     ; 假设 P2.5 为最右侧 (Digit 0, Buffer 0x30)
-                      59     ; 扫描顺序 Buffer 0x30 -> 0x35
-0041                  60     BITMASK_TABLE:
-0041 20100804         61             DB 020h,010h,008h,004h,002h,001h
-0045 0201                    
-                      62         ; Buffer Index: 0(30h) -> P2.5, ..., 5(35h) -> P2.0
-                      63     
-0047                  64     PASSWORD_TABLE:
-0047 01020304         65             DB 01h,02h,03h,04h,05h
-004B 05                      
-                      66             ; 默认密码 12345
-                      67     
-                      68     ; 状态常量定义
-  0000                69     RUN_ST  EQU     00h
-  0001                70     OPT_ST  EQU     01h
-  0002                71     PASS_ST EQU     02h
-  0011                72     OPT1_ST EQU     11h
-  0012                73     OPT2_ST EQU     12h
-  0013                74     OPT3_ST EQU     13h
+002D 05                      
+                +1    49     
+                +1    50     ; RUN_ST, OPT_ST, PASS_ST, OPT1_ST, OPT2_ST, OPT3_ST
+  0000          +1    51     RUN_ST  EQU     00h
+  0001          +1    52     OPT_ST  EQU     01h
+  0002          +1    53     PASS_ST EQU     02h
+  0011          +1    54     OPT1_ST EQU     11h
+  0012          +1    55     OPT2_ST EQU     12h
+  0013          +1    56     OPT3_ST EQU     13h
+                      57     
+                      58     
+                      59     EXTRN CODE(MatrixKey)
+                      60     EXTRN CODE(Timer1_Init)
+                      61     EXTRN CODE(Timer0_Init)
+                      62     EXTRN CODE(TIMER0_ISR)
+                      63     EXTRN CODE(TIMER1_ISR)
+                      64     EXTRN CODE(LED6_ApplyTable)
+                      65             
+                      66             
+0000                  67     ORG 0000h
+0000 020700           68             LJMP MAIN
+                      69     
+000B                  70     ORG 000Bh
+000B 020000   F       71             LJMP TIMER0_ISR
+                      72     
+001B                  73     ORG 001Bh
+001B 020000   F       74             LJMP TIMER1_ISR
                       75     
-                      76     ; 变量分配同前
-                      77     ; 0x30~0x35: 显示缓存 (6 Bytes)
-                      78     
-004C                  79     MatrixKey:
-004C 74FF             80                                     MOV A,#0FFh    ; 默认返回 0xFF 表示无键按下
-004E 7590FF           81                                     MOV P1,#0FFh
-                      82     
-0051 C293             83                                     CLR P1.3
-0053 209702           84                                     JB P1.7,MK_SK1
-0056 01B6             85                                     AJMP MXK_1_CHECK
-0058                  86     MK_SK1:
-0058 209602           87                                     JB P1.6,MK_SK2
-005B 01BF             88                                     AJMP MXK_5_CHECK
-005D                  89     MK_SK2:
-005D 209502           90                                     JB P1.5,MK_SK3
-0060 01C8             91                                     AJMP MXK_9_CHECK
-0062                  92     MK_SK3:
-0062 209402           93                                     JB P1.4,MK_SK4
-0065 01D1             94                                     AJMP MXK_13_CHECK
-0067                  95     MK_SK4:
-0067 7590FF           96                                     MOV P1,#0FFh
-                      97     
-006A C292             98                                     CLR P1.2
-006C 209702           99                                     JB P1.7,MK_SK5
-006F 01DA            100                                     AJMP MXK_2_CHECK
-0071                 101     MK_SK5:
-0071 209602          102                                     JB P1.6,MK_SK6
-0074 01E3            103                                     AJMP MXK_6_CHECK
-0076                 104     MK_SK6:
-0076 209502          105                                     JB P1.5,MK_SK7
-0079 01EC            106                                     AJMP MXK_10_CHECK
-007B                 107     MK_SK7:
-007B 209402          108                                     JB P1.4,MK_SK8
-007E 01F5            109                                     AJMP MXK_14_CHECK
-0080                 110     MK_SK8:
-0080 7590FF          111                                     MOV P1,#0FFh
-                     112     
-0083 C291            113                                     CLR P1.1
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     3
+0700                  76             ORG 0700h
+0700                  77     MAIN:
+0700 7580FF           78             MOV P0, #0FFh
+0703 75A000           79             MOV P2, #00h
+                      80             
+                      81             ; 初始化显示缓冲 (6位) => 使用 LED6 表 00 (DISPLAY_INIT_BLANK)
+0706 7400             82             MOV A, #00h
+0708 120000   F       83             LCALL LED6_ApplyTable
+                      84             
+070B 753800           85             MOV 038h, #00h
+                      86     
+070E 757000           87             MOV 070h, #00h
+0711 757100           88             MOV 071h, #00h
+                      89     
+0714 7544FF           90             MOV 044h, #0FFh
+0717 754500           91             MOV 045h, #00h
+071A 7546FF           92             MOV 046h, #0FFh
+071D 754700           93             MOV 047h, #00h
+0720 754800           94             MOV 048h, #00h
+0723 753A03           95             MOV 03Ah, #03h
+                      96     
+0726 120000   F       97             LCALL Timer1_Init
+0729 120000   F       98             LCALL Timer0_Init
+                      99     
+072C                 100     LOOP:
+                     101             EXTRN CODE(KeyInput_Process)
+072C 120000   F      102             LCALL KeyInput_Process
+                     103     
+072F                 104     MXK_STATE_CHECK:
+072F E570            105             MOV A, 070h
+0731 B40005          106             CJNE A,#RUN_ST, CHECK_OPT
+0734 120763          107             LCALL RUN_HANDLER
+0737 80F3            108             SJMP LOOP
+0739                 109     CHECK_OPT:
+0739 B40105          110             CJNE A,#OPT_ST, CHECK_OPT1
+073C 120790          111             LCALL OPT_HANDLER
+073F E12C            112             AJMP LOOP
+0741                 113     CHECK_OPT1:
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     3
 
-0085 209702          114                                     JB P1.7,MK_SK9
-0088 01FE            115                                     AJMP MXK_3_CHECK
-008A                 116     MK_SK9:
-008A 209602          117                                     JB P1.6,MK_SK10
-008D 2107            118                                     AJMP MXK_7_CHECK
-008F                 119     MK_SK10:
-008F 209502          120                                     JB P1.5,MK_SK11
-0092 2110            121                                     AJMP MXK_11_CHECK
-0094                 122     MK_SK11:
-0094 209402          123                                     JB P1.4,MK_SK12
-0097 2119            124                                     AJMP MXK_15_CHECK
-0099                 125     MK_SK12:
-0099 7590FF          126                                     MOV P1,#0FFh
-                     127     
-009C C290            128                                     CLR P1.0
-009E 209702          129                                     JB P1.7,MK_SK13
-00A1 2122            130                                     AJMP MXK_4_CHECK
-00A3                 131     MK_SK13:
-00A3 209602          132                                     JB P1.6,MK_SK14
-00A6 212B            133                                     AJMP MXK_8_CHECK
-00A8                 134     MK_SK14:
-00A8 209502          135                                     JB P1.5,MK_SK15
-00AB 2134            136                                     AJMP MXK_12_CHECK
-00AD                 137     MK_SK15:
-00AD 209402          138                                     JB P1.4,MK_SK16
-00B0 213D            139                                     AJMP MXK_16_CHECK
-00B2                 140     MK_SK16:
-00B2 7590FF          141                                     MOV P1,#0FFh
-00B5 22              142                                     RET
-                     143     
-00B6                 144     MXK_1_CHECK:
-00B6 740F            145                                     MOV A,#0Fh
-00B8 754001          146                                     MOV 040h,#01
-00BB 754101          147                                     MOV 041h,#01
-00BE 22              148                                     RET
-00BF                 149     MXK_5_CHECK:
-00BF 740E            150                                     MOV A,#0Eh
-00C1 754001          151                                     MOV 040h,#01
-00C4 754102          152                                     MOV 041h,#02
-00C7 22              153                                     RET
-00C8                 154     MXK_9_CHECK:
-00C8 740D            155                                     MOV A,#0Dh
-00CA 754001          156                                     MOV 040h,#01
-00CD 754103          157                                     MOV 041h,#03
-00D0 22              158                                     RET
-00D1                 159     MXK_13_CHECK:
-00D1 740C            160                                     MOV A,#0Ch
-00D3 754001          161                                     MOV 040h,#01
-00D6 754104          162                                     MOV 041h,#04
-00D9 22              163                                     RET
-00DA                 164     MXK_2_CHECK:
-00DA 740B            165                                     MOV A,#0Bh
-00DC 754002          166                                     MOV 040h,#02
-00DF 754101          167                                     MOV 041h,#01
-00E2 22              168                                     RET
-00E3                 169     MXK_6_CHECK:
-00E3 740A            170                                     MOV A,#0Ah
-00E5 754002          171                                     MOV 040h,#02
-00E8 754102          172                                     MOV 041h,#02
-00EB 22              173                                     RET
-00EC                 174     MXK_10_CHECK:
-00EC 7409            175                                     MOV A,#09
-00EE 754002          176                                     MOV 040h,#02
-00F1 754103          177                                     MOV 041h,#03
-00F4 22              178                                     RET
-00F5                 179     MXK_14_CHECK:
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     4
+0741 B41105          114             CJNE A,#OPT1_ST, CHECK_OPT2
+0744 12080C          115             LCALL OPT1_HANDLER
+0747 E12C            116             AJMP LOOP
+0749                 117     CHECK_OPT2:
+0749 B41205          118             CJNE A,#OPT2_ST, CHECK_OPT3
+074C 120883          119             LCALL OPT2_HANDLER
+074F E12C            120             AJMP LOOP
+0751                 121     CHECK_OPT3:
+0751 B41305          122             CJNE A,#OPT3_ST, CHECK_PASS
+0754 1208FA          123             LCALL OPT3_HANDLER
+0757 E12C            124             AJMP LOOP
+0759                 125     CHECK_PASS:
+0759 B40205          126             CJNE A,#PASS_ST, SKIP_PASS
+075C 120970          127             LCALL PASS_HANDLER
+075F E12C            128             AJMP LOOP
+0761                 129     SKIP_PASS:
+0761 E12C            130             AJMP LOOP
+                     131     
+                     132     
+                     133     ;-----------------------------
+                     134     ; 状态机
+                     135     ;-----------------------------
+                     136     
+0763                 137     RUN_HANDLER:
+0763 E571            138                     MOV A, 071h
+0765 B57019          139                     CJNE A, 070h, RUN_INIT    
+                     140     
+0768 E561            141                     MOV A, 061h
+076A B40002          142                     CJNE A, #00h, RUN_HANDLE_KEY
+076D 8018            143                     SJMP RUN_MODE
+                     144     
+076F                 145     RUN_HANDLE_KEY:
+076F E560            146                     MOV A, 060h
+0771 B48A08          147                     CJNE A, #08Ah, RUN_HANDLE_OTHER
+0774 757002          148                     MOV 070h, #PASS_ST
+0777 756100          149                     MOV 061h, #00h
+077A 800B            150                     SJMP RUN_MODE
+                     151     
+077C                 152     RUN_HANDLE_OTHER:
+077C 756100          153                     MOV 061h, #00h
+077F 8006            154                     SJMP RUN_MODE
+                     155     
+0781                 156     RUN_INIT:
+0781 E570            157                     MOV A, 070h
+0783 F571            158                     MOV 071h, A
+0785 8000            159                     SJMP RUN_MODE
+                     160     
+0787                 161     RUN_MODE:
+                     162             ; RUN 模式显示空白 (TABLE_DISPLAY_RUN_BLANK id=01)
+0787 7401            163             MOV A, #01h
+0789 120000   F      164             LCALL LED6_ApplyTable
+078C 753904          165                     MOV 039h, #04h ; 密码光标初始化位置 (for later use)
+078F 22              166                     RET
+                     167     
+0790                 168     OPT_HANDLER:
+0790 E571            169             MOV A, 071h
+0792 B57007          170             CJNE A, 070h, OPT_INIT
+0795 E561            171             MOV A, 061h
+0797 B4000E          172             CJNE A, #00h, OPT_HANDLE_KEY
+079A E1A2            173             AJMP OPT_MODE
+                     174     
+079C                 175     OPT_INIT:
+079C E570            176             MOV A, 070h
+079E F571            177             MOV 071h, A
+07A0 8000            178             SJMP OPT_MODE
+                     179     
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     4
 
-00F5 7408            180                                     MOV A,#08
-00F7 754002          181                                     MOV 040h,#02
-00FA 754104          182                                     MOV 041h,#04
-00FD 22              183                                     RET
-00FE                 184     MXK_3_CHECK:
-00FE 7407            185                                     MOV A,#07
-0100 754003          186                                     MOV 040h,#03
-0103 754101          187                                     MOV 041h,#01
-0106 22              188                                     RET
-0107                 189     MXK_7_CHECK:
-0107 7406            190                                     MOV A,#06
-0109 754003          191                                     MOV 040h,#03
-010C 754102          192                                     MOV 041h,#02
-010F 22              193                                     RET
-0110                 194     MXK_11_CHECK:
-0110 7405            195                                     MOV A,#05
-0112 754003          196                                     MOV 040h,#03
-0115 754103          197                                     MOV 041h,#03
-0118 22              198                                     RET
-0119                 199     MXK_15_CHECK:
-0119 7404            200                                     MOV A,#04
-011B 754003          201                                     MOV 040h,#03
-011E 754104          202                                     MOV 041h,#04
-0121 22              203                                     RET
-0122                 204     MXK_4_CHECK:
-0122 7403            205                                     MOV A,#03
-0124 754004          206                                     MOV 040h,#04
-0127 754101          207                                     MOV 041h,#01
-012A 22              208                                     RET
-012B                 209     MXK_8_CHECK:
-012B 7402            210                                     MOV A,#02
-012D 754004          211                                     MOV 040h,#04
-0130 754102          212                                     MOV 041h,#02
-0133 22              213                                     RET
-0134                 214     MXK_12_CHECK:
-0134 7401            215                                     MOV A,#01
-0136 754004          216                                     MOV 040h,#04
-0139 754103          217                                     MOV 041h,#03
-013C 22              218                                     RET
-013D                 219     MXK_16_CHECK:
-013D 7400            220                                     MOV A,#00
-013F 754004          221                                     MOV 040h,#04
-0142 754104          222                                     MOV 041h,#04
-0145 22              223                                     RET
-                     224     
-0700                 225             ORG 0700h
-0700                 226     MAIN:
-0700 7580FF          227             MOV P0, #0FFh
-0703 75A000          228             MOV P2, #00h
-                     229             
-                     230             ; 初始化显示缓冲 (6位)
-0706 753010          231             MOV 030h, #010h
-0709 753110          232             MOV 031h, #010h
-070C 753210          233             MOV 032h, #010h
-070F 753310          234             MOV 033h, #010h
-0712 753410          235             MOV 034h, #010h
-0715 753510          236             MOV 035h, #010h
-                     237             
-0718 753800          238             MOV 038h, #00h
+07A2                 180     OPT_MODE:
+                     181             ; 显示菜单 (6位): 1.n 2.r 3.C
+                     182             ; 35: 1. (0x15)
+                     183             ; 34: n  (0x1E)
+                     184             ; 33: 2. (0x16)
+                     185             ; 32: r  (0x12)
+                     186             ; 31: 3. (0x17)
+                     187             ; 30: C  (0x0C)
+                     188                     ; 主菜单显示 (TABLE_MENU_MAIN_OPT id=02)
+07A2 7402            189                     MOV A, #02h
+07A4 120000   F      190                     LCALL LED6_ApplyTable
+07A7 22              191             RET
+                     192     
+07A8                 193     OPT_HANDLE_KEY:
+07A8 E560            194                     MOV A, 060h
+07AA 540F            195                     ANL A, #0Fh
+07AC B40A04          196                     CJNE A, #0Ah, OPT_CHECK_KEY1
+07AF 1207E1          197                     LCALL OPT_CHECK_ALL_INPUTS
+07B2 22              198                     RET
+                     199     
+07B3                 200     OPT_CHECK_KEY1:
+07B3 E560            201                     MOV A, 060h
+07B5 540F            202                     ANL A, #0Fh
+07B7 B40107          203                     CJNE A, #01h, OPT_CHECK_KEY2
+07BA 757011          204                     MOV 070h, #OPT1_ST
+07BD 756100          205                     MOV 061h, #00h
+07C0 22              206                     RET
+                     207     
+07C1                 208     OPT_CHECK_KEY2:
+07C1 E560            209                     MOV A, 060h
+07C3 540F            210                     ANL A, #0Fh
+07C5 B40207          211                     CJNE A, #02h, OPT_CHECK_KEY3
+07C8 757012          212                     MOV 070h, #OPT2_ST
+07CB 756100          213                     MOV 061h, #00h
+07CE 22              214                     RET
+                     215     
+07CF                 216     OPT_CHECK_KEY3:
+07CF E560            217                     MOV A, 060h
+07D1 540F            218                     ANL A, #0Fh
+07D3 B40307          219                     CJNE A, #03h, OPT_HANDLE_KEY_SKIP
+07D6 757013          220                     MOV 070h, #OPT3_ST
+07D9 756100          221                     MOV 061h, #00h
+07DC 22              222                     RET
+                     223     
+07DD                 224     OPT_HANDLE_KEY_SKIP:
+07DD 756100          225                     MOV 061h, #00h
+07E0 22              226                     RET
+                     227     
+07E1                 228     OPT_CHECK_ALL_INPUTS:
+07E1 E550            229                     MOV A, 050h
+07E3 600F            230                     JZ OPT_INPUT_INCOMPLETE
+07E5 E552            231                     MOV A, 052h
+07E7 600B            232                     JZ OPT_INPUT_INCOMPLETE
+07E9 E554            233                     MOV A, 054h
+07EB 6007            234                     JZ OPT_INPUT_INCOMPLETE
+                     235                     
+07ED 757000          236                     MOV 070h, #RUN_ST
+07F0 756100          237                     MOV 061h, #00h
+07F3 22              238                     RET
                      239     
-071B 757000          240             MOV 070h, #00h
-071E 757100          241             MOV 071h, #00h
-                     242     
-0721 7544FF          243             MOV 044h, #0FFh
-0724 754500          244             MOV 045h, #00h
-0727 7546FF          245             MOV 046h, #0FFh
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     5
+07F4                 240     OPT_INPUT_INCOMPLETE:
+                     241             ; 显示 Err011 (TABLE_OPT_ERR011 id=03)
+07F4 7403            242             MOV A, #03h
+07F6 120000   F      243             LCALL LED6_ApplyTable
+                     244                     
+07F9 7B04            245                     MOV R3, #04h
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     5
 
-072A 754700          246             MOV 047h, #00h
-072D 754800          247             MOV 048h, #00h
-0730 753A03          248             MOV 03Ah, #03h
-                     249             
-                     250             
-0733 758911          251             MOV TMOD, #011h
-0736 758DFC          252             MOV TH1, #0FCh
-0739 758B18          253             MOV TL1, #018h
-073C 758CD8          254             MOV TH0, #0D8h
-073F 758AF0          255             MOV TL0, #0F0h
-0742 75A88A          256             MOV IE,  #08Ah
-0745 D28E            257             SETB TR1      
-0747 D28C            258             SETB TR0      
-                     259     
-0749                 260     LOOP:
-0749 12004C          261             LCALL MatrixKey 
-074C B54404          262             CJNE A,044h,MXK_SAMPLE_CHANGED
-074F 0545            263             INC 045h
-0751 8005            264             SJMP MXK_AFTER_STABLE_CHECK
-                     265     
-0753                 266     MXK_SAMPLE_CHANGED:
-0753 F544            267             MOV 044h, A
-0755 754501          268             MOV 045h, #01
+07FB                 246     OPT_ERROR_DELAY_OUTER:
+07FB 7CF0            247                     MOV R4, #0F0h
+07FD                 248     OPT_ERROR_DELAY_LOOP:
+07FD 7DFF            249                     MOV R5, #0FFh
+07FF                 250     OPT_ERROR_DELAY_INNER:
+07FF 00              251                     NOP
+0800 00              252                     NOP
+0801 00              253                     NOP
+0802 DDFB            254                     DJNZ R5, OPT_ERROR_DELAY_INNER
+0804 DCF7            255                     DJNZ R4, OPT_ERROR_DELAY_LOOP
+0806 DBF3            256                     DJNZ R3, OPT_ERROR_DELAY_OUTER
+                     257                     
+0808 756100          258                     MOV 061h, #00h
+080B 22              259                     RET
+                     260     
+                     261     
+                     262     
+080C                 263     OPT1_HANDLER:
+080C E571            264                     MOV A, 071h
+080E B57065          265                     CJNE A, 070h, OPT1_INIT
+0811 E561            266                     MOV A, 061h
+0813 B40003          267                     CJNE A, #00h, OPT1_INPUT_HANDLE_KEY
+0816 8000            268                     SJMP OPT1_INPUT_MODE
                      269     
-0758                 270     MXK_AFTER_STABLE_CHECK:
-0758 E545            271             MOV A, 045h
-075A B40347          272             CJNE A,#03,MXK_STATE_CHECK
-075D 8000            273             SJMP MXK_CHECK_CONF
-                     274     
-075F                 275     MXK_CHECK_CONF:
-075F E546            276             MOV A, 046h
-0761 B54402          277             CJNE A,044h,MXK_CONF_CHANGED
-0764 803E            278             SJMP MXK_STATE_CHECK
-                     279     
-0766                 280     MXK_CONF_CHANGED:
-0766 E544            281             MOV A, 044h
-0768 F546            282             MOV 046h, A
-076A E548            283             MOV A, 048h
-076C B40208          284             CJNE A, #02h, MXK_CONF_CHECK_RELEASE
-076F 754700          285             MOV 047h, #00h
-0772 754800          286             MOV 048h, #00h
-0775 802D            287             SJMP MXK_STATE_CHECK
-                     288     
-0777                 289     MXK_CONF_CHECK_RELEASE:
-0777 E544            290             MOV A, 044h
-0779 B4FF19          291             CJNE A,#0FFh,MXK_CONF_PRESSED
-077C E547            292             MOV A, 047h
-077E C3              293             CLR C
-077F 9464            294             SUBB A, #064h
-0781 5002            295             JNC MXK_LONG_PRESS
-0783 8008            296             SJMP MXK_SHORT_PRESS
-                     297     
-0785                 298     MXK_LONG_PRESS:
-0785 754700          299             MOV 047h, #00h
-0788 754800          300             MOV 048h, #00h
-078B 8017            301             SJMP MXK_STATE_CHECK
-                     302     
-078D                 303     MXK_SHORT_PRESS:
-078D 754700          304             MOV 047h, #00h
-0790 754800          305             MOV 048h, #00h
-0793 800F            306             SJMP MXK_STATE_CHECK
-                     307     
-0795                 308     MXK_CONF_PRESSED:
-0795 E544            309             MOV A, 044h
-0797 540F            310             ANL A, #0Fh
-0799 F560            311             MOV 060h, A
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     6
+0818                 270     OPT1_INPUT_MODE:
+0818 22              271                     RET
+                     272     
+0819                 273     OPT1_INPUT_HANDLE_KEY:
+0819 E560            274                     MOV A, 060h
+081B 540F            275                     ANL A, #0Fh
+081D FF              276                     MOV R7, A
+081E C3              277                     CLR C
+081F 940A            278                     SUBB A, #0Ah
+0821 5014            279                     JNC OPT1_INPUT_SPECIAL_KEY
+                     280     
+                     281                     ; 数字键
+0823 E53B            282                     MOV A, 03Bh
+0825 2430            283             ADD A, #030h
+0827 F8              284             MOV R0, A
+0828 EF              285                     MOV A, R7
+0829 F6              286             MOV @R0, A
+                     287     
+                     288                     ; 限制输入两位 (33->32)
+082A E53B            289                     MOV A, 03Bh
+082C B40202          290                     CJNE A, #02h, OPT1_INPUT_DEC ; 最低位为 32, 0x02
+082F 8002            291                     SJMP OPT1_INPUT_DONE
+                     292     
+0831                 293     OPT1_INPUT_DEC:
+0831 153B            294             DEC 03Bh
+                     295     
+0833                 296     OPT1_INPUT_DONE:
+0833 756100          297                     MOV 061h, #00h
+0836 22              298                     RET
+                     299     
+0837                 300     OPT1_INPUT_SPECIAL_KEY:
+0837 E560            301                     MOV A, 060h
+0839 B40B22          302                     CJNE A, #0Bh, OPT1_INPUT_CHECK_CONFIRM
+                     303                     ; B键回退
+                     304                     
+083C E53B            305                     MOV A, 03Bh
+083E 2430            306                     ADD A, #030h
+0840 F8              307                     MOV R0, A
+0841 7610            308                     MOV @R0, #010h
+0843 053B            309                     INC 03Bh
+                     310                     ; 限制不超过 3 (0x03)
+0845 E53B            311                     MOV A, 03Bh
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     6
 
-079B 756101          312             MOV 061h, #01h
-079E 754700          313             MOV 047h, #00h
-07A1 754800          314             MOV 048h, #00h
-                     315     
-07A4                 316     MXK_STATE_CHECK:
-07A4 E570            317             MOV A, 070h
-07A6 B40005          318             CJNE A,#RUN_ST, CHECK_OPT
-07A9 12086D          319             LCALL RUN_HANDLER
-07AC 809B            320             SJMP LOOP
-07AE                 321     CHECK_OPT:
-07AE B40105          322             CJNE A,#OPT_ST, CHECK_OPT1
-07B1 1208A7          323             LCALL OPT_HANDLER
-07B4 E149            324             AJMP LOOP
-07B6                 325     CHECK_OPT1:
-07B6 B41105          326             CJNE A,#OPT1_ST, CHECK_OPT2
-07B9 12093D          327             LCALL OPT1_HANDLER
-07BC E149            328             AJMP LOOP
-07BE                 329     CHECK_OPT2:
-07BE B41205          330             CJNE A,#OPT2_ST, CHECK_OPT3
-07C1 1209C1          331             LCALL OPT2_HANDLER
-07C4 E149            332             AJMP LOOP
-07C6                 333     CHECK_OPT3:
-07C6 B41305          334             CJNE A,#OPT3_ST, CHECK_PASS
-07C9 120A45          335             LCALL OPT3_HANDLER
-07CC E149            336             AJMP LOOP
-07CE                 337     CHECK_PASS:
-07CE B40205          338             CJNE A,#PASS_ST, SKIP_PASS
-07D1 120AC8          339             LCALL PASS_HANDLER
-07D4 E149            340             AJMP LOOP
-07D6                 341     SKIP_PASS:
-07D6 E149            342             AJMP LOOP
-                     343     
-07D8                 344     TIMER1_ISR:
-07D8 C0D0            345             PUSH PSW
-07DA C0E0            346             PUSH ACC
-07DC C0F0            347             PUSH B
-07DE C082            348             PUSH DPL
-07E0 C083            349             PUSH DPH
-07E2 C000            350             PUSH 00h
-07E4 C001            351             PUSH 01h
-                     352     
-07E6 758DFC          353             MOV TH1, #0FCh
-07E9 758B18          354             MOV TL1, #018h
-                     355     
-07EC 7580FF          356             MOV P0, #0FFh
-07EF 75A000          357             MOV P2, #00h
+0847 C3              312                     CLR C
+0848 9404            313                     SUBB A, #04h
+084A 5004            314                     JNC OPT1_INPUT_BACKSPACE_LIMIT
+084C 756100          315                     MOV 061h, #00h
+084F 22              316                     RET
+                     317     
+0850                 318     OPT1_INPUT_BACKSPACE_LIMIT:
+0850 753B03          319                     MOV 03Bh, #03h
+0853 E53B            320                     MOV A, 03Bh
+0855 2430            321                     ADD A, #030h
+0857 F8              322                     MOV R0, A
+0858 7610            323                     MOV @R0, #010h
+085A 756100          324                     MOV 061h, #00h
+085D 22              325                     RET
+                     326     
+085E                 327     OPT1_INPUT_CHECK_CONFIRM:
+085E E560            328                     MOV A, 060h
+0860 B40A0F          329                     CJNE A, #0Ah, OPT1_INPUT_SKIP_CONFIRM
+                     330                     ; 确认: 取Buffer 33, 32
+0863 E533            331                     MOV A, 033h
+0865 F550            332                     MOV 050h, A
+0867 E532            333                     MOV A, 032h
+0869 F551            334                     MOV 051h, A
+086B 756100          335                     MOV 061h, #00h
+086E 757001          336                     MOV 070h, #OPT_ST
+0871 22              337                     RET
+                     338     
+0872                 339     OPT1_INPUT_SKIP_CONFIRM:
+0872 756100          340                     MOV 061h, #00h
+0875 22              341                     RET
+                     342     
+0876                 343     OPT1_INIT:
+0876 E570            344                     MOV A, 070h
+0878 F571            345                     MOV 071h, A
+                     346                     ; 显示 "no._d_d__" (适应6位)
+                     347                     ; 35: n (0x1E)
+                     348                     ; 34: o.(0x20)
+                     349                     ; 33: _ (input 1)
+                     350                     ; 32: _ (input 2)
+                     351                     ; 31: _
+                     352                     ; 30: _
+                     353                     ; OPT1 提示 (TABLE_OPT1_PROMPT id=04)
+087A 7404            354                     MOV A, #04h
+087C 120000   F      355                     LCALL LED6_ApplyTable
+087F 753B03          356                     MOV 03Bh, #03h    ; 光标从 33h 开始 (Buffer Index 3)
+0882 22              357                     RET
                      358     
-                     359             ; 0..5 循环
-07F2 E538            360             MOV A, 038h
-07F4 FA              361             MOV R2, A         ; R2 = index
-07F5 2430            362             ADD A, #030h
-07F7 F8              363             MOV R0, A
-07F8 E6              364             MOV A, @R0        ; 读 Buffer
-07F9 F5F0            365             MOV B, A
+                     359     
+0883                 360     OPT2_HANDLER:
+0883 E571            361                     MOV A, 071h
+0885 B57065          362                     CJNE A, 070h, OPT2_INIT
+0888 E561            363                     MOV A, 061h
+088A B40003          364                     CJNE A, #00h, OPT2_INPUT_HANDLE_KEY
+088D 8000            365                     SJMP OPT2_INPUT_MODE
                      366     
-07FB 90001E          367             MOV DPTR, #SEG_TABLE
-07FE E5F0            368             MOV A, B
-0800 93              369             MOVC A, @A+DPTR   
-0801 F5F0            370             MOV B, A          
-                     371     
-0803 900041          372             MOV DPTR, #BITMASK_TABLE
-0806 EA              373             MOV A, R2         
-0807 93              374             MOVC A, @A+DPTR
-0808 F9              375             MOV R1, A
-                     376     
-0809 E5F0            377             MOV A, B
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     7
+088F                 367     OPT2_INPUT_MODE:
+088F 22              368                     RET
+                     369     
+0890                 370     OPT2_INPUT_HANDLE_KEY:
+0890 E560            371                     MOV A, 060h
+0892 540F            372                     ANL A, #0Fh
+0894 FF              373                     MOV R7, A
+0895 C3              374                     CLR C
+0896 940A            375                     SUBB A, #0Ah
+0898 5014            376                     JNC OPT2_INPUT_SPECIAL_KEY
+                     377     
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     7
 
-080B F580            378             MOV P0, A
-080D E9              379             MOV A, R1
-080E F5A0            380             MOV P2, A
-                     381     
-0810 0538            382             INC 038h
-0812 E538            383             MOV A, 038h
-0814 B40603          384             CJNE A, #06, ISR_EXIT ; 6 位数码管
-0817 753800          385             MOV 038h, #00h
-                     386     
-081A                 387     ISR_EXIT:
-081A D001            388             POP 01h
-081C D000            389             POP 00h
-081E D083            390             POP DPH
-0820 D082            391             POP DPL
-0822 D0F0            392             POP B
-0824 D0E0            393             POP ACC
-0826 D0D0            394             POP PSW
-0828 32              395             RETI
-                     396     
-0829                 397     TIMER0_ISR:
-0829 C0D0            398             PUSH PSW
-082B C0E0            399             PUSH ACC
-082D C0F0            400             PUSH B
-                     401     
-082F 758CD8          402             MOV TH0, #0D8h
-0832 758AF0          403             MOV TL0, #0F0h
-                     404     
-0835 E546            405             MOV A, 046h
-0837 B4FF02          406             CJNE A, #0FFh, T0_KEY_HELD
-083A 802A            407             SJMP T0_EXIT
-                     408     
-083C                 409     T0_KEY_HELD:
-083C E547            410             MOV A, 047h
-083E B4FF02          411             CJNE A, #0FFh, T0_INC
-0841 8023            412             SJMP T0_EXIT
-0843                 413     T0_INC:
-0843 0547            414             INC 047h
-0845 E547            415             MOV A, 047h
-0847 C3              416             CLR C
-0848 9464            417             SUBB A, #064h
-084A 5002            418             JNC T0_LONG_REACHED
-084C 8018            419             SJMP T0_EXIT
-                     420     
-084E                 421     T0_LONG_REACHED:
-084E E548            422             MOV A, 048h
-0850 B40013          423             CJNE A, #00h, T0_EXIT
-0853 E560            424             MOV A, 060h
-0855 540F            425             ANL A, #0Fh
-0857 4480            426             ORL A, #080h
-0859 F560            427             MOV 060h, A
-085B 756101          428             MOV 061h, #01h
-085E 754802          429             MOV 048h, #02h
-0861 754764          430             MOV 047h, #064h
-0864 8000            431             SJMP T0_EXIT
-                     432     
-0866                 433     T0_EXIT:
-0866 D0F0            434             POP B
-0868 D0E0            435             POP ACC
-086A D0D0            436             POP PSW
-086C 32              437             RETI
-                     438     
-                     439     ;-----------------------------
-                     440     ; 状态机
-                     441     ;-----------------------------
-                     442     
-086D                 443     RUN_HANDLER:
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     8
+089A E53B            378                     MOV A, 03Bh
+089C 2430            379             ADD A, #030h
+089E F8              380             MOV R0, A
+089F EF              381                     MOV A, R7
+08A0 F6              382             MOV @R0, A
+                     383     
+08A1 E53B            384                     MOV A, 03Bh
+08A3 B40102          385                     CJNE A, #01h, OPT2_INPUT_DEC
+08A6 8002            386                     SJMP OPT2_INPUT_DONE
+                     387     
+08A8                 388     OPT2_INPUT_DEC:
+08A8 153B            389             DEC 03Bh
+                     390     
+08AA                 391     OPT2_INPUT_DONE:
+08AA 756100          392                     MOV 061h, #00h
+08AD 22              393                     RET
+                     394     
+08AE                 395     OPT2_INPUT_SPECIAL_KEY:
+08AE E560            396                     MOV A, 060h
+08B0 B40B22          397                     CJNE A, #0Bh, OPT2_INPUT_CHECK_CONFIRM
+                     398                     
+08B3 E53B            399                     MOV A, 03Bh
+08B5 2430            400                     ADD A, #030h
+08B7 F8              401                     MOV R0, A
+08B8 7610            402                     MOV @R0, #010h
+08BA 053B            403                     INC 03Bh
+08BC E53B            404                     MOV A, 03Bh
+08BE C3              405                     CLR C
+08BF 9404            406                     SUBB A, #04h
+08C1 5004            407                     JNC OPT2_INPUT_BACKSPACE_LIMIT
+08C3 756100          408                     MOV 061h, #00h
+08C6 22              409                     RET
+                     410     
+08C7                 411     OPT2_INPUT_BACKSPACE_LIMIT:
+08C7 753B03          412                     MOV 03Bh, #03h
+08CA E53B            413                     MOV A, 03Bh
+08CC 2430            414                     ADD A, #030h
+08CE F8              415                     MOV R0, A
+08CF 7610            416                     MOV @R0, #010h
+08D1 756100          417                     MOV 061h, #00h
+08D4 22              418                     RET
+                     419     
+08D5                 420     OPT2_INPUT_CHECK_CONFIRM:
+08D5 E560            421                     MOV A, 060h
+08D7 B40A0F          422                     CJNE A, #0Ah, OPT2_INPUT_SKIP_CONFIRM
+                     423                     
+08DA E533            424                     MOV A, 033h
+08DC F552            425                     MOV 052h, A
+08DE E532            426                     MOV A, 032h
+08E0 F553            427                     MOV 053h, A
+08E2 756100          428                     MOV 061h, #00h
+08E5 757001          429                     MOV 070h, #OPT_ST
+08E8 22              430                     RET
+                     431     
+08E9                 432     OPT2_INPUT_SKIP_CONFIRM:
+08E9 756100          433                     MOV 061h, #00h
+08EC 22              434                     RET
+                     435     
+08ED                 436     OPT2_INIT:
+08ED E570            437                     MOV A, 070h
+08EF F571            438                     MOV 071h, A
+                     439                     ; 显示 "rL_d_d__"
+                     440                     ; 35: r (0x12)
+                     441                     ; 34: L (0x13)
+                     442                     ; 33: _
+                     443                     ; 32: _
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     8
 
-086D E571            444                     MOV A, 071h
-086F B57019          445                     CJNE A, 070h, RUN_INIT    
-                     446     
-0872 E561            447                     MOV A, 061h
-0874 B40002          448                     CJNE A, #00h, RUN_HANDLE_KEY
-0877 8018            449                     SJMP RUN_MODE
-                     450     
-0879                 451     RUN_HANDLE_KEY:
-0879 E560            452                     MOV A, 060h
-087B B48A08          453                     CJNE A, #08Ah, RUN_HANDLE_OTHER
-087E 757002          454                     MOV 070h, #PASS_ST
-0881 756100          455                     MOV 061h, #00h
-0884 800B            456                     SJMP RUN_MODE
-                     457     
-0886                 458     RUN_HANDLE_OTHER:
-0886 756100          459                     MOV 061h, #00h
-0889 8006            460                     SJMP RUN_MODE
-                     461     
-088B                 462     RUN_INIT:
-088B E570            463                     MOV A, 070h
-088D F571            464                     MOV 071h, A
-088F 8000            465                     SJMP RUN_MODE
-                     466     
-0891                 467     RUN_MODE:
-0891 753010          468                     MOV 030h, #010h
-0894 753110          469                     MOV 031h, #010h
-0897 753210          470                     MOV 032h, #010h
-089A 753310          471                     MOV 033h, #010h
-089D 753410          472                     MOV 034h, #010h
-08A0 753510          473                     MOV 035h, #010h
-08A3 753904          474                     MOV 039h, #04h ; 密码光标初始化位置 (for later use)
-08A6 22              475                     RET
+                     444                     ; 31: _
+                     445                     ; 30: _
+                     446                     ; OPT2 提示 (TABLE_OPT2_PROMPT id=05)
+08F1 7405            447                     MOV A, #05h
+08F3 120000   F      448                     LCALL LED6_ApplyTable
+08F6 753B03          449                     MOV 03Bh, #03h    ; 光标从 33h 开始
+08F9 22              450                     RET
+                     451     
+                     452     
+08FA                 453     OPT3_HANDLER:
+08FA E571            454                     MOV A, 071h
+08FC B57061          455                     CJNE A, 070h, OPT3_INIT
+08FF E561            456                     MOV A, 061h
+0901 B40003          457                     CJNE A, #00h, OPT3_INPUT_HANDLE_KEY
+0904 8000            458                     SJMP OPT3_INPUT_MODE
+                     459     
+0906                 460     OPT3_INPUT_MODE:
+0906 22              461                     RET
+                     462     
+0907                 463     OPT3_INPUT_HANDLE_KEY:
+0907 E560            464                     MOV A, 060h
+0909 540F            465                     ANL A, #0Fh
+090B FF              466                     MOV R7, A
+090C C3              467                     CLR C
+090D 940A            468                     SUBB A, #0Ah
+090F 5014            469                     JNC OPT3_INPUT_SPECIAL_KEY
+                     470     
+0911 E53B            471                     MOV A, 03Bh
+0913 2430            472             ADD A, #030h
+0915 F8              473             MOV R0, A
+0916 EF              474                     MOV A, R7
+0917 F6              475             MOV @R0, A
                      476     
-08A7                 477     OPT_HANDLER:
-08A7 E571            478             MOV A, 071h
-08A9 B57007          479             CJNE A, 070h, OPT_INIT
-08AC E561            480             MOV A, 061h
-08AE B4001B          481             CJNE A, #00h, OPT_HANDLE_KEY
-08B1 01B9            482             AJMP OPT_MODE
+0918 E53B            477                     MOV A, 03Bh
+091A B40402          478                     CJNE A, #04h, OPT3_INPUT_DEC ; 最低位 34 (0x04)
+091D 8002            479                     SJMP OPT3_INPUT_DONE
+                     480     
+091F                 481     OPT3_INPUT_DEC:
+091F 153B            482             DEC 03Bh
                      483     
-08B3                 484     OPT_INIT:
-08B3 E570            485             MOV A, 070h
-08B5 F571            486             MOV 071h, A
-08B7 8000            487             SJMP OPT_MODE
-                     488     
-08B9                 489     OPT_MODE:
-                     490             ; 显示菜单 (6位): 1.n 2.r 3.C
-                     491             ; 35: 1. (0x15)
-                     492             ; 34: n  (0x1E)
-                     493             ; 33: 2. (0x16)
-                     494             ; 32: r  (0x12)
-                     495             ; 31: 3. (0x17)
-                     496             ; 30: C  (0x0C)
-08B9 753515          497             MOV 035h, #015h  
-08BC 75341E          498             MOV 034h, #01Eh
-08BF 753316          499             MOV 033h, #016h
-08C2 753212          500             MOV 032h, #012h
-08C5 753117          501             MOV 031h, #017h
-08C8 75300C          502             MOV 030h, #00Ch
-08CB 22              503             RET
-                     504     
-08CC                 505     OPT_HANDLE_KEY:
-08CC E560            506                     MOV A, 060h
-08CE 540F            507                     ANL A, #0Fh
-08D0 B40A04          508                     CJNE A, #0Ah, OPT_CHECK_KEY1
-08D3 120905          509                     LCALL OPT_CHECK_ALL_INPUTS
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE     9
+0921                 484     OPT3_INPUT_DONE:
+0921 756100          485                     MOV 061h, #00h
+0924 22              486                     RET
+                     487     
+0925                 488     OPT3_INPUT_SPECIAL_KEY:
+0925 E560            489                     MOV A, 060h
+0927 B40B22          490                     CJNE A, #0Bh, OPT3_INPUT_CHECK_CONFIRM
+                     491                     
+092A E53B            492                     MOV A, 03Bh
+092C 2430            493                     ADD A, #030h
+092E F8              494                     MOV R0, A
+092F 7610            495                     MOV @R0, #010h
+0931 053B            496                     INC 03Bh
+0933 E53B            497                     MOV A, 03Bh
+0935 C3              498                     CLR C
+0936 9405            499                     SUBB A, #05h
+0938 5004            500                     JNC OPT3_INPUT_BACKSPACE_LIMIT
+093A 756100          501                     MOV 061h, #00h
+093D 22              502                     RET
+                     503     
+093E                 504     OPT3_INPUT_BACKSPACE_LIMIT:
+093E 753B04          505                     MOV 03Bh, #04h
+0941 E53B            506                     MOV A, 03Bh
+0943 2430            507                     ADD A, #030h
+0945 F8              508                     MOV R0, A
+0946 7610            509                     MOV @R0, #010h
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE     9
 
-08D6 22              510                     RET
-                     511     
-08D7                 512     OPT_CHECK_KEY1:
-08D7 E560            513                     MOV A, 060h
-08D9 540F            514                     ANL A, #0Fh
-08DB B40107          515                     CJNE A, #01h, OPT_CHECK_KEY2
-08DE 757011          516                     MOV 070h, #OPT1_ST
-08E1 756100          517                     MOV 061h, #00h
-08E4 22              518                     RET
-                     519     
-08E5                 520     OPT_CHECK_KEY2:
-08E5 E560            521                     MOV A, 060h
-08E7 540F            522                     ANL A, #0Fh
-08E9 B40207          523                     CJNE A, #02h, OPT_CHECK_KEY3
-08EC 757012          524                     MOV 070h, #OPT2_ST
-08EF 756100          525                     MOV 061h, #00h
-08F2 22              526                     RET
-                     527     
-08F3                 528     OPT_CHECK_KEY3:
-08F3 E560            529                     MOV A, 060h
-08F5 540F            530                     ANL A, #0Fh
-08F7 B40307          531                     CJNE A, #03h, OPT_HANDLE_KEY_SKIP
-08FA 757013          532                     MOV 070h, #OPT3_ST
-08FD 756100          533                     MOV 061h, #00h
-0900 22              534                     RET
-                     535     
-0901                 536     OPT_HANDLE_KEY_SKIP:
-0901 756100          537                     MOV 061h, #00h
-0904 22              538                     RET
-                     539     
-0905                 540     OPT_CHECK_ALL_INPUTS:
-0905 E550            541                     MOV A, 050h
-0907 600F            542                     JZ OPT_INPUT_INCOMPLETE
-0909 E552            543                     MOV A, 052h
-090B 600B            544                     JZ OPT_INPUT_INCOMPLETE
-090D E554            545                     MOV A, 054h
-090F 6007            546                     JZ OPT_INPUT_INCOMPLETE
-                     547                     
-0911 757000          548                     MOV 070h, #RUN_ST
-0914 756100          549                     MOV 061h, #00h
-0917 22              550                     RET
-                     551     
-0918                 552     OPT_INPUT_INCOMPLETE:
-                     553                     ; 显示 Err011 (6位)
-0918 75350E          554                     MOV 035h, #00Eh    ; E
-091B 753412          555                     MOV 034h, #012h   ; r
-091E 753312          556                     MOV 033h, #012h   ; r
-0921 753200          557                     MOV 032h, #00h    ; 0
-0924 753101          558                     MOV 031h, #01h    ; 1
-0927 753001          559                     MOV 030h, #01h    ; 1
-                     560                     
-092A 7B04            561                     MOV R3, #04h
-092C                 562     OPT_ERROR_DELAY_OUTER:
-092C 7CF0            563                     MOV R4, #0F0h
-092E                 564     OPT_ERROR_DELAY_LOOP:
-092E 7DFF            565                     MOV R5, #0FFh
-0930                 566     OPT_ERROR_DELAY_INNER:
-0930 00              567                     NOP
-0931 00              568                     NOP
-0932 00              569                     NOP
-0933 DDFB            570                     DJNZ R5, OPT_ERROR_DELAY_INNER
-0935 DCF7            571                     DJNZ R4, OPT_ERROR_DELAY_LOOP
-0937 DBF3            572                     DJNZ R3, OPT_ERROR_DELAY_OUTER
-                     573                     
-0939 756100          574                     MOV 061h, #00h
-093C 22              575                     RET
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    10
-
-                     576     
-                     577     
-                     578     
-093D                 579     OPT1_HANDLER:
-093D E571            580                     MOV A, 071h
-093F B57065          581                     CJNE A, 070h, OPT1_INIT
-0942 E561            582                     MOV A, 061h
-0944 B40003          583                     CJNE A, #00h, OPT1_INPUT_HANDLE_KEY
-0947 8000            584                     SJMP OPT1_INPUT_MODE
-                     585     
-0949                 586     OPT1_INPUT_MODE:
-0949 22              587                     RET
-                     588     
-094A                 589     OPT1_INPUT_HANDLE_KEY:
-094A E560            590                     MOV A, 060h
-094C 540F            591                     ANL A, #0Fh
-094E FF              592                     MOV R7, A
-094F C3              593                     CLR C
-0950 940A            594                     SUBB A, #0Ah
-0952 5014            595                     JNC OPT1_INPUT_SPECIAL_KEY
-                     596     
-                     597                     ; 数字键
-0954 E53B            598                     MOV A, 03Bh
-0956 2430            599             ADD A, #030h
-0958 F8              600             MOV R0, A
-0959 EF              601                     MOV A, R7
-095A F6              602             MOV @R0, A
-                     603     
-                     604                     ; 限制输入两位 (33->32)
-095B E53B            605                     MOV A, 03Bh
-095D B40202          606                     CJNE A, #02h, OPT1_INPUT_DEC ; 最低位为 32, 0x02
-0960 8002            607                     SJMP OPT1_INPUT_DONE
-                     608     
-0962                 609     OPT1_INPUT_DEC:
-0962 153B            610             DEC 03Bh
-                     611     
-0964                 612     OPT1_INPUT_DONE:
-0964 756100          613                     MOV 061h, #00h
-0967 22              614                     RET
-                     615     
-0968                 616     OPT1_INPUT_SPECIAL_KEY:
-0968 E560            617                     MOV A, 060h
-096A B40B22          618                     CJNE A, #0Bh, OPT1_INPUT_CHECK_CONFIRM
-                     619                     ; B键回退
-                     620                     
-096D E53B            621                     MOV A, 03Bh
-096F 2430            622                     ADD A, #030h
-0971 F8              623                     MOV R0, A
-0972 7610            624                     MOV @R0, #010h
-0974 053B            625                     INC 03Bh
-                     626                     ; 限制不超过 3 (0x03)
-0976 E53B            627                     MOV A, 03Bh
-0978 C3              628                     CLR C
-0979 9404            629                     SUBB A, #04h
-097B 5004            630                     JNC OPT1_INPUT_BACKSPACE_LIMIT
-097D 756100          631                     MOV 061h, #00h
-0980 22              632                     RET
-                     633     
-0981                 634     OPT1_INPUT_BACKSPACE_LIMIT:
-0981 753B03          635                     MOV 03Bh, #03h
-0984 E53B            636                     MOV A, 03Bh
-0986 2430            637                     ADD A, #030h
-0988 F8              638                     MOV R0, A
-0989 7610            639                     MOV @R0, #010h
-098B 756100          640                     MOV 061h, #00h
-098E 22              641                     RET
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    11
-
-                     642     
-098F                 643     OPT1_INPUT_CHECK_CONFIRM:
-098F E560            644                     MOV A, 060h
-0991 B40A0F          645                     CJNE A, #0Ah, OPT1_INPUT_SKIP_CONFIRM
-                     646                     ; 确认: 取Buffer 33, 32
-0994 E533            647                     MOV A, 033h
-0996 F550            648                     MOV 050h, A
-0998 E532            649                     MOV A, 032h
-099A F551            650                     MOV 051h, A
-099C 756100          651                     MOV 061h, #00h
-099F 757001          652                     MOV 070h, #OPT_ST
-09A2 22              653                     RET
-                     654     
-09A3                 655     OPT1_INPUT_SKIP_CONFIRM:
-09A3 756100          656                     MOV 061h, #00h
-09A6 22              657                     RET
-                     658     
-09A7                 659     OPT1_INIT:
-09A7 E570            660                     MOV A, 070h
-09A9 F571            661                     MOV 071h, A
-                     662                     ; 显示 "no._d_d__" (适应6位)
-                     663                     ; 35: n (0x1E)
-                     664                     ; 34: o.(0x20)
-                     665                     ; 33: _ (input 1)
-                     666                     ; 32: _ (input 2)
-                     667                     ; 31: _
-                     668                     ; 30: _
-09AB 75351E          669                     MOV 035h, #01Eh
-09AE 753420          670                     MOV 034h, #020h
-09B1 753310          671                     MOV 033h, #010h
-09B4 753210          672                     MOV 032h, #010h
-09B7 753121          673                     MOV 031h, #021h
-09BA 753021          674                     MOV 030h, #021h
-09BD 753B03          675                     MOV 03Bh, #03h    ; 光标从 33h 开始 (Buffer Index 3)
-09C0 22              676                     RET
-                     677     
-                     678     
-09C1                 679     OPT2_HANDLER:
-09C1 E571            680                     MOV A, 071h
-09C3 B57065          681                     CJNE A, 070h, OPT2_INIT
-09C6 E561            682                     MOV A, 061h
-09C8 B40003          683                     CJNE A, #00h, OPT2_INPUT_HANDLE_KEY
-09CB 8000            684                     SJMP OPT2_INPUT_MODE
-                     685     
-09CD                 686     OPT2_INPUT_MODE:
-09CD 22              687                     RET
-                     688     
-09CE                 689     OPT2_INPUT_HANDLE_KEY:
-09CE E560            690                     MOV A, 060h
-09D0 540F            691                     ANL A, #0Fh
-09D2 FF              692                     MOV R7, A
-09D3 C3              693                     CLR C
-09D4 940A            694                     SUBB A, #0Ah
-09D6 5014            695                     JNC OPT2_INPUT_SPECIAL_KEY
-                     696     
-09D8 E53B            697                     MOV A, 03Bh
-09DA 2430            698             ADD A, #030h
-09DC F8              699             MOV R0, A
-09DD EF              700                     MOV A, R7
-09DE F6              701             MOV @R0, A
-                     702     
-09DF E53B            703                     MOV A, 03Bh
-09E1 B40102          704                     CJNE A, #01h, OPT2_INPUT_DEC
-09E4 8002            705                     SJMP OPT2_INPUT_DONE
-                     706     
-09E6                 707     OPT2_INPUT_DEC:
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    12
-
-09E6 153B            708             DEC 03Bh
-                     709     
-09E8                 710     OPT2_INPUT_DONE:
-09E8 756100          711                     MOV 061h, #00h
-09EB 22              712                     RET
-                     713     
-09EC                 714     OPT2_INPUT_SPECIAL_KEY:
-09EC E560            715                     MOV A, 060h
-09EE B40B22          716                     CJNE A, #0Bh, OPT2_INPUT_CHECK_CONFIRM
-                     717                     
-09F1 E53B            718                     MOV A, 03Bh
-09F3 2430            719                     ADD A, #030h
-09F5 F8              720                     MOV R0, A
-09F6 7610            721                     MOV @R0, #010h
-09F8 053B            722                     INC 03Bh
-09FA E53B            723                     MOV A, 03Bh
-09FC C3              724                     CLR C
-09FD 9404            725                     SUBB A, #04h
-09FF 5004            726                     JNC OPT2_INPUT_BACKSPACE_LIMIT
-0A01 756100          727                     MOV 061h, #00h
-0A04 22              728                     RET
-                     729     
-0A05                 730     OPT2_INPUT_BACKSPACE_LIMIT:
-0A05 753B03          731                     MOV 03Bh, #03h
-0A08 E53B            732                     MOV A, 03Bh
-0A0A 2430            733                     ADD A, #030h
-0A0C F8              734                     MOV R0, A
-0A0D 7610            735                     MOV @R0, #010h
-0A0F 756100          736                     MOV 061h, #00h
-0A12 22              737                     RET
-                     738     
-0A13                 739     OPT2_INPUT_CHECK_CONFIRM:
-0A13 E560            740                     MOV A, 060h
-0A15 B40A0F          741                     CJNE A, #0Ah, OPT2_INPUT_SKIP_CONFIRM
-                     742                     
-0A18 E533            743                     MOV A, 033h
-0A1A F552            744                     MOV 052h, A
-0A1C E532            745                     MOV A, 032h
-0A1E F553            746                     MOV 053h, A
-0A20 756100          747                     MOV 061h, #00h
-0A23 757001          748                     MOV 070h, #OPT_ST
-0A26 22              749                     RET
-                     750     
-0A27                 751     OPT2_INPUT_SKIP_CONFIRM:
-0A27 756100          752                     MOV 061h, #00h
-0A2A 22              753                     RET
-                     754     
-0A2B                 755     OPT2_INIT:
-0A2B E570            756                     MOV A, 070h
-0A2D F571            757                     MOV 071h, A
-                     758                     ; 显示 "rL_d_d__"
-                     759                     ; 35: r (0x12)
-                     760                     ; 34: L (0x13)
-                     761                     ; 33: _
-                     762                     ; 32: _
-                     763                     ; 31: _
-                     764                     ; 30: _
-0A2F 753512          765                     MOV 035h, #012h
-0A32 753413          766                     MOV 034h, #013h
-0A35 753310          767                     MOV 033h, #010h
-0A38 753210          768                     MOV 032h, #010h
-0A3B 753110          769                     MOV 031h, #010h
-0A3E 753021          770                     MOV 030h, #021h
-0A41 753B03          771                     MOV 03Bh, #03h    ; 光标从 33h 开始
-0A44 22              772                     RET
-                     773     
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    13
-
-                     774     
-0A45                 775     OPT3_HANDLER:
-0A45 E571            776                     MOV A, 071h
-0A47 B57061          777                     CJNE A, 070h, OPT3_INIT
-0A4A E561            778                     MOV A, 061h
-0A4C B40003          779                     CJNE A, #00h, OPT3_INPUT_HANDLE_KEY
-0A4F 8000            780                     SJMP OPT3_INPUT_MODE
-                     781     
-0A51                 782     OPT3_INPUT_MODE:
-0A51 22              783                     RET
-                     784     
-0A52                 785     OPT3_INPUT_HANDLE_KEY:
-0A52 E560            786                     MOV A, 060h
-0A54 540F            787                     ANL A, #0Fh
-0A56 FF              788                     MOV R7, A
-0A57 C3              789                     CLR C
-0A58 940A            790                     SUBB A, #0Ah
-0A5A 5014            791                     JNC OPT3_INPUT_SPECIAL_KEY
-                     792     
-0A5C E53B            793                     MOV A, 03Bh
-0A5E 2430            794             ADD A, #030h
-0A60 F8              795             MOV R0, A
-0A61 EF              796                     MOV A, R7
-0A62 F6              797             MOV @R0, A
-                     798     
-0A63 E53B            799                     MOV A, 03Bh
-0A65 B40402          800                     CJNE A, #04h, OPT3_INPUT_DEC ; 最低位 34 (0x04)
-0A68 8002            801                     SJMP OPT3_INPUT_DONE
-                     802     
-0A6A                 803     OPT3_INPUT_DEC:
-0A6A 153B            804             DEC 03Bh
-                     805     
-0A6C                 806     OPT3_INPUT_DONE:
-0A6C 756100          807                     MOV 061h, #00h
-0A6F 22              808                     RET
-                     809     
-0A70                 810     OPT3_INPUT_SPECIAL_KEY:
-0A70 E560            811                     MOV A, 060h
-0A72 B40B22          812                     CJNE A, #0Bh, OPT3_INPUT_CHECK_CONFIRM
-                     813                     
-0A75 E53B            814                     MOV A, 03Bh
-0A77 2430            815                     ADD A, #030h
-0A79 F8              816                     MOV R0, A
-0A7A 7610            817                     MOV @R0, #010h
-0A7C 053B            818                     INC 03Bh
-0A7E E53B            819                     MOV A, 03Bh
-0A80 C3              820                     CLR C
-0A81 9405            821                     SUBB A, #05h
-0A83 5004            822                     JNC OPT3_INPUT_BACKSPACE_LIMIT
-0A85 756100          823                     MOV 061h, #00h
-0A88 22              824                     RET
-                     825     
-0A89                 826     OPT3_INPUT_BACKSPACE_LIMIT:
-0A89 753B04          827                     MOV 03Bh, #04h
-0A8C E53B            828                     MOV A, 03Bh
-0A8E 2430            829                     ADD A, #030h
-0A90 F8              830                     MOV R0, A
-0A91 7610            831                     MOV @R0, #010h
-0A93 756100          832                     MOV 061h, #00h
-0A96 22              833                     RET
-                     834     
-0A97                 835     OPT3_INPUT_CHECK_CONFIRM:
-0A97 E560            836                     MOV A, 060h
-0A99 B40A0B          837                     CJNE A, #0Ah, OPT3_INPUT_SKIP_CONFIRM
-                     838                     
-0A9C E534            839                     MOV A, 034h
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    14
-
-0A9E F554            840                     MOV 054h, A
-0AA0 756100          841                     MOV 061h, #00h
-0AA3 757001          842                     MOV 070h, #OPT_ST
-0AA6 22              843                     RET
-                     844     
-0AA7                 845     OPT3_INPUT_SKIP_CONFIRM:
-0AA7 756100          846                     MOV 061h, #00h
-0AAA 22              847                     RET
-                     848     
-0AAB                 849     OPT3_INIT:
-0AAB E570            850                     MOV A, 070h
-0AAD F571            851                     MOV 071h, A
-                     852                     ; 显示 "C._d____"
-                     853                     ; 35: C. (0x22 -> SEG_TABLE[0x16] if remapped? No, user defined code)
-                     854                     ; SEG_TABLE 增加定义 0x46 (index 23) 为 'C.'
-                     855                     ; 35: C.
-                     856                     ; 34: _
-0AAF 753517          857                     MOV 035h, #017h   ; 0x17 index is C. (Wait: index 17 in table is 0x0C 'P.'?
+0948 756100          510                     MOV 061h, #00h
+094B 22              511                     RET
+                     512     
+094C                 513     OPT3_INPUT_CHECK_CONFIRM:
+094C E560            514                     MOV A, 060h
+094E B40A0B          515                     CJNE A, #0Ah, OPT3_INPUT_SKIP_CONFIRM
+                     516                     
+0951 E534            517                     MOV A, 034h
+0953 F554            518                     MOV 054h, A
+0955 756100          519                     MOV 061h, #00h
+0958 757001          520                     MOV 070h, #OPT_ST
+095B 22              521                     RET
+                     522     
+095C                 523     OPT3_INPUT_SKIP_CONFIRM:
+095C 756100          524                     MOV 061h, #00h
+095F 22              525                     RET
+                     526     
+0960                 527     OPT3_INIT:
+0960 E570            528                     MOV A, 070h
+0962 F571            529                     MOV 071h, A
+                     530                     ; 显示 "C._d____"
+                     531                     ; 35: C. (0x22 -> SEG_TABLE[0x16] if remapped? No, user defined code)
+                     532                     ; SEG_TABLE 增加定义 0x46 (index 23) 为 'C.'
+                     533                     ; 35: C.
+                     534                     ; 34: _
+0964 753517          535                     MOV 035h, #017h   ; 0x17 index is C. (Wait: index 17 in table is 0x0C 'P.'?
                              ? No)
-                     858                     ; Let's check SEG_TABLE:
-                     859                     ; 0..9 (0-9)
-                     860                     ; A (10), b (11), C (12), d (13), E (14), F (15), _ (16), P. (17), r (18), 
+                     536                     ; Let's check SEG_TABLE:
+                     537                     ; 0..9 (0-9)
+                     538                     ; A (10), b (11), C (12), d (13), E (14), F (15), _ (16), P. (17), r (18), 
                              L (19)
-                     861                     ; 0. (20), 1. (21) ... 9. (29)
-                     862                     ; n (30), o (31), o. (32), OFF (33), C. (34)
-                     863                     
-0AB2 753522          864                     MOV 035h, #022h   ; Index 34 ('C.')
-0AB5 753410          865                     MOV 034h, #010h   ; _
-0AB8 753321          866                     MOV 033h, #021h
-0ABB 753221          867                     MOV 032h, #021h
-0ABE 753121          868                     MOV 031h, #021h
-0AC1 753021          869                     MOV 030h, #021h
-0AC4 753B04          870                     MOV 03Bh, #04h    ; 光标从 34h 开始
-0AC7 22              871                     RET
-                     872     
-                     873     
-0AC8                 874     PASS_HANDLER:
-0AC8 E571            875                     MOV A, 071h
-0ACA B5704F          876                     CJNE A, 070h, PASS_INIT
-0ACD E561            877                     MOV A, 061h
-0ACF B40002          878                     CJNE A, #00h, PASS_HANDLE_KEY
-0AD2 8065            879                     SJMP PASS_MODE
-                     880     
-0AD4                 881     PASS_HANDLE_KEY:
-0AD4 E560            882                     MOV A, 060h
-0AD6 540F            883                     ANL A, #0Fh
-0AD8 FF              884                     MOV R7, A
-0AD9 C3              885                     CLR C
-0ADA 940A            886                     SUBB A, #0Ah
-0ADC 5015            887                     JNC PASS_SKIP_UPDATE
-                     888     
-                     889                     ; 数字键
-0ADE E539            890                     MOV A, 039h
-0AE0 2430            891             ADD A, #030h
-0AE2 F8              892             MOV R0, A
-0AE3 EF              893                     MOV A, R7
-0AE4 F6              894             MOV @R0, A
-                     895     
-0AE5 E539            896                     MOV A, 039h
-0AE7 B4FF02          897                     CJNE A, #0FFh, PASS_KEY_DEC
-0AEA 8002            898                     SJMP PASS_KEY_DONE
-                     899     
-0AEC                 900     PASS_KEY_DEC:
-0AEC 1539            901             DEC 039H
-                     902     
-0AEE                 903     PASS_KEY_DONE:
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    15
+                     539                     ; 0. (20), 1. (21) ... 9. (29)
+                     540                     ; n (30), o (31), o. (32), OFF (33), C. (34)
+                     541                     
+                     542                     ; OPT3 提示 (TABLE_OPT3_PROMPT id=06)
+0967 7406            543                     MOV A, #06h
+0969 120000   F      544                     LCALL LED6_ApplyTable
+096C 753B04          545                     MOV 03Bh, #04h    ; 光标从 34h 开始
+096F 22              546                     RET
+                     547     
+                     548     
+0970                 549     PASS_HANDLER:
+0970 E571            550                     MOV A, 071h
+0972 B5704F          551                     CJNE A, 070h, PASS_INIT
+0975 E561            552                     MOV A, 061h
+0977 B40002          553                     CJNE A, #00h, PASS_HANDLE_KEY
+097A 8058            554                     SJMP PASS_MODE
+                     555     
+097C                 556     PASS_HANDLE_KEY:
+097C E560            557                     MOV A, 060h
+097E 540F            558                     ANL A, #0Fh
+0980 FF              559                     MOV R7, A
+0981 C3              560                     CLR C
+0982 940A            561                     SUBB A, #0Ah
+0984 5015            562                     JNC PASS_SKIP_UPDATE
+                     563     
+                     564                     ; 数字键
+0986 E539            565                     MOV A, 039h
+0988 2430            566             ADD A, #030h
+098A F8              567             MOV R0, A
+098B EF              568                     MOV A, R7
+098C F6              569             MOV @R0, A
+                     570     
+098D E539            571                     MOV A, 039h
+098F B4FF02          572                     CJNE A, #0FFh, PASS_KEY_DEC
+0992 8002            573                     SJMP PASS_KEY_DONE
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE    10
 
-0AEE 756100          904                     MOV 061h, #00h
-0AF1 8046            905                     SJMP PASS_MODE
-                     906     
-0AF3                 907     PASS_SKIP_UPDATE:
-0AF3 E560            908                     MOV A, 060h
-0AF5 B40B41          909                     CJNE A, #0Bh, PASS_MODE
-                     910                     ; B键回退
-0AF8 0539            911                     INC 039h
-0AFA E539            912                     MOV A, 039h
-0AFC C3              913                     CLR C
-0AFD 9405            914                     SUBB A, #05h
-0AFF 500C            915                     JNC PASS_BACKSPACE_LIMIT ; 恢复为 4
-0B01 E539            916                     MOV A, 039h
-0B03 2430            917                     ADD A, #030h
-0B05 F8              918                     MOV R0, A
-0B06 7610            919                     MOV @R0, #010h
-0B08 756100          920                     MOV 061h, #00h
-0B0B 802C            921                     SJMP PASS_MODE
-                     922     
-0B0D                 923     PASS_BACKSPACE_LIMIT:
-0B0D 753904          924                     MOV 039h, #04h
-0B10 E539            925                     MOV A, 039h
-0B12 2430            926                     ADD A, #030h
-0B14 F8              927                     MOV R0, A
-0B15 7610            928                     MOV @R0, #010h
-0B17 756100          929                     MOV 061h, #00h
-0B1A 801D            930                     SJMP PASS_MODE
-                     931     
-0B1C                 932     PASS_INIT:
-0B1C E570            933                     MOV A, 070h
-0B1E F571            934                     MOV 071h, A      
-0B20 757002          935                     MOV 070h, #PASS_ST
-                     936                     
-                     937                     ; 显示 "P._____" (6位)
-                     938                     ; 35: P. (0x11)
-                     939                     ; 34~30: _
-0B23 753511          940                     MOV 035h, #011h
-0B26 753410          941                     MOV 034h, #010h
-0B29 753310          942                     MOV 033h, #010h
-0B2C 753210          943                     MOV 032h, #010h
-0B2F 753110          944                     MOV 031h, #010h
-0B32 753010          945                     MOV 030h, #010h
-                     946                     
-0B35 753904          947                     MOV 039h, #04h     ; 光标位置 4 (Buffer 34h)
-0B38 22              948                     RET
-                     949     
-0B39                 950     PASS_MODE:
-0B39 E561            951                     MOV A, 061h
-0B3B B40001          952                     CJNE A, #00h, PASS_MODE_CHECK_KEY
-0B3E 22              953                     RET
-                     954     
-0B3F                 955     PASS_MODE_CHECK_KEY:
-0B3F E560            956                     MOV A, 060h
-0B41 B40A13          957                     CJNE A, #0Ah, PASS_MODE_SKIP_CONFIRM
-                     958                     
-0B44 E539            959                     MOV A, 039h
-0B46 B4FF07          960                     CJNE A, #0FFh, PASS_CONFIRM_INCOMPLETE
-0B49 120B5B          961                     LCALL PASS_VERIFY_PASSWORD
-0B4C 756100          962                     MOV 061h, #00h
-0B4F 22              963                     RET
-                     964     
-0B50                 965     PASS_CONFIRM_INCOMPLETE:
-0B50 120B88          966                     LCALL PASS_SHOW_ERROR
-0B53 756100          967                     MOV 061h, #00h
-0B56 22              968                     RET
-                     969     
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    16
+                     574     
+0994                 575     PASS_KEY_DEC:
+0994 1539            576             DEC 039H
+                     577     
+0996                 578     PASS_KEY_DONE:
+0996 756100          579                     MOV 061h, #00h
+0999 8039            580                     SJMP PASS_MODE
+                     581     
+099B                 582     PASS_SKIP_UPDATE:
+099B E560            583                     MOV A, 060h
+099D B40B34          584                     CJNE A, #0Bh, PASS_MODE
+                     585                     ; B键回退
+09A0 0539            586                     INC 039h
+09A2 E539            587                     MOV A, 039h
+09A4 C3              588                     CLR C
+09A5 9405            589                     SUBB A, #05h
+09A7 500C            590                     JNC PASS_BACKSPACE_LIMIT ; 恢复为 4
+09A9 E539            591                     MOV A, 039h
+09AB 2430            592                     ADD A, #030h
+09AD F8              593                     MOV R0, A
+09AE 7610            594                     MOV @R0, #010h
+09B0 756100          595                     MOV 061h, #00h
+09B3 801F            596                     SJMP PASS_MODE
+                     597     
+09B5                 598     PASS_BACKSPACE_LIMIT:
+09B5 753904          599                     MOV 039h, #04h
+09B8 E539            600                     MOV A, 039h
+09BA 2430            601                     ADD A, #030h
+09BC F8              602                     MOV R0, A
+09BD 7610            603                     MOV @R0, #010h
+09BF 756100          604                     MOV 061h, #00h
+09C2 8010            605                     SJMP PASS_MODE
+                     606     
+09C4                 607     PASS_INIT:
+09C4 E570            608                     MOV A, 070h
+09C6 F571            609                     MOV 071h, A      
+09C8 757002          610                     MOV 070h, #PASS_ST
+                     611                     
+                     612                     ; 显示 "P._____" (6位)
+                     613                     ; 35: P. (0x11)
+                     614                     ; 34~30: _
+                     615                     ; PASS 模式显示 (TABLE_PASS_PROMPT id=07)
+09CB 7407            616                     MOV A, #07h
+09CD 120000   F      617                     LCALL LED6_ApplyTable
+09D0 753904          618                     MOV 039h, #04h     ; 光标位置 4 (Buffer 34h)
+09D3 22              619                     RET
+                     620     
+09D4                 621     PASS_MODE:
+09D4 E561            622                     MOV A, 061h
+09D6 B40001          623                     CJNE A, #00h, PASS_MODE_CHECK_KEY
+09D9 22              624                     RET
+                     625     
+09DA                 626     PASS_MODE_CHECK_KEY:
+09DA E560            627                     MOV A, 060h
+09DC B40A13          628                     CJNE A, #0Ah, PASS_MODE_SKIP_CONFIRM
+                     629                     
+09DF E539            630                     MOV A, 039h
+09E1 B4FF07          631                     CJNE A, #0FFh, PASS_CONFIRM_INCOMPLETE
+09E4 1209F6          632                     LCALL PASS_VERIFY_PASSWORD
+09E7 756100          633                     MOV 061h, #00h
+09EA 22              634                     RET
+                     635     
+09EB                 636     PASS_CONFIRM_INCOMPLETE:
+09EB 120A23          637                     LCALL PASS_SHOW_ERROR
+09EE 756100          638                     MOV 061h, #00h
+09F1 22              639                     RET
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE    11
 
-0B57                 970     PASS_MODE_SKIP_CONFIRM:
-0B57 756100          971                     MOV 061h, #00h
-0B5A 22              972                     RET
-                     973     
-0B5B                 974     PASS_VERIFY_PASSWORD:
-                     975                     ; 验证 5 位密码 (Buffer 34..30) vs Table 0..4
-0B5B 7804            976                     MOV R0, #04h    ; Buffer Index
-0B5D 7B00            977                     MOV R3, #00h    ; Table Index
-                     978     
-0B5F                 979     PASS_VERIFY_LOOP:
-0B5F E8              980                     MOV A, R0
-0B60 2430            981                     ADD A, #030h
-0B62 F9              982                     MOV R1, A
-0B63 E7              983                     MOV A, @R1      
-0B64 FA              984                     MOV R2, A       
-                     985                     
-0B65 900047          986                     MOV DPTR, #PASSWORD_TABLE
-0B68 EB              987                     MOV A, R3
-0B69 93              988                     MOVC A, @A+DPTR 
-                     989                     
-0B6A B50202          990                     CJNE A, 02h, PASS_VERIFY_FAIL_CHECK
-0B6D 800B            991                     SJMP PASS_VERIFY_NEXT
-                     992     
-0B6F                 993     PASS_VERIFY_FAIL_CHECK:
-0B6F EA              994                     MOV A, R2
-0B70 F5F0            995                     MOV B, A
-0B72 EB              996                     MOV A, R3
-0B73 900047          997                     MOV DPTR, #PASSWORD_TABLE
-0B76 93              998                     MOVC A, @A+DPTR
-0B77 B5F00A          999                     CJNE A, B, PASS_VERIFY_FAIL
-                    1000     
-0B7A                1001     PASS_VERIFY_NEXT:
-0B7A 18             1002                     DEC R0
-0B7B 0B             1003                     INC R3
-0B7C EB             1004                     MOV A, R3
-0B7D B405DF         1005                     CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
-0B80 120BC6         1006                     LCALL PASS_SHOW_SUCCESS
-0B83 22             1007                     RET
-                    1008     
-0B84                1009     PASS_VERIFY_FAIL:
-0B84 120B88         1010                     LCALL PASS_SHOW_ERROR
-0B87 22             1011                     RET
-                    1012     
-0B88                1013     PASS_SHOW_ERROR:
-0B88 153A           1014                     DEC 03Ah
-0B8A E53A           1015                     MOV A, 03Ah
-0B8C 6024           1016                     JZ PASS_ERROR_LOCKED
-                    1017                     
-                    1018                     ; 显示 FALSEX (6位)
-                    1019                     ; 35: F (0x0F)
-                    1020                     ; 34: A (0x0A)
-                    1021                     ; 33: L (0x13)
-                    1022                     ; 32: S (0x05)
-                    1023                     ; 31: E (0x0E)
-                    1024                     ; 30: Count
-0B8E 75350F         1025                     MOV 035h, #00Fh
-0B91 75340A         1026                     MOV 034h, #00Ah
-0B94 753313         1027                     MOV 033h, #013h
-0B97 753205         1028                     MOV 032h, #005h
-0B9A 75310E         1029                     MOV 031h, #00Eh
-0B9D E53A           1030                     MOV A, 03Ah
-0B9F F530           1031                     MOV 030h, A
-                    1032                     
-0BA1 7B06           1033                     MOV R3, #06h
-0BA3                1034     PASS_ERROR_DELAY_OUTER:
-0BA3 7CF0           1035                     MOV R4, #0F0h
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    17
+                     640     
+09F2                 641     PASS_MODE_SKIP_CONFIRM:
+09F2 756100          642                     MOV 061h, #00h
+09F5 22              643                     RET
+                     644     
+09F6                 645     PASS_VERIFY_PASSWORD:
+                     646                     ; 验证 5 位密码 (Buffer 34..30) vs Table 0..4
+09F6 7804            647                     MOV R0, #04h    ; Buffer Index
+09F8 7B00            648                     MOV R3, #00h    ; Table Index
+                     649     
+09FA                 650     PASS_VERIFY_LOOP:
+09FA E8              651                     MOV A, R0
+09FB 2430            652                     ADD A, #030h
+09FD F9              653                     MOV R1, A
+09FE E7              654                     MOV A, @R1      
+09FF FA              655                     MOV R2, A       
+                     656                     
+0A00 900029          657                     MOV DPTR, #PASSWORD_TABLE
+0A03 EB              658                     MOV A, R3
+0A04 93              659                     MOVC A, @A+DPTR 
+                     660                     
+0A05 B50202          661                     CJNE A, 02h, PASS_VERIFY_FAIL_CHECK
+0A08 800B            662                     SJMP PASS_VERIFY_NEXT
+                     663     
+0A0A                 664     PASS_VERIFY_FAIL_CHECK:
+0A0A EA              665                     MOV A, R2
+0A0B F5F0            666                     MOV B, A
+0A0D EB              667                     MOV A, R3
+0A0E 900029          668                     MOV DPTR, #PASSWORD_TABLE
+0A11 93              669                     MOVC A, @A+DPTR
+0A12 B5F00A          670                     CJNE A, B, PASS_VERIFY_FAIL
+                     671     
+0A15                 672     PASS_VERIFY_NEXT:
+0A15 18              673                     DEC R0
+0A16 0B              674                     INC R3
+0A17 EB              675                     MOV A, R3
+0A18 B405DF          676                     CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
+0A1B 120A4A          677                     LCALL PASS_SHOW_SUCCESS
+0A1E 22              678                     RET
+                     679     
+0A1F                 680     PASS_VERIFY_FAIL:
+0A1F 120A23          681                     LCALL PASS_SHOW_ERROR
+0A22 22              682                     RET
+                     683     
+0A23                 684     PASS_SHOW_ERROR:
+0A23 153A            685                     DEC 03Ah
+0A25 E53A            686                     MOV A, 03Ah
+0A27 601A            687                     JZ PASS_ERROR_LOCKED
+                     688                     
+                     689                     ; 显示 FALSEX (TABLE_PASS_ERROR_FALSEX id=08)，最后一位由剩余次�
+                             ��填充
+0A29 7408            690                     MOV A, #08h
+0A2B 120000   F      691                     LCALL LED6_ApplyTable
+0A2E E53A            692                     MOV A, 03Ah
+0A30 F530            693                     MOV 030h, A
+                     694                     
+0A32 7B06            695                     MOV R3, #06h
+0A34                 696     PASS_ERROR_DELAY_OUTER:
+0A34 7CF0            697                     MOV R4, #0F0h
+0A36                 698     PASS_ERROR_DELAY_LOOP:
+0A36 7DFF            699                     MOV R5, #0FFh
+0A38                 700     PASS_ERROR_DELAY_INNER:
+0A38 00              701                     NOP
+0A39 00              702                     NOP
+0A3A 00              703                     NOP
+0A3B DDFB            704                     DJNZ R5, PASS_ERROR_DELAY_INNER
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE    12
 
-0BA5                1036     PASS_ERROR_DELAY_LOOP:
-0BA5 7DFF           1037                     MOV R5, #0FFh
-0BA7                1038     PASS_ERROR_DELAY_INNER:
-0BA7 00             1039                     NOP
-0BA8 00             1040                     NOP
-0BA9 00             1041                     NOP
-0BAA DDFB           1042                     DJNZ R5, PASS_ERROR_DELAY_INNER
-0BAC DCF7           1043                     DJNZ R4, PASS_ERROR_DELAY_LOOP
-0BAE DBF3           1044                     DJNZ R3, PASS_ERROR_DELAY_OUTER
-                    1045                     
-0BB0 611C           1046                     AJMP PASS_INIT
-                    1047     
-0BB2                1048     PASS_ERROR_LOCKED:
-                    1049                     ; Err011
-0BB2 753001         1050                     MOV 030h, #01h 
-0BB5 753101         1051                     MOV 031h, #01h 
-0BB8 753200         1052                     MOV 032h, #00h 
-0BBB 753312         1053                     MOV 033h, #012h
-0BBE 753412         1054                     MOV 034h, #012h
-0BC1 75350E         1055                     MOV 035h, #00Eh
-0BC4 61B2           1056                     AJMP PASS_ERROR_LOCKED
-                    1057     
-0BC6                1058     PASS_SHOW_SUCCESS:
-0BC6 757001         1059                     MOV 070h, #OPT_ST
-0BC9 22             1060                     RET
-                    1061     
-                    1062     END
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    18
+0A3D DCF7            705                     DJNZ R4, PASS_ERROR_DELAY_LOOP
+0A3F DBF3            706                     DJNZ R3, PASS_ERROR_DELAY_OUTER
+                     707                     
+0A41 21C4            708                     AJMP PASS_INIT
+                     709     
+0A43                 710     PASS_ERROR_LOCKED:
+                     711             ; 锁定显示（TABLE_PASS_ERROR_LOCKED id=09）
+0A43 7409            712             MOV A, #09h
+0A45 120000   F      713             LCALL LED6_ApplyTable
+0A48 4143            714                     AJMP PASS_ERROR_LOCKED
+                     715     
+0A4A                 716     PASS_SHOW_SUCCESS:
+0A4A 757001          717                     MOV 070h, #OPT_ST
+0A4D 22              718                     RET
+                     719     
+                     720     END
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE    13
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -1122,162 +771,106 @@ SYMBOL TABLE LISTING
 
 N A M E                     T Y P E  V A L U E   ATTRIBUTES
 
-ACC. . . . . . . . . . . .  D ADDR   00E0H   A   
 B. . . . . . . . . . . . .  D ADDR   00F0H   A   
-BITMASK_TABLE. . . . . . .  C ADDR   0041H   A   
-CHECK_OPT. . . . . . . . .  C ADDR   07AEH   A   
-CHECK_OPT1 . . . . . . . .  C ADDR   07B6H   A   
-CHECK_OPT2 . . . . . . . .  C ADDR   07BEH   A   
-CHECK_OPT3 . . . . . . . .  C ADDR   07C6H   A   
-CHECK_PASS . . . . . . . .  C ADDR   07CEH   A   
-DPH. . . . . . . . . . . .  D ADDR   0083H   A   
-DPL. . . . . . . . . . . .  D ADDR   0082H   A   
-IE . . . . . . . . . . . .  D ADDR   00A8H   A   
-ISR_EXIT . . . . . . . . .  C ADDR   081AH   A   
-LOOP . . . . . . . . . . .  C ADDR   0749H   A   
+BITMASK_TABLE. . . . . . .  C ADDR   0023H   A   
+CHECK_OPT. . . . . . . . .  C ADDR   0739H   A   
+CHECK_OPT1 . . . . . . . .  C ADDR   0741H   A   
+CHECK_OPT2 . . . . . . . .  C ADDR   0749H   A   
+CHECK_OPT3 . . . . . . . .  C ADDR   0751H   A   
+CHECK_PASS . . . . . . . .  C ADDR   0759H   A   
+KEYINPUT_PROCESS . . . . .  C ADDR   -----       EXT
+LED6_APPLYTABLE. . . . . .  C ADDR   -----       EXT
+LOOP . . . . . . . . . . .  C ADDR   072CH   A   
 MAIN . . . . . . . . . . .  C ADDR   0700H   A   
-MATRIXKEY. . . . . . . . .  C ADDR   004CH   A   
-MK_SK1 . . . . . . . . . .  C ADDR   0058H   A   
-MK_SK10. . . . . . . . . .  C ADDR   008FH   A   
-MK_SK11. . . . . . . . . .  C ADDR   0094H   A   
-MK_SK12. . . . . . . . . .  C ADDR   0099H   A   
-MK_SK13. . . . . . . . . .  C ADDR   00A3H   A   
-MK_SK14. . . . . . . . . .  C ADDR   00A8H   A   
-MK_SK15. . . . . . . . . .  C ADDR   00ADH   A   
-MK_SK16. . . . . . . . . .  C ADDR   00B2H   A   
-MK_SK2 . . . . . . . . . .  C ADDR   005DH   A   
-MK_SK3 . . . . . . . . . .  C ADDR   0062H   A   
-MK_SK4 . . . . . . . . . .  C ADDR   0067H   A   
-MK_SK5 . . . . . . . . . .  C ADDR   0071H   A   
-MK_SK6 . . . . . . . . . .  C ADDR   0076H   A   
-MK_SK7 . . . . . . . . . .  C ADDR   007BH   A   
-MK_SK8 . . . . . . . . . .  C ADDR   0080H   A   
-MK_SK9 . . . . . . . . . .  C ADDR   008AH   A   
-MXK_10_CHECK . . . . . . .  C ADDR   00ECH   A   
-MXK_11_CHECK . . . . . . .  C ADDR   0110H   A   
-MXK_12_CHECK . . . . . . .  C ADDR   0134H   A   
-MXK_13_CHECK . . . . . . .  C ADDR   00D1H   A   
-MXK_14_CHECK . . . . . . .  C ADDR   00F5H   A   
-MXK_15_CHECK . . . . . . .  C ADDR   0119H   A   
-MXK_16_CHECK . . . . . . .  C ADDR   013DH   A   
-MXK_1_CHECK. . . . . . . .  C ADDR   00B6H   A   
-MXK_2_CHECK. . . . . . . .  C ADDR   00DAH   A   
-MXK_3_CHECK. . . . . . . .  C ADDR   00FEH   A   
-MXK_4_CHECK. . . . . . . .  C ADDR   0122H   A   
-MXK_5_CHECK. . . . . . . .  C ADDR   00BFH   A   
-MXK_6_CHECK. . . . . . . .  C ADDR   00E3H   A   
-MXK_7_CHECK. . . . . . . .  C ADDR   0107H   A   
-MXK_8_CHECK. . . . . . . .  C ADDR   012BH   A   
-MXK_9_CHECK. . . . . . . .  C ADDR   00C8H   A   
-MXK_AFTER_STABLE_CHECK . .  C ADDR   0758H   A   
-MXK_CHECK_CONF . . . . . .  C ADDR   075FH   A   
-MXK_CONF_CHANGED . . . . .  C ADDR   0766H   A   
-MXK_CONF_CHECK_RELEASE . .  C ADDR   0777H   A   
-MXK_CONF_PRESSED . . . . .  C ADDR   0795H   A   
-MXK_LONG_PRESS . . . . . .  C ADDR   0785H   A   
-MXK_SAMPLE_CHANGED . . . .  C ADDR   0753H   A   
-MXK_SHORT_PRESS. . . . . .  C ADDR   078DH   A   
-MXK_STATE_CHECK. . . . . .  C ADDR   07A4H   A   
-OPT1_HANDLER . . . . . . .  C ADDR   093DH   A   
-OPT1_INIT. . . . . . . . .  C ADDR   09A7H   A   
-OPT1_INPUT_BACKSPACE_LIMIT  C ADDR   0981H   A   
-OPT1_INPUT_CHECK_CONFIRM .  C ADDR   098FH   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    19
-
-OPT1_INPUT_DEC . . . . . .  C ADDR   0962H   A   
-OPT1_INPUT_DONE. . . . . .  C ADDR   0964H   A   
-OPT1_INPUT_HANDLE_KEY. . .  C ADDR   094AH   A   
-OPT1_INPUT_MODE. . . . . .  C ADDR   0949H   A   
-OPT1_INPUT_SKIP_CONFIRM. .  C ADDR   09A3H   A   
-OPT1_INPUT_SPECIAL_KEY . .  C ADDR   0968H   A   
+MATRIXKEY. . . . . . . . .  C ADDR   -----       EXT
+MXK_STATE_CHECK. . . . . .  C ADDR   072FH   A   
+OPT1_HANDLER . . . . . . .  C ADDR   080CH   A   
+OPT1_INIT. . . . . . . . .  C ADDR   0876H   A   
+OPT1_INPUT_BACKSPACE_LIMIT  C ADDR   0850H   A   
+OPT1_INPUT_CHECK_CONFIRM .  C ADDR   085EH   A   
+OPT1_INPUT_DEC . . . . . .  C ADDR   0831H   A   
+OPT1_INPUT_DONE. . . . . .  C ADDR   0833H   A   
+OPT1_INPUT_HANDLE_KEY. . .  C ADDR   0819H   A   
+OPT1_INPUT_MODE. . . . . .  C ADDR   0818H   A   
+OPT1_INPUT_SKIP_CONFIRM. .  C ADDR   0872H   A   
+OPT1_INPUT_SPECIAL_KEY . .  C ADDR   0837H   A   
 OPT1_ST. . . . . . . . . .  N NUMB   0011H   A   
-OPT2_HANDLER . . . . . . .  C ADDR   09C1H   A   
-OPT2_INIT. . . . . . . . .  C ADDR   0A2BH   A   
-OPT2_INPUT_BACKSPACE_LIMIT  C ADDR   0A05H   A   
-OPT2_INPUT_CHECK_CONFIRM .  C ADDR   0A13H   A   
-OPT2_INPUT_DEC . . . . . .  C ADDR   09E6H   A   
-OPT2_INPUT_DONE. . . . . .  C ADDR   09E8H   A   
-OPT2_INPUT_HANDLE_KEY. . .  C ADDR   09CEH   A   
-OPT2_INPUT_MODE. . . . . .  C ADDR   09CDH   A   
-OPT2_INPUT_SKIP_CONFIRM. .  C ADDR   0A27H   A   
-OPT2_INPUT_SPECIAL_KEY . .  C ADDR   09ECH   A   
+OPT2_HANDLER . . . . . . .  C ADDR   0883H   A   
+OPT2_INIT. . . . . . . . .  C ADDR   08EDH   A   
+OPT2_INPUT_BACKSPACE_LIMIT  C ADDR   08C7H   A   
+OPT2_INPUT_CHECK_CONFIRM .  C ADDR   08D5H   A   
+OPT2_INPUT_DEC . . . . . .  C ADDR   08A8H   A   
+OPT2_INPUT_DONE. . . . . .  C ADDR   08AAH   A   
+OPT2_INPUT_HANDLE_KEY. . .  C ADDR   0890H   A   
+OPT2_INPUT_MODE. . . . . .  C ADDR   088FH   A   
+OPT2_INPUT_SKIP_CONFIRM. .  C ADDR   08E9H   A   
+OPT2_INPUT_SPECIAL_KEY . .  C ADDR   08AEH   A   
 OPT2_ST. . . . . . . . . .  N NUMB   0012H   A   
-OPT3_HANDLER . . . . . . .  C ADDR   0A45H   A   
-OPT3_INIT. . . . . . . . .  C ADDR   0AABH   A   
-OPT3_INPUT_BACKSPACE_LIMIT  C ADDR   0A89H   A   
-OPT3_INPUT_CHECK_CONFIRM .  C ADDR   0A97H   A   
-OPT3_INPUT_DEC . . . . . .  C ADDR   0A6AH   A   
-OPT3_INPUT_DONE. . . . . .  C ADDR   0A6CH   A   
-OPT3_INPUT_HANDLE_KEY. . .  C ADDR   0A52H   A   
-OPT3_INPUT_MODE. . . . . .  C ADDR   0A51H   A   
-OPT3_INPUT_SKIP_CONFIRM. .  C ADDR   0AA7H   A   
-OPT3_INPUT_SPECIAL_KEY . .  C ADDR   0A70H   A   
+OPT3_HANDLER . . . . . . .  C ADDR   08FAH   A   
+OPT3_INIT. . . . . . . . .  C ADDR   0960H   A   
+OPT3_INPUT_BACKSPACE_LIMIT  C ADDR   093EH   A   
+OPT3_INPUT_CHECK_CONFIRM .  C ADDR   094CH   A   
+OPT3_INPUT_DEC . . . . . .  C ADDR   091FH   A   
+OPT3_INPUT_DONE. . . . . .  C ADDR   0921H   A   
+OPT3_INPUT_HANDLE_KEY. . .  C ADDR   0907H   A   
+OPT3_INPUT_MODE. . . . . .  C ADDR   0906H   A   
+OPT3_INPUT_SKIP_CONFIRM. .  C ADDR   095CH   A   
+OPT3_INPUT_SPECIAL_KEY . .  C ADDR   0925H   A   
 OPT3_ST. . . . . . . . . .  N NUMB   0013H   A   
-OPT_CHECK_ALL_INPUTS . . .  C ADDR   0905H   A   
-OPT_CHECK_KEY1 . . . . . .  C ADDR   08D7H   A   
-OPT_CHECK_KEY2 . . . . . .  C ADDR   08E5H   A   
-OPT_CHECK_KEY3 . . . . . .  C ADDR   08F3H   A   
-OPT_ERROR_DELAY_INNER. . .  C ADDR   0930H   A   
-OPT_ERROR_DELAY_LOOP . . .  C ADDR   092EH   A   
-OPT_ERROR_DELAY_OUTER. . .  C ADDR   092CH   A   
-OPT_HANDLER. . . . . . . .  C ADDR   08A7H   A   
-OPT_HANDLE_KEY . . . . . .  C ADDR   08CCH   A   
-OPT_HANDLE_KEY_SKIP. . . .  C ADDR   0901H   A   
-OPT_INIT . . . . . . . . .  C ADDR   08B3H   A   
-OPT_INPUT_INCOMPLETE . . .  C ADDR   0918H   A   
-OPT_MODE . . . . . . . . .  C ADDR   08B9H   A   
+OPT_CHECK_ALL_INPUTS . . .  C ADDR   07E1H   A   
+OPT_CHECK_KEY1 . . . . . .  C ADDR   07B3H   A   
+OPT_CHECK_KEY2 . . . . . .  C ADDR   07C1H   A   
+OPT_CHECK_KEY3 . . . . . .  C ADDR   07CFH   A   
+OPT_ERROR_DELAY_INNER. . .  C ADDR   07FFH   A   
+OPT_ERROR_DELAY_LOOP . . .  C ADDR   07FDH   A   
+OPT_ERROR_DELAY_OUTER. . .  C ADDR   07FBH   A   
+OPT_HANDLER. . . . . . . .  C ADDR   0790H   A   
+OPT_HANDLE_KEY . . . . . .  C ADDR   07A8H   A   
+OPT_HANDLE_KEY_SKIP. . . .  C ADDR   07DDH   A   
+OPT_INIT . . . . . . . . .  C ADDR   079CH   A   
+OPT_INPUT_INCOMPLETE . . .  C ADDR   07F4H   A   
+OPT_MODE . . . . . . . . .  C ADDR   07A2H   A   
 OPT_ST . . . . . . . . . .  N NUMB   0001H   A   
-P0 . . . . . . . . . . . .  D ADDR   0080H   A   
-P1 . . . . . . . . . . . .  D ADDR   0090H   A   
-P2 . . . . . . . . . . . .  D ADDR   00A0H   A   
-PASSWORD_TABLE . . . . . .  C ADDR   0047H   A   
-PASS_BACKSPACE_LIMIT . . .  C ADDR   0B0DH   A   
-PASS_CONFIRM_INCOMPLETE. .  C ADDR   0B50H   A   
-PASS_ERROR_DELAY_INNER . .  C ADDR   0BA7H   A   
-PASS_ERROR_DELAY_LOOP. . .  C ADDR   0BA5H   A   
-PASS_ERROR_DELAY_OUTER . .  C ADDR   0BA3H   A   
-PASS_ERROR_LOCKED. . . . .  C ADDR   0BB2H   A   
-PASS_HANDLER . . . . . . .  C ADDR   0AC8H   A   
-PASS_HANDLE_KEY. . . . . .  C ADDR   0AD4H   A   
-PASS_INIT. . . . . . . . .  C ADDR   0B1CH   A   
-PASS_KEY_DEC . . . . . . .  C ADDR   0AECH   A   
-PASS_KEY_DONE. . . . . . .  C ADDR   0AEEH   A   
-PASS_MODE. . . . . . . . .  C ADDR   0B39H   A   
-PASS_MODE_CHECK_KEY. . . .  C ADDR   0B3FH   A   
-PASS_MODE_SKIP_CONFIRM . .  C ADDR   0B57H   A   
-PASS_SHOW_ERROR. . . . . .  C ADDR   0B88H   A   
-PASS_SHOW_SUCCESS. . . . .  C ADDR   0BC6H   A   
-PASS_SKIP_UPDATE . . . . .  C ADDR   0AF3H   A   
-PASS_ST. . . . . . . . . .  N NUMB   0002H   A   
-PASS_VERIFY_FAIL . . . . .  C ADDR   0B84H   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 22:32:38 PAGE    20
+A51 MACRO ASSEMBLER  MAIN                                                                 12/18/2025 23:56:58 PAGE    14
 
-PASS_VERIFY_FAIL_CHECK . .  C ADDR   0B6FH   A   
-PASS_VERIFY_LOOP . . . . .  C ADDR   0B5FH   A   
-PASS_VERIFY_NEXT . . . . .  C ADDR   0B7AH   A   
-PASS_VERIFY_PASSWORD . . .  C ADDR   0B5BH   A   
-PSW. . . . . . . . . . . .  D ADDR   00D0H   A   
-RUN_HANDLER. . . . . . . .  C ADDR   086DH   A   
-RUN_HANDLE_KEY . . . . . .  C ADDR   0879H   A   
-RUN_HANDLE_OTHER . . . . .  C ADDR   0886H   A   
-RUN_INIT . . . . . . . . .  C ADDR   088BH   A   
-RUN_MODE . . . . . . . . .  C ADDR   0891H   A   
+P0 . . . . . . . . . . . .  D ADDR   0080H   A   
+P2 . . . . . . . . . . . .  D ADDR   00A0H   A   
+PASSWORD_TABLE . . . . . .  C ADDR   0029H   A   
+PASS_BACKSPACE_LIMIT . . .  C ADDR   09B5H   A   
+PASS_CONFIRM_INCOMPLETE. .  C ADDR   09EBH   A   
+PASS_ERROR_DELAY_INNER . .  C ADDR   0A38H   A   
+PASS_ERROR_DELAY_LOOP. . .  C ADDR   0A36H   A   
+PASS_ERROR_DELAY_OUTER . .  C ADDR   0A34H   A   
+PASS_ERROR_LOCKED. . . . .  C ADDR   0A43H   A   
+PASS_HANDLER . . . . . . .  C ADDR   0970H   A   
+PASS_HANDLE_KEY. . . . . .  C ADDR   097CH   A   
+PASS_INIT. . . . . . . . .  C ADDR   09C4H   A   
+PASS_KEY_DEC . . . . . . .  C ADDR   0994H   A   
+PASS_KEY_DONE. . . . . . .  C ADDR   0996H   A   
+PASS_MODE. . . . . . . . .  C ADDR   09D4H   A   
+PASS_MODE_CHECK_KEY. . . .  C ADDR   09DAH   A   
+PASS_MODE_SKIP_CONFIRM . .  C ADDR   09F2H   A   
+PASS_SHOW_ERROR. . . . . .  C ADDR   0A23H   A   
+PASS_SHOW_SUCCESS. . . . .  C ADDR   0A4AH   A   
+PASS_SKIP_UPDATE . . . . .  C ADDR   099BH   A   
+PASS_ST. . . . . . . . . .  N NUMB   0002H   A   
+PASS_VERIFY_FAIL . . . . .  C ADDR   0A1FH   A   
+PASS_VERIFY_FAIL_CHECK . .  C ADDR   0A0AH   A   
+PASS_VERIFY_LOOP . . . . .  C ADDR   09FAH   A   
+PASS_VERIFY_NEXT . . . . .  C ADDR   0A15H   A   
+PASS_VERIFY_PASSWORD . . .  C ADDR   09F6H   A   
+RUN_HANDLER. . . . . . . .  C ADDR   0763H   A   
+RUN_HANDLE_KEY . . . . . .  C ADDR   076FH   A   
+RUN_HANDLE_OTHER . . . . .  C ADDR   077CH   A   
+RUN_INIT . . . . . . . . .  C ADDR   0781H   A   
+RUN_MODE . . . . . . . . .  C ADDR   0787H   A   
 RUN_ST . . . . . . . . . .  N NUMB   0000H   A   
-SEG_TABLE. . . . . . . . .  C ADDR   001EH   A   
-SKIP_PASS. . . . . . . . .  C ADDR   07D6H   A   
-T0_EXIT. . . . . . . . . .  C ADDR   0866H   A   
-T0_INC . . . . . . . . . .  C ADDR   0843H   A   
-T0_KEY_HELD. . . . . . . .  C ADDR   083CH   A   
-T0_LONG_REACHED. . . . . .  C ADDR   084EH   A   
-TH0. . . . . . . . . . . .  D ADDR   008CH   A   
-TH1. . . . . . . . . . . .  D ADDR   008DH   A   
-TIMER0_ISR . . . . . . . .  C ADDR   0829H   A   
-TIMER1_ISR . . . . . . . .  C ADDR   07D8H   A   
-TL0. . . . . . . . . . . .  D ADDR   008AH   A   
-TL1. . . . . . . . . . . .  D ADDR   008BH   A   
-TMOD . . . . . . . . . . .  D ADDR   0089H   A   
-TR0. . . . . . . . . . . .  B ADDR   0088H.4 A   
-TR1. . . . . . . . . . . .  B ADDR   0088H.6 A   
+SEG_TABLE. . . . . . . . .  C ADDR   0000H   A   
+SKIP_PASS. . . . . . . . .  C ADDR   0761H   A   
+TIMER0_INIT. . . . . . . .  C ADDR   -----       EXT
+TIMER0_ISR . . . . . . . .  C ADDR   -----       EXT
+TIMER1_INIT. . . . . . . .  C ADDR   -----       EXT
+TIMER1_ISR . . . . . . . .  C ADDR   -----       EXT
 
 
 REGISTER BANK(S) USED: 0 

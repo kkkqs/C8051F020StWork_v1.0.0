@@ -385,9 +385,38 @@
         </Group>
         <Group>
           <GroupName>driver</GroupName>
+          <Files>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>bsp</GroupName>
+          <Files>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>config</GroupName>

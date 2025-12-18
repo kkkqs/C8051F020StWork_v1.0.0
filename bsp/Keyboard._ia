@@ -1,0 +1,1 @@
+"D:\Git\C8051F020StWork\bsp\Keyboard.asm" SET (SMALL) DEBUG PRINT(.\Listings\..\..\..\Git\C8051F020StWork\bsp\Keyboard.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\Keyboard.obj) EP

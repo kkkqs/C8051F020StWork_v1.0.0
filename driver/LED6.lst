@@ -1,0 +1,308 @@
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 23:53:42 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\driver\LED6.asm SET(SMALL) DEBUG PRINT(.\Listings
+                      \..\..\..\Git\C8051F020StWork\driver\LED6.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     LED6 SEGMENT CODE
+----                   2     rseg LED6
+                       3     
+                       4     ; 包含表定义
+                       5     ;$include (led6_tables.inc)
+                +1     6     ; led6_tables.inc
+                +1     7     ; 说明：每个表由6个字节组成，按顺序表示缓冲区 [035h, 034h, 033h, 032h,
+                              031h, 030h]
+                +1     8     ; 即表的第1字节对应主程序中的 MOV 035h, #xx，最后一字节对应 MOV 030h, 
+                             #xx
+                +1     9     ; 驱动 `LED6` 可以选择按本顺序把字节写入显示缓冲（写入 030h..035h 时
+                             须反向拷贝）。
+                +1    10     
+                +1    11     ; 全局：上电/清空显示（全部为占位 0x10）
+0000 10101010   +1    12     TABLE_DISPLAY_INIT_BLANK:    DB 010h, 010h, 010h, 010h, 010h, 010h
+0004 1010                    
+                +1    13     
+                +1    14     ; RUN 模式初始化（同上）
+0006 10101010   +1    15     TABLE_DISPLAY_RUN_BLANK:     DB 010h, 010h, 010h, 010h, 010h, 010h
+000A 1010                    
+                +1    16     
+                +1    17     ; 主菜单："1.n 2.r 3.C" （035..030）
+000C 151E1612   +1    18     TABLE_MENU_MAIN_OPT:         DB 015h, 01Eh, 016h, 012h, 017h, 00Ch
+0010 170C                    
+                +1    19     
+                +1    20     ; 错误：Err011（输入不完整）
+0012 0E121200   +1    21     TABLE_OPT_ERR011:            DB 00Eh, 012h, 012h, 00h, 01h, 01h
+0016 0101                    
+                +1    22     
+                +1    23     ; OPT1 提示: "no._d_d__"（035..030）
+0018 1E201010   +1    24     TABLE_OPT1_PROMPT:          DB 01Eh, 020h, 010h, 010h, 021h, 021h
+001C 2121                    
+                +1    25     
+                +1    26     ; OPT2 提示: "rL_d_d__"
+001E 12131010   +1    27     TABLE_OPT2_PROMPT:          DB 012h, 013h, 010h, 010h, 010h, 021h
+0022 1021                    
+                +1    28     
+                +1    29     ; OPT3 提示: "C._d____" (含 C.)
+0024 22102121   +1    30     TABLE_OPT3_PROMPT:          DB 022h, 010h, 021h, 021h, 021h, 021h
+0028 2121                    
+                +1    31     
+                +1    32     ; PASS 提示: "P._____'"
+002A 11101010   +1    33     TABLE_PASS_PROMPT:          DB 011h, 010h, 010h, 010h, 010h, 010h
+002E 1010                    
+                +1    34     
+                +1    35     ; 密码错误显示: "FALSEX"（最后一位由程序写入剩余次数，表中保留 0x0
+                             0 作为占位）
+0030 0F0A1305   +1    36     TABLE_PASS_ERROR_FALSEX:     DB 00Fh, 00Ah, 013h, 005h, 00Eh, 00h
+0034 0E00                    
+                +1    37     
+                +1    38     ; 锁定/Err011（与 OPT_ERR011 相同字节序，但保留独立名字以便调用）
+0036 0E121200   +1    39     TABLE_PASS_ERROR_LOCKED:     DB 00Eh, 012h, 012h, 00h, 01h, 01h
+003A 0101                    
+                +1    40     
+                +1    41     ; 说明：动态写入场景（使用游标 03Bh / 039h 的 MOV @R0）不在此文件中�
+                             �表，
+                +1    42     ; 可使用 LED6 的单格写入接口（例如 LED6_WriteAtCursor）来处理。
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 23:53:42 PAGE     2
+
+                      43     
+                      44     ;$include (../user/CONFIG.INC)
+                +1    45     ; 索引从 0 开始，供 main.ASM 中通过偏移访问 (MOVC @A+DPTR)
+                +1    46     ; 00 - '0'  - 0C0h
+                +1    47     ; 01 - '1'  - 0F9h
+                +1    48     ; 02 - '2'  - 0A4h
+                +1    49     ; 03 - '3'  - 0B0h
+                +1    50     ; 04 - '4'  - 099h
+                +1    51     ; 05 - '5'  - 092h
+                +1    52     ; 06 - '6'  - 082h
+                +1    53     ; 07 - '7'  - 0F8h
+                +1    54     ; 08 - '8'  - 080h
+                +1    55     ; 09 - '9'  - 090h
+                +1    56     ; 10 - 'A'  - 088h
+                +1    57     ; 11 - 'b'  - 083h
+                +1    58     ; 12 - 'C'  - 0C6h
+                +1    59     ; 13 - 'd'  - 0A1h
+                +1    60     ; 14 - 'E'  - 086h
+                +1    61     ; 15 - 'F'  - 08Eh
+                +1    62     ; 16 - '_'  - 0F7h
+                +1    63     ; 17 - 'P.' - 00Ch
+                +1    64     ; 18 - 'r'  - 0AFh
+                +1    65     ; 19 - 'L'  - 047h
+                +1    66     ; 20 - '0.' - 040h
+                +1    67     ; 21 - '1.' - 079h
+                +1    68     ; 22 - '2.' - 024h
+                +1    69     ; 23 - '3.' - 030h
+                +1    70     ; 24 - '4.' - 019h
+                +1    71     ; 25 - '5.' - 012h
+                +1    72     ; 26 - '6.' - 002h
+                +1    73     ; 27 - '7.' - 078h
+                +1    74     ; 28 - '8.' - 000h
+                +1    75     ; 29 - '9.' - 010h
+                +1    76     ; 30 - 'n'  - 0ABh
+                +1    77     ; 31 - 'o'  - 0A3h
+                +1    78     ; 32 - 'o.' - 023h
+                +1    79     ; 33 - OFF  - 0FFh    ; 熄灭 (全部段关闭)
+                +1    80     ; 34 - 'C.' - 046h    ; 自定义 C 带小数点
+                +1    81     
+003C            +1    82     SEG_TABLE:
+003C C0F9A4B0   +1    83         DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,0F7h
+                             ,00Ch,0AFh,047h
+0040 999282F8                
+0044 80908883                
+0048 C6A1868E                
+004C F70CAF47                
+0050 40792430   +1    84         DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
+0054 19120278                
+0058 0010                    
+005A ABA323FF   +1    85         DB 0ABh,0A3h,023h,0FFh,046h
+005E 46                      
+                +1    86     
+005F            +1    87     BITMASK_TABLE:
+005F 20100804   +1    88         DB 020h,010h,008h,004h,002h,001h
+0063 0201                    
+                +1    89     
+0065            +1    90     PASSWORD_TABLE:
+0065 01020304   +1    91         DB 01h,02h,03h,04h,05h
+0069 05                      
+                +1    92     
+                +1    93     ; RUN_ST, OPT_ST, PASS_ST, OPT1_ST, OPT2_ST, OPT3_ST
+  0000          +1    94     RUN_ST  EQU     00h
+  0001          +1    95     OPT_ST  EQU     01h
+  0002          +1    96     PASS_ST EQU     02h
+  0011          +1    97     OPT1_ST EQU     11h
+  0012          +1    98     OPT2_ST EQU     12h
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 23:53:42 PAGE     3
+
+  0013          +1    99     OPT3_ST EQU     13h
+                     100     
+                     101     
+                     102     PUBLIC LED6_Refresh
+                     103     PUBLIC LED6_ApplyTable
+                     104     
+                     105     ; LED6_Refresh: 在 ISR 中被调用，快速输出当前缓冲的单位
+006A                 106     LED6_Refresh:
+006A 7580FF          107         MOV P0, #0FFh
+006D 75A000          108         MOV P2, #00h
+                     109     
+0070 E538            110         MOV A, 038h
+0072 FA              111         MOV R2, A
+0073 2430            112         ADD A, #030h
+0075 F8              113         MOV R0, A
+0076 E6              114         MOV A, @R0        ; 读 Buffer
+0077 F5F0            115         MOV B, A
+                     116     
+0079 900000   F      117         MOV DPTR, #SEG_TABLE
+007C E5F0            118         MOV A, B
+007E 93              119         MOVC A, @A+DPTR
+007F F5F0            120         MOV B, A
+                     121     
+0081 900000   F      122         MOV DPTR, #BITMASK_TABLE
+0084 EA              123         MOV A, R2
+0085 93              124         MOVC A, @A+DPTR
+0086 F9              125         MOV R1, A
+                     126     
+0087 E5F0            127         MOV A, B
+0089 F580            128         MOV P0, A
+008B E9              129         MOV A, R1
+008C F5A0            130         MOV P2, A
+                     131     
+008E 0538            132         INC 038h
+0090 E538            133         MOV A, 038h
+0092 B40603          134         CJNE A, #06, LED6_EXIT ; 6 位数码管
+0095 753800          135         MOV 038h, #00h
+                     136     
+0098                 137     LED6_EXIT:
+0098 22              138         RET
+                     139     
+                     140     ; LED6_ApplyTable
+                     141     ; 输入: A = 表 ID
+                     142     ; 映射：
+                     143     ;   00h TABLE_DISPLAY_INIT_BLANK
+                     144     ;   01h TABLE_DISPLAY_RUN_BLANK
+                     145     ;   02h TABLE_MENU_MAIN_OPT
+                     146     ;   03h TABLE_OPT_ERR011
+                     147     ;   04h TABLE_OPT1_PROMPT
+                     148     ;   05h TABLE_OPT2_PROMPT
+                     149     ;   06h TABLE_OPT3_PROMPT
+                     150     ;   07h TABLE_PASS_PROMPT
+                     151     ;   08h TABLE_PASS_ERROR_FALSEX
+                     152     ;   09h TABLE_PASS_ERROR_LOCKED
+0099                 153     LED6_ApplyTable:
+0099 C0E0            154         PUSH ACC
+009B C0F0            155         PUSH B
+009D C082            156         PUSH DPL
+009F C083            157         PUSH DPH
+                     158     
+                     159         ; 选择表地址
+00A1 B40005          160         CJNE A, #00h, LBL_L1
+00A4 900000   F      161         MOV DPTR, #TABLE_DISPLAY_INIT_BLANK
+00A7 804B            162         SJMP LBL_COPY
+00A9 B40105          163     LBL_L1: CJNE A, #01h, LBL_L2
+00AC 900000   F      164         MOV DPTR, #TABLE_DISPLAY_RUN_BLANK
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 23:53:42 PAGE     4
+
+00AF 8043            165         SJMP LBL_COPY
+00B1 B40205          166     LBL_L2: CJNE A, #02h, LBL_L3
+00B4 900000   F      167         MOV DPTR, #TABLE_MENU_MAIN_OPT
+00B7 803B            168         SJMP LBL_COPY
+00B9 B40305          169     LBL_L3: CJNE A, #03h, LBL_L4
+00BC 900000   F      170         MOV DPTR, #TABLE_OPT_ERR011
+00BF 8033            171         SJMP LBL_COPY
+00C1 B40405          172     LBL_L4: CJNE A, #04h, LBL_L5
+00C4 900000   F      173         MOV DPTR, #TABLE_OPT1_PROMPT
+00C7 802B            174         SJMP LBL_COPY
+00C9 B40505          175     LBL_L5: CJNE A, #05h, LBL_L6
+00CC 900000   F      176         MOV DPTR, #TABLE_OPT2_PROMPT
+00CF 8023            177         SJMP LBL_COPY
+00D1 B40605          178     LBL_L6: CJNE A, #06h, LBL_L7
+00D4 900000   F      179         MOV DPTR, #TABLE_OPT3_PROMPT
+00D7 801B            180         SJMP LBL_COPY
+00D9 B40705          181     LBL_L7: CJNE A, #07h, LBL_L8
+00DC 900000   F      182         MOV DPTR, #TABLE_PASS_PROMPT
+00DF 8013            183         SJMP LBL_COPY
+00E1 B40805          184     LBL_L8: CJNE A, #08h, LBL_L9
+00E4 900000   F      185         MOV DPTR, #TABLE_PASS_ERROR_FALSEX
+00E7 800B            186         SJMP LBL_COPY
+00E9 B40905          187     LBL_L9: CJNE A, #09h, LBL_DEFAULT
+00EC 900000   F      188         MOV DPTR, #TABLE_PASS_ERROR_LOCKED
+00EF 8003            189         SJMP LBL_COPY
+00F1                 190     LBL_DEFAULT:
+                     191         ; 未知 ID -> 使用空白表
+00F1 900000   F      192         MOV DPTR, #TABLE_DISPLAY_INIT_BLANK
+                     193     
+00F4                 194     LBL_COPY:
+00F4 7835            195         MOV R0, #035h    ; 指向 035h，逐字写入到 035..030
+00F6 7B00            196         MOV R3, #00h
+00F8                 197     LBL_LOOP:
+00F8 EB              198         MOV A, R3
+00F9 93              199         MOVC A, @A+DPTR
+00FA F6              200         MOV @R0, A
+00FB 18              201         DEC R0
+00FC 0B              202         INC R3
+00FD EB              203         MOV A, R3
+00FE B406F7          204         CJNE A, #06, LBL_LOOP
+                     205     
+0101 D083            206         POP DPH
+0103 D082            207         POP DPL
+0105 D0F0            208         POP B
+0107 D0E0            209         POP ACC
+0109 22              210         RET
+                     211     
+                     212     END
+A51 MACRO ASSEMBLER  LED6                                                                 12/18/2025 23:53:42 PAGE     5
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                   T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . . . . .  D ADDR   00F0H   A   
+BITMASK_TABLE. . . . . .  C ADDR   005FH   R   SEG=LED6
+DPH. . . . . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . . . . .  D ADDR   0082H   A   
+LBL_COPY . . . . . . . .  C ADDR   00F4H   R   SEG=LED6
+LBL_DEFAULT. . . . . . .  C ADDR   00F1H   R   SEG=LED6
+LBL_L1 . . . . . . . . .  C ADDR   00A9H   R   SEG=LED6
+LBL_L2 . . . . . . . . .  C ADDR   00B1H   R   SEG=LED6
+LBL_L3 . . . . . . . . .  C ADDR   00B9H   R   SEG=LED6
+LBL_L4 . . . . . . . . .  C ADDR   00C1H   R   SEG=LED6
+LBL_L5 . . . . . . . . .  C ADDR   00C9H   R   SEG=LED6
+LBL_L6 . . . . . . . . .  C ADDR   00D1H   R   SEG=LED6
+LBL_L7 . . . . . . . . .  C ADDR   00D9H   R   SEG=LED6
+LBL_L8 . . . . . . . . .  C ADDR   00E1H   R   SEG=LED6
+LBL_L9 . . . . . . . . .  C ADDR   00E9H   R   SEG=LED6
+LBL_LOOP . . . . . . . .  C ADDR   00F8H   R   SEG=LED6
+LED6 . . . . . . . . . .  C SEG    010AH       REL=UNIT
+LED6_APPLYTABLE. . . . .  C ADDR   0099H   R   SEG=LED6
+LED6_EXIT. . . . . . . .  C ADDR   0098H   R   SEG=LED6
+LED6_REFRESH . . . . . .  C ADDR   006AH   R   SEG=LED6
+OPT1_ST. . . . . . . . .  N NUMB   0011H   A   
+OPT2_ST. . . . . . . . .  N NUMB   0012H   A   
+OPT3_ST. . . . . . . . .  N NUMB   0013H   A   
+OPT_ST . . . . . . . . .  N NUMB   0001H   A   
+P0 . . . . . . . . . . .  D ADDR   0080H   A   
+P2 . . . . . . . . . . .  D ADDR   00A0H   A   
+PASSWORD_TABLE . . . . .  C ADDR   0065H   R   SEG=LED6
+PASS_ST. . . . . . . . .  N NUMB   0002H   A   
+RUN_ST . . . . . . . . .  N NUMB   0000H   A   
+SEG_TABLE. . . . . . . .  C ADDR   003CH   R   SEG=LED6
+TABLE_DISPLAY_INIT_BLANK  C ADDR   0000H   R   SEG=LED6
+TABLE_DISPLAY_RUN_BLANK.  C ADDR   0006H   R   SEG=LED6
+TABLE_MENU_MAIN_OPT. . .  C ADDR   000CH   R   SEG=LED6
+TABLE_OPT1_PROMPT. . . .  C ADDR   0018H   R   SEG=LED6
+TABLE_OPT2_PROMPT. . . .  C ADDR   001EH   R   SEG=LED6
+TABLE_OPT3_PROMPT. . . .  C ADDR   0024H   R   SEG=LED6
+TABLE_OPT_ERR011 . . . .  C ADDR   0012H   R   SEG=LED6
+TABLE_PASS_ERROR_FALSEX.  C ADDR   0030H   R   SEG=LED6
+TABLE_PASS_ERROR_LOCKED.  C ADDR   0036H   R   SEG=LED6
+TABLE_PASS_PROMPT. . . .  C ADDR   002AH   R   SEG=LED6
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

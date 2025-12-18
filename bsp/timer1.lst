@@ -1,0 +1,83 @@
+A51 MACRO ASSEMBLER  TIMER1                                                               12/18/2025 23:34:02 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj
+ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\bsp\timer1.asm SET(SMALL) DEBUG PRINT(.\Listings\
+                      ..\..\..\Git\C8051F020StWork\bsp\timer1.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     TMR1 SEGMENT CODE
+----                   2     rseg TMR1
+                       3     
+                       4     EXTRN CODE(LED6_Refresh)
+                       5     
+                       6     PUBLIC Timer1_Init
+                       7     PUBLIC TIMER1_ISR
+                       8     
+0000                   9     Timer1_Init:
+                      10         ; 设置 Timer1 及通用定时器配置（与原 main.ASM 的配置一致）
+0000 758911           11         MOV TMOD, #011h
+0003 758DFC           12         MOV TH1, #0FCh
+0006 758B18           13         MOV TL1, #018h
+                      14         ; 配置中断使能（保留原设置）
+0009 75A88A           15         MOV IE,  #08Ah
+000C D28E             16         SETB TR1
+000E 22               17         RET
+                      18     
+000F                  19     TIMER1_ISR:
+000F C0D0             20         PUSH PSW
+0011 C0E0             21         PUSH ACC
+0013 C0F0             22         PUSH B
+0015 C082             23         PUSH DPL
+0017 C083             24         PUSH DPH
+0019 C000             25         PUSH 00h
+001B C001             26         PUSH 01h
+                      27     
+001D 758DFC           28         MOV TH1, #0FCh
+0020 758B18           29         MOV TL1, #018h
+                      30     
+                      31         ; 调用驱动中的显示刷新例程（在 driver/LED6.asm 中实现）
+0023 120000   F       32         LCALL LED6_Refresh
+                      33     
+0026                  34     T1_ISR_EXIT:
+0026 D001             35         POP 01h
+0028 D000             36         POP 00h
+002A D083             37         POP DPH
+002C D082             38         POP DPL
+002E D0F0             39         POP B
+0030 D0E0             40         POP ACC
+0032 D0D0             41         POP PSW
+0034 32               42         RETI
+                      43     
+                      44     END
+A51 MACRO ASSEMBLER  TIMER1                                                               12/18/2025 23:34:02 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+DPH. . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . .  D ADDR   0082H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+LED6_REFRESH . . .  C ADDR   -----       EXT
+PSW. . . . . . . .  D ADDR   00D0H   A   
+T1_ISR_EXIT. . . .  C ADDR   0026H   R   SEG=TMR1
+TH1. . . . . . . .  D ADDR   008DH   A   
+TIMER1_INIT. . . .  C ADDR   0000H   R   SEG=TMR1
+TIMER1_ISR . . . .  C ADDR   000FH   R   SEG=TMR1
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TMR1 . . . . . . .  C SEG    0035H       REL=UNIT
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
