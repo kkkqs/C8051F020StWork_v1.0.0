@@ -93,25 +93,25 @@
       <flags>2</flags>
       <showCmd>3</showCmd>
       <MinPosition>
-        <xPos>-32000</xPos>
-        <yPos>-32000</yPos>
+        <xPos>-1</xPos>
+        <yPos>-1</yPos>
       </MinPosition>
       <MaxPosition>
         <xPos>-1</xPos>
         <yPos>-1</yPos>
       </MaxPosition>
       <NormalPosition>
-        <Top>156</Top>
-        <Left>97</Left>
-        <Right>1483</Right>
-        <Bottom>930</Bottom>
+        <Top>252</Top>
+        <Left>328</Left>
+        <Right>1714</Right>
+        <Bottom>1026</Bottom>
       </NormalPosition>
     </WindowPosition>
     <MDIClientArea>
       <RegID>0</RegID>
       <MDITabState>
-        <Len>526</Len>
-        <Data>01000000040000000100000001000000010000000100000000000000020000000000000001000000010000000000000028000000280000000100000005000000040000000100000024443A5C4769745C4338303531463032305374576F726B5C757365725C6D61696E2E41534D00000000086D61696E2E41534D00000000C5D4F200FFFFFFFF32443A5C4769745C4338303531463032305374576F726B5C5461736B735C436F6E66696775726174696F6E5461736B2E61736D0000000015436F6E66696775726174696F6E5461736B2E61736D00000000FFDC7800FFFFFFFF2C443A5C4769745C4338303531463032305374576F726B5C5461736B735C52756E6E696E675461736B2E61736D000000000F52756E6E696E675461736B2E61736D00000000BECEA100FFFFFFFF21443A5C4769745C4338303531463032305374576F726B5C636F6E6669672E696E63000000000A636F6E6669672E696E6300000000F0A0A100FFFFFFFF25443A5C4769745C4338303531463032305374576F726B5C6273705C74696D6572312E61736D000000000A74696D6572312E61736D00000000BCA8E100FFFFFFFF0100000010000000C5D4F200FFDC7800BECEA100F0A0A100BCA8E1009CC1B600F7B88600D9ADC200A5C2D700B3A6BE00EAD6A300F6FA7D00B5E99D005FC3CF00C1838300CACAD500010000000000000002000000D900000066000000AB060000E7020000</Data>
+        <Len>234</Len>
+        <Data>01000000040000000100000001000000010000000100000000000000020000000000000001000000010000000000000028000000280000000100000001000000000000000100000024443A5C4769745C4338303531463032305374576F726B5C757365725C6D61696E2E61736D00000000086D61696E2E61736D00000000C5D4F200FFFFFFFF0100000010000000C5D4F200FFDC7800BECEA100F0A0A100BCA8E1009CC1B600F7B88600D9ADC200A5C2D700B3A6BE00EAD6A300F6FA7D00B5E99D005FC3CF00C1838300CACAD500010000000000000002000000D900000066000000AB060000E7020000</Data>
       </MDITabState>
     </MDIClientArea>
     <ViewEx>
@@ -1862,49 +1862,13 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>4</ActiveTab>
+      <ActiveTab>0</ActiveTab>
       <Doc>
-        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.ASM</Name>
+        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</Name>
         <ColumnNumber>0</ColumnNumber>
         <TopLine>1</TopLine>
-        <CurrentLine>12</CurrentLine>
-        <Folding>0</Folding>
-        <ContractedFolders></ContractedFolders>
-        <PaneID>0</PaneID>
-      </Doc>
-      <Doc>
-        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.asm</Name>
-        <ColumnNumber>0</ColumnNumber>
-        <TopLine>28</TopLine>
-        <CurrentLine>63</CurrentLine>
-        <Folding>0</Folding>
-        <ContractedFolders></ContractedFolders>
-        <PaneID>0</PaneID>
-      </Doc>
-      <Doc>
-        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.asm</Name>
-        <ColumnNumber>0</ColumnNumber>
-        <TopLine>1</TopLine>
-        <CurrentLine>2</CurrentLine>
-        <Folding>0</Folding>
-        <ContractedFolders></ContractedFolders>
-        <PaneID>0</PaneID>
-      </Doc>
-      <Doc>
-        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\config.inc</Name>
-        <ColumnNumber>1</ColumnNumber>
-        <TopLine>1</TopLine>
-        <CurrentLine>20</CurrentLine>
-        <Folding>0</Folding>
-        <ContractedFolders></ContractedFolders>
-        <PaneID>0</PaneID>
-      </Doc>
-      <Doc>
-        <Name>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</Name>
-        <ColumnNumber>0</ColumnNumber>
-        <TopLine>1</TopLine>
-        <CurrentLine>3</CurrentLine>
-        <Folding>0</Folding>
+        <CurrentLine>1</CurrentLine>
+        <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>

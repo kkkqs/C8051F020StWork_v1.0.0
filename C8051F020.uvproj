@@ -377,66 +377,23 @@
           <GroupName>user</GroupName>
           <Files>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\user\main.ASM</FileName>
+              <FileName>..\..\..\Git\C8051F020StWork\user\main.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.ASM</FilePath>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>driver</GroupName>
-          <Files>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\driver\keyboard.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\keyboard.asm</FilePath>
-            </File>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>bsp</GroupName>
-          <Files>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FilePath>
-            </File>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>config</GroupName>
-          <Files>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\config.inc</FileName>
-              <FileType>5</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\config.inc</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>Task</GroupName>
-          <Files>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.asm</FilePath>
-            </File>
-            <File>
-              <FileName>..\..\..\Git\C8051F020StWork\Tasks\RunningTask.asm</FileName>
-              <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.asm</FilePath>
-            </File>
-          </Files>
         </Group>
       </Groups>
     </Target>

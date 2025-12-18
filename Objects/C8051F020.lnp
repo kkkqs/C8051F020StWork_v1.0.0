@@ -1,9 +1,3 @@
-".\Objects\..\..\..\Git\C8051F020StWork\user\main.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\driver\keyboard.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\timer0.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.obj" 
+".\Objects\..\..\..\Git\C8051F020StWork\user\main.obj" 
 TO ".\Objects\C8051F020" 
 PRINT(".\Listings\C8051F020.m51") RAMSIZE(256) 

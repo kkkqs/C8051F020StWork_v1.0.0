@@ -184,11 +184,11 @@
       <GroupNumber>1</GroupNumber>
       <FileNumber>1</FileNumber>
       <FileType>2</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.ASM</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\user\main.ASM</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\user\main.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -200,30 +200,6 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>2</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\keyboard.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\driver\keyboard.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>3</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -232,30 +208,6 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>4</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer0.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>5</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>1</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -264,18 +216,6 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>4</GroupNumber>
-      <FileNumber>6</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\config.inc</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\config.inc</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -284,30 +224,6 @@
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>7</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>1</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\Tasks\ConfigurationTask.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>5</GroupNumber>
-      <FileNumber>8</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>1</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\Tasks\RunningTask.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
 </ProjectOpt>

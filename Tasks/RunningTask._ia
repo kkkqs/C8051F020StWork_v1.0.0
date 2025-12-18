@@ -1,1 +1,0 @@
-"D:\Git\C8051F020StWork\Tasks\RunningTask.asm" SET (SMALL) DEBUG PRINT(.\Listings\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\Tasks\RunningTask.obj) EP
