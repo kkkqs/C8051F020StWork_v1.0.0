@@ -33,5 +33,10 @@ TABLE_PASS_ERROR_FALSEX:     DB 00Fh, 00Ah, 013h, 005h, 00Eh, 00h
 ; 锁定/Err011（与 OPT_ERR011 相同字节序，但保留独立名字以便调用）
 TABLE_PASS_ERROR_LOCKED:     DB 00Eh, 012h, 012h, 00h, 01h, 01h
 
+
+; 全部熄灭显示（所有段关闭，值由 SEG_TABLE 的 OFF=0FFh 决定）
+TABLE_DISPLAY_ALL_OFF:       DB 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh
+
+
 ; 说明：动态写入场景（使用游标 03Bh / 039h 的 MOV @R0）不在此文件中建表，
 ; 可使用 LED6 的单格写入接口（例如 LED6_WriteAtCursor）来处理。

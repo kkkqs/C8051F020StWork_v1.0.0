@@ -1,0 +1,46 @@
+A51 MACRO ASSEMBLER  DELAY                                                                12/19/2025 20:25:38 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\Delay.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\bsp\Delay.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\L
+                      istings\..\..\..\Git\C8051F020StWork\bsp\Delay.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\Delay.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     DELAY SEGMENT CODE
+----                   2     rseg DELAY
+                       3     PUBLIC DELAY_MS
+                       4     
+                       5     ; R4 = ms
+0000                   6     DELAY_MS:
+0000 C000              7         PUSH 00h 
+0002 C001              8         PUSH 01h
+0004 783A              9     L_D1: MOV R0, #03Ah
+0006 79F8             10     L_D2: MOV R1, #248
+0008 D9FE             11     L_D3: DJNZ R1, L_D3 
+000A D8FA             12     DJNZ R0, L_D2 
+000C DCF6             13     DJNZ R4, L_D1
+000E D001             14         POP 01h 
+0010 D000             15         POP 00h 
+0012 22               16         RET
+                      17     END
+A51 MACRO ASSEMBLER  DELAY                                                                12/19/2025 20:25:38 PAGE     2
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+DELAY. . . . . . .  C SEG    0013H       REL=UNIT
+DELAY_MS . . . . .  C ADDR   0000H   R   SEG=DELAY
+L_D1 . . . . . . .  C ADDR   0004H   R   SEG=DELAY
+L_D2 . . . . . . .  C ADDR   0006H   R   SEG=DELAY
+L_D3 . . . . . . .  C ADDR   0008H   R   SEG=DELAY
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

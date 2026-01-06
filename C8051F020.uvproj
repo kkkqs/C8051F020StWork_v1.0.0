@@ -149,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>10</TargetSelection>
+          <TargetSelection>12</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -331,7 +331,7 @@
             <UseMpl>0</UseMpl>
             <UseStandard>1</UseStandard>
             <UseCase>0</UseCase>
-            <UseMod51>0</UseMod51>
+            <UseMod51>1</UseMod51>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -381,6 +381,11 @@
               <FileType>2</FileType>
               <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</FilePath>
             </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\user\Init_Device.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\Init_Device.asm</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -395,6 +400,11 @@
               <FileName>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FileName>
               <FileType>2</FileType>
               <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</FilePath>
             </File>
           </Files>
         </Group>
@@ -416,6 +426,11 @@
               <FileType>2</FileType>
               <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilePath>
             </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\bsp\Delay.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Delay.asm</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -423,6 +438,23 @@
         </Group>
         <Group>
           <GroupName>Task</GroupName>
+          <Files>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</FilePath>
+            </File>
+            <File>
+              <FileName>..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</FileName>
+              <FileType>2</FileType>
+              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

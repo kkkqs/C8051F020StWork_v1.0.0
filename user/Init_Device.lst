@@ -1,18 +1,19 @@
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     1
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\bsp\timer1.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\
-                      Listings\..\..\..\Git\C8051F020StWork\bsp\timer1.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\user\Init_Device.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\user\Init_Device.asm NOMOD51 SET(SMALL) DEBUG PR
+                      INT(.\Listings\..\..\..\Git\C8051F020StWork\user\Init_Device.lst) OBJECT(.\Objects\..\..\..\Git\C8
+                      051F020StWork\user\Init_Device.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
-                       1     
-                       2     
-                       3     TMR1 SEGMENT CODE
-----                   4     rseg TMR1
-                       5     ;$include (C8051F020.inc) 
+                       1     ;------------------------------------
+                       2     ;-  Generated Initialization File  --
+                       3     ;------------------------------------
+                       4     
+                       5     ;$include (C8051F020.inc)
                 +1     6     ;-----------------------------------------------------------------------------
                 +1     7     ;       
                 +1     8     ;       
@@ -64,9 +65,9 @@ LOC  OBJ            LINE     SOURCE
   00A4          +1    54     P0MDOUT  DATA  0A4H   ; PORT 0 OUTPUT MODE CONFIGURATION
   00A5          +1    55     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    56     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
-  00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     2
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     2
 
+  00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    58     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    59     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
   00AA          +1    60     ADC1CN  DATA  0AAH   ; ADC 1 CONTROL
@@ -132,9 +133,9 @@ LOC  OBJ            LINE     SOURCE
   00EA          +1   120     PCA0CPL0 DATA  0EAH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 0 - LOW BYTE
   00EB          +1   121     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   122     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
-  00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     3
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     3
 
+  00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   124     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   125     RSTSRC   DATA  0EFH   ; RESET SOURCE 
   00F0          +1   126     B        DATA  0F0H   ; B REGISTER
@@ -200,9 +201,9 @@ LOC  OBJ            LINE     SOURCE
   00C2          +1   186     AA       BIT   SMB0CN.2 ; SMBUS 0 ASSERT/ACKNOWLEDGE FLAG
   00C3          +1   187     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   188     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
-  00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     4
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     4
 
+  00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   190     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   191     ;
                 +1   192     ; T2CON C8H
@@ -254,51 +255,94 @@ LOC  OBJ            LINE     SOURCE
   00FE          +1   238     WCOL     BIT   SPI0CN.6 ; SPI 0 WRITE COLLISION FLAG
   00FF          +1   239     SPIF     BIT   SPI0CN.7 ; SPI 0 INTERRUPT FLAG
                      240     
-                     241             
-                     242     EXTRN CODE(LED6_Refresh)
+                     241     
+                     242     public  Init_Device
                      243     
-                     244     PUBLIC Timer1_Init
-                     245     PUBLIC TIMER1_ISR
+                     244     INIT SEGMENT CODE
+----                 245         rseg INIT
                      246     
-0000                 247     Timer1_Init:
-                     248         ; 设置 Timer1 及通用定时器配置（与原 main.ASM 的配置一致）
-0000 758911          249         MOV TMOD, #011h
-0003 758DFC          250         MOV TH1, #0FCh
-0006 758B18          251         MOV TL1, #018h
-                     252         ; 配置中断使能（保留原设置）
-0009 75A88A          253         MOV IE,  #08Ah
-000C D28E            254         SETB TR1
-000E 22              255         RET
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     5
+                     247     ; Peripheral specific initialization functions,
+                     248     ; Called from the Init_Device label
+0000                 249     Reset_Sources_Init:
+0000 75FFDE          250         mov  WDTCN,     #0DEh
+0003 75FFAD          251         mov  WDTCN,     #0ADh
+0006 22              252         ret
+                     253     
+0007                 254     Timer_Init:
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     5
 
-                     256     
-000F                 257     TIMER1_ISR:
-000F C0D0            258         PUSH PSW
-0011 C0E0            259         PUSH ACC
-0013 C0F0            260         PUSH B
-0015 C082            261         PUSH DPL
-0017 C083            262         PUSH DPH
-0019 C000            263         PUSH 00h
-001B C001            264         PUSH 01h
-                     265     
-001D 758DFC          266         MOV TH1, #0FCh
-0020 758B18          267         MOV TL1, #018h
-                     268     
-                     269         ; 调用驱动中的显示刷新例程（在 driver/LED6.asm 中实现）
-0023 120000   F      270         LCALL LED6_Refresh
-                     271     
-0026                 272     T1_ISR_EXIT:
-0026 D001            273         POP 01h
-0028 D000            274         POP 00h
-002A D083            275         POP DPH
-002C D082            276         POP DPL
-002E D0F0            277         POP B
-0030 D0E0            278         POP ACC
-0032 D0D0            279         POP PSW
-0034 32              280         RETI
-                     281     
-                     282     END
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     6
+0007 758911          255         mov  TMOD,      #011h
+000A 22              256         ret
+                     257     
+000B                 258     Oscillator_Init:
+000B 75B207          259         mov  OSCICN,    #007h
+000E 22              260         ret
+                     261     
+                     262     ; Initialization function for device,
+                     263     ; Call Init_Device from your main program
+                     264     
+000F                 265     Port_IO_Init:
+                     266         ; P0.0  -  Unassigned,  Push-Pull,  Digital
+                     267         ; P0.1  -  Unassigned,  Push-Pull,  Digital
+                     268         ; P0.2  -  Unassigned,  Push-Pull,  Digital
+                     269         ; P0.3  -  Unassigned,  Push-Pull,  Digital
+                     270         ; P0.4  -  Unassigned,  Push-Pull,  Digital
+                     271         ; P0.5  -  Unassigned,  Push-Pull,  Digital
+                     272         ; P0.6  -  Unassigned,  Push-Pull,  Digital
+                     273         ; P0.7  -  Unassigned,  Push-Pull,  Digital
+                     274     
+                     275         ; P1.0  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     276         ; P1.1  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     277         ; P1.2  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     278         ; P1.3  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     279         ; P1.4  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     280         ; P1.5  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     281         ; P1.6  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     282         ; P1.7  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     283     
+                     284         ; P2.0  -  Unassigned,  Push-Pull,  Digital
+                     285         ; P2.1  -  Unassigned,  Push-Pull,  Digital
+                     286         ; P2.2  -  Unassigned,  Push-Pull,  Digital
+                     287         ; P2.3  -  Unassigned,  Push-Pull,  Digital
+                     288         ; P2.4  -  Unassigned,  Push-Pull,  Digital
+                     289         ; P2.5  -  Unassigned,  Push-Pull,  Digital
+                     290         ; P2.6  -  Unassigned,  Push-Pull,  Digital
+                     291         ; P2.7  -  Unassigned,  Push-Pull,  Digital
+                     292     
+                     293         ; P3.0  -  Unassigned,  Push-Pull,  Digital
+                     294         ; P3.1  -  Unassigned,  Push-Pull,  Digital
+                     295         ; P3.2  -  Unassigned,  Push-Pull,  Digital
+                     296         ; P3.3  -  Unassigned,  Push-Pull,  Digital
+                     297         ; P3.4  -  Unassigned,  Push-Pull,  Digital
+                     298         ; P3.5  -  Unassigned,  Push-Pull,  Digital
+                     299         ; P3.6  -  Unassigned,  Push-Pull,  Digital
+                     300         ; P3.7  -  Unassigned,  Push-Pull,  Digital
+                     301     
+000F 75A4FF          302         mov  P0MDOUT,   #0FFh
+0012 75A50F          303         mov  P1MDOUT,   #00Fh  ; P1.3-P1.0 Push-Pull (Column), P1.7-P1.4 Open-Drain (Row Input)
+0015 75A6FF          304         mov  P2MDOUT,   #0FFh
+0018 75A7FF          305         mov  P3MDOUT,   #0FFh
+001B 75B5FF          306             mov  P74OUT,    #0FFh
+001E 75E340          307         mov  XBR2,      #040h
+                     308         
+                     309         ; Configure External Memory Interface to release P2/P3 for GPIO
+0021 75A300          310         mov  EMI0CF,    #000h  ; Disable EMIF, P2/P3 available as GPIO
+0024 22              311         ret
+                     312     
+                     313     ; Initialization function for device,
+                     314     ; Call Init_Device from your main program
+                     315     
+0025                 316     Init_Device:
+0025 120000   F      317         lcall Reset_Sources_Init
+0028 120000   F      318             lcall Port_IO_Init
+002B 120000   F      319         lcall Timer_Init
+002E 120000   F      320         lcall Oscillator_Init
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     6
+
+0031 22              321         ret
+                     322     
+                     323     end
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -366,7 +410,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     7
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     8
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -379,13 +423,15 @@ FLSCL. . . . . . .  D ADDR   00B6H   A
 IE . . . . . . . .  D ADDR   00A8H   A   
 IE0. . . . . . . .  B ADDR   0088H.1 A   
 IE1. . . . . . . .  B ADDR   0088H.3 A   
+INIT . . . . . . .  C SEG    0032H       REL=UNIT
+INIT_DEVICE. . . .  C ADDR   0025H   R   SEG=INIT
 IP . . . . . . . .  D ADDR   00B8H   A   
 IT0. . . . . . . .  B ADDR   0088H.0 A   
 IT1. . . . . . . .  B ADDR   0088H.2 A   
-LED6_REFRESH . . .  C ADDR   -----       EXT
 MODF . . . . . . .  B ADDR   00F8H.5 A   
 MSTEN. . . . . . .  B ADDR   00F8H.1 A   
 OSCICN . . . . . .  D ADDR   00B2H   A   
+OSCILLATOR_INIT. .  C ADDR   000BH   R   SEG=INIT
 OSCXCN . . . . . .  D ADDR   00B1H   A   
 OV . . . . . . . .  B ADDR   00D0H.2 A   
 P. . . . . . . . .  B ADDR   00D0H.0 A   
@@ -424,6 +470,7 @@ PCA0H. . . . . . .  D ADDR   00F9H   A
 PCA0L. . . . . . .  D ADDR   00E9H   A   
 PCA0MD . . . . . .  D ADDR   00D9H   A   
 PCON . . . . . . .  D ADDR   0087H   A   
+PORT_IO_INIT . . .  C ADDR   000FH   R   SEG=INIT
 PS . . . . . . . .  B ADDR   00B8H.4 A   
 PSCTL. . . . . . .  D ADDR   008FH   A   
 PSW. . . . . . . .  D ADDR   00D0H   A   
@@ -431,17 +478,18 @@ PT0. . . . . . . .  B ADDR   00B8H.1 A
 PT1. . . . . . . .  B ADDR   00B8H.3 A   
 PT2. . . . . . . .  B ADDR   00B8H.5 A   
 PX0. . . . . . . .  B ADDR   00B8H.0 A   
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE     9
+
 PX1. . . . . . . .  B ADDR   00B8H.2 A   
 RB8. . . . . . . .  B ADDR   0098H.2 A   
 RCAP2H . . . . . .  D ADDR   00CBH   A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     8
-
 RCAP2L . . . . . .  D ADDR   00CAH   A   
 RCAP4H . . . . . .  D ADDR   00E5H   A   
 RCAP4L . . . . . .  D ADDR   00E4H   A   
 RCLK . . . . . . .  B ADDR   00C8H.5 A   
 REF0CN . . . . . .  D ADDR   00D1H   A   
 REN. . . . . . . .  B ADDR   0098H.4 A   
+RESET_SOURCES_INIT  C ADDR   0000H   R   SEG=INIT
 RI . . . . . . . .  B ADDR   0098H.0 A   
 RS0. . . . . . . .  B ADDR   00D0H.3 A   
 RS1. . . . . . . .  B ADDR   00D0H.4 A   
@@ -476,7 +524,6 @@ SPIEN. . . . . . .  B ADDR   00F8H.0 A
 SPIF . . . . . . .  B ADDR   00F8H.7 A   
 STA. . . . . . . .  B ADDR   00C0H.5 A   
 STO. . . . . . . .  B ADDR   00C0H.4 A   
-T1_ISR_EXIT. . . .  C ADDR   0026H   R   SEG=TMR1
 T2CON. . . . . . .  D ADDR   00C8H   A   
 T4CON. . . . . . .  D ADDR   00C9H   A   
 TB8. . . . . . . .  B ADDR   0098H.3 A   
@@ -490,20 +537,18 @@ TH1. . . . . . . .  D ADDR   008DH   A
 TH2. . . . . . . .  D ADDR   00CDH   A   
 TH4. . . . . . . .  D ADDR   00F5H   A   
 TI . . . . . . . .  B ADDR   0098H.1 A   
-TIMER1_INIT. . . .  C ADDR   0000H   R   SEG=TMR1
-TIMER1_ISR . . . .  C ADDR   000FH   R   SEG=TMR1
+TIMER_INIT . . . .  C ADDR   0007H   R   SEG=INIT
 TL0. . . . . . . .  D ADDR   008AH   A   
 TL1. . . . . . . .  D ADDR   008BH   A   
 TL2. . . . . . . .  D ADDR   00CCH   A   
 TL4. . . . . . . .  D ADDR   00F4H   A   
 TMOD . . . . . . .  D ADDR   0089H   A   
-TMR1 . . . . . . .  C SEG    0035H       REL=UNIT
 TMR3CN . . . . . .  D ADDR   0091H   A   
 TMR3H. . . . . . .  D ADDR   0095H   A   
 TMR3L. . . . . . .  D ADDR   0094H   A   
-TMR3RLH. . . . . .  D ADDR   0093H   A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     9
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          12/19/2025 20:25:37 PAGE    10
 
+TMR3RLH. . . . . .  D ADDR   0093H   A   
 TMR3RLL. . . . . .  D ADDR   0092H   A   
 TR0. . . . . . . .  B ADDR   0088H.4 A   
 TR1. . . . . . . .  B ADDR   0088H.6 A   

@@ -1,31 +1,41 @@
 $INCLUDE (config.inc)
-
+$include (C8051F020.inc)
 EXTRN CODE(MatrixKey)
 EXTRN CODE(Timer1_Init)
 EXTRN CODE(Timer0_Init)
 EXTRN CODE(TIMER0_ISR)
 EXTRN CODE(TIMER1_ISR)
 EXTRN CODE(LED6_ApplyTable)
-	
-	
-ORG 0000h
+EXTRN CODE(LED6_Refresh)
+EXTRN CODE(DELAY_MS)
+EXTRN CODE(InputTask_03B)
+EXTRN CODE(InputTask_039)
+EXTRN CODE(RunningTask_Init)
+EXTRN CODE(RunningTask_Handler)
+EXTRN CODE(ConfigurationTask_Init)
+EXTRN CODE(ConfigurationTask_Handler)
+EXTRN CODE(Init_Device)
+; DebugTask is implemented inline in this file
+	ORG 0000h
 	LJMP MAIN
 
-ORG 000Bh
+	ORG 000Bh
 	LJMP TIMER0_ISR
 
-ORG 001Bh
+	ORG 001Bh
 	LJMP TIMER1_ISR
 
-	ORG 0700h
+	ORG 0200h
 MAIN:
+	LCALL Init_Device
+	
 	MOV P0, #0FFh
 	MOV P2, #00h
-	
+
 	; 初始化显示缓冲 (6位) => 使用 LED6 表 00 (DISPLAY_INIT_BLANK)
 	MOV A, #00h
 	LCALL LED6_ApplyTable
-	
+
 	MOV 038h, #00h
 
 	MOV 070h, #00h
@@ -40,6 +50,39 @@ MAIN:
 
 	LCALL Timer1_Init
 	LCALL Timer0_Init
+	SETB EA                ; Enable Global Interrupts
+	; Setup debug flag (default 0). If set to 1, jump to debug task.
+;	MOV DEBUG_ON, #00h
+;	MOV A, DEBUG_ON
+;	CJNE A, #01h, SKIP_DEBUG
+;	LJMP DebugTask_Handler
+SKIP_DEBUG:
+	LCALL RunningTask_Init
+	LCALL ConfigurationTask_Init
+
+; -----------------------------
+; Inline debug task
+; -----------------------------
+;DebugTask_Handler:
+;	; Debug: disable Timer1 and drive LED6 display here
+;	CLR TR1
+;	CLR ET1
+;	CLR TR0
+;	CLR ET0
+
+;	; Fill display buffer (028h..02Dh) with 1..6
+;	MOV 028h, #01h
+;	MOV 029h, #02h
+;	MOV 02Ah, #03h
+;	MOV 02Bh, #04h
+;	MOV 02Ch, #05h
+;	MOV 02Dh, #06h
+
+;DebugLoop:
+;	LCALL LED6_Refresh
+;	MOV R4, #05
+;	LCALL DELAY_MS
+;	SJMP DebugLoop
 
 LOOP:
 	EXTRN CODE(KeyInput_Process)
@@ -47,618 +90,46 @@ LOOP:
 
 MXK_STATE_CHECK:
 	MOV A, 070h
-	CJNE A,#RUN_ST, CHECK_OPT
-	LCALL RUN_HANDLER
+	CJNE A,#RUN_ST, CHECK_ELEV
+	LCALL RunningTask_Handler
+	SJMP LOOP
+CHECK_ELEV:
+	CJNE A,#ELEV_ST, CHECK_ELEV2
+	LCALL RunningTask_Handler
+	SJMP LOOP
+CHECK_ELEV2:
+	CJNE A,#ELEV_RUN, CHECK_ELEV3
+	LCALL RunningTask_Handler
+	SJMP LOOP
+CHECK_ELEV3:
+	CJNE A,#ELEV_ARRIVED, CHECK_ELEV4
+	LCALL RunningTask_Handler
+	SJMP LOOP
+CHECK_ELEV4:
+	CJNE A,#ELEV_CLOSE, CHECK_OPT
+	LCALL RunningTask_Handler
 	SJMP LOOP
 CHECK_OPT:
 	CJNE A,#OPT_ST, CHECK_OPT1
-	LCALL OPT_HANDLER
+	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 CHECK_OPT1:
 	CJNE A,#OPT1_ST, CHECK_OPT2
-	LCALL OPT1_HANDLER
+	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 CHECK_OPT2:
 	CJNE A,#OPT2_ST, CHECK_OPT3
-	LCALL OPT2_HANDLER
+	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 CHECK_OPT3:
 	CJNE A,#OPT3_ST, CHECK_PASS
-	LCALL OPT3_HANDLER
+	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 CHECK_PASS:
 	CJNE A,#PASS_ST, SKIP_PASS
-	LCALL PASS_HANDLER
+	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 SKIP_PASS:
 	AJMP LOOP
-
-
-;-----------------------------
-; 状态机
-;-----------------------------
-
-RUN_HANDLER:
-		MOV A, 071h
-		CJNE A, 070h, RUN_INIT    
-
-		MOV A, 061h
-		CJNE A, #00h, RUN_HANDLE_KEY
-		SJMP RUN_MODE
-
-RUN_HANDLE_KEY:
-		MOV A, 060h
-		CJNE A, #08Ah, RUN_HANDLE_OTHER
-		MOV 070h, #PASS_ST
-		MOV 061h, #00h
-		SJMP RUN_MODE
-
-RUN_HANDLE_OTHER:
-		MOV 061h, #00h
-		SJMP RUN_MODE
-
-RUN_INIT:
-		MOV A, 070h
-		MOV 071h, A
-		SJMP RUN_MODE
-
-RUN_MODE:
-	; RUN 模式显示空白 (TABLE_DISPLAY_RUN_BLANK id=01)
-	MOV A, #01h
-	LCALL LED6_ApplyTable
-		MOV 039h, #04h ; 密码光标初始化位置 (for later use)
-		RET
-
-OPT_HANDLER:
-        MOV A, 071h
-        CJNE A, 070h, OPT_INIT
-        MOV A, 061h
-        CJNE A, #00h, OPT_HANDLE_KEY
-        AJMP OPT_MODE
-
-OPT_INIT:
-        MOV A, 070h
-        MOV 071h, A
-        SJMP OPT_MODE
-
-OPT_MODE:
-        ; 显示菜单 (6位): 1.n 2.r 3.C
-        ; 35: 1. (0x15)
-        ; 34: n  (0x1E)
-        ; 33: 2. (0x16)
-        ; 32: r  (0x12)
-        ; 31: 3. (0x17)
-        ; 30: C  (0x0C)
-		; 主菜单显示 (TABLE_MENU_MAIN_OPT id=02)
-		MOV A, #02h
-		LCALL LED6_ApplyTable
-        RET
-
-OPT_HANDLE_KEY:
-		MOV A, 060h
-		ANL A, #0Fh
-		CJNE A, #0Ah, OPT_CHECK_KEY1
-		LCALL OPT_CHECK_ALL_INPUTS
-		RET
-
-OPT_CHECK_KEY1:
-		MOV A, 060h
-		ANL A, #0Fh
-		CJNE A, #01h, OPT_CHECK_KEY2
-		MOV 070h, #OPT1_ST
-		MOV 061h, #00h
-		RET
-
-OPT_CHECK_KEY2:
-		MOV A, 060h
-		ANL A, #0Fh
-		CJNE A, #02h, OPT_CHECK_KEY3
-		MOV 070h, #OPT2_ST
-		MOV 061h, #00h
-		RET
-
-OPT_CHECK_KEY3:
-		MOV A, 060h
-		ANL A, #0Fh
-		CJNE A, #03h, OPT_HANDLE_KEY_SKIP
-		MOV 070h, #OPT3_ST
-		MOV 061h, #00h
-		RET
-
-OPT_HANDLE_KEY_SKIP:
-		MOV 061h, #00h
-		RET
-
-OPT_CHECK_ALL_INPUTS:
-		MOV A, 050h
-		JZ OPT_INPUT_INCOMPLETE
-		MOV A, 052h
-		JZ OPT_INPUT_INCOMPLETE
-		MOV A, 054h
-		JZ OPT_INPUT_INCOMPLETE
-		
-		MOV 070h, #RUN_ST
-		MOV 061h, #00h
-		RET
-
-OPT_INPUT_INCOMPLETE:
-	; 显示 Err011 (TABLE_OPT_ERR011 id=03)
-	MOV A, #03h
-	LCALL LED6_ApplyTable
-		
-		MOV R3, #04h
-OPT_ERROR_DELAY_OUTER:
-		MOV R4, #0F0h
-OPT_ERROR_DELAY_LOOP:
-		MOV R5, #0FFh
-OPT_ERROR_DELAY_INNER:
-		NOP
-		NOP
-		NOP
-		DJNZ R5, OPT_ERROR_DELAY_INNER
-		DJNZ R4, OPT_ERROR_DELAY_LOOP
-		DJNZ R3, OPT_ERROR_DELAY_OUTER
-		
-		MOV 061h, #00h
-		RET
-
-
-
-OPT1_HANDLER:
-		MOV A, 071h
-		CJNE A, 070h, OPT1_INIT
-		MOV A, 061h
-		CJNE A, #00h, OPT1_INPUT_HANDLE_KEY
-		SJMP OPT1_INPUT_MODE
-
-OPT1_INPUT_MODE:
-		RET
-
-OPT1_INPUT_HANDLE_KEY:
-		MOV A, 060h
-		ANL A, #0Fh
-		MOV R7, A
-		CLR C
-		SUBB A, #0Ah
-		JNC OPT1_INPUT_SPECIAL_KEY
-
-		; 数字键
-		MOV A, 03Bh
-        ADD A, #030h
-        MOV R0, A
-		MOV A, R7
-        MOV @R0, A
-
-		; 限制输入两位 (33->32)
-		MOV A, 03Bh
-		CJNE A, #02h, OPT1_INPUT_DEC ; 最低位为 32, 0x02
-		SJMP OPT1_INPUT_DONE
-
-OPT1_INPUT_DEC:
-        DEC 03Bh
-
-OPT1_INPUT_DONE:
-		MOV 061h, #00h
-		RET
-
-OPT1_INPUT_SPECIAL_KEY:
-		MOV A, 060h
-		CJNE A, #0Bh, OPT1_INPUT_CHECK_CONFIRM
-		; B键回退
-		
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
- 		INC 03Bh
-		; 限制不超过 3 (0x03)
-		MOV A, 03Bh
-		CLR C
-		SUBB A, #04h
-		JNC OPT1_INPUT_BACKSPACE_LIMIT
-		MOV 061h, #00h
-		RET
-
-OPT1_INPUT_BACKSPACE_LIMIT:
-		MOV 03Bh, #03h
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
-		MOV 061h, #00h
-		RET
-
-OPT1_INPUT_CHECK_CONFIRM:
-		MOV A, 060h
-		CJNE A, #0Ah, OPT1_INPUT_SKIP_CONFIRM
-		; 确认: 取Buffer 33, 32
-		MOV A, 033h
-		MOV 050h, A
-		MOV A, 032h
-		MOV 051h, A
-		MOV 061h, #00h
-		MOV 070h, #OPT_ST
-		RET
-
-OPT1_INPUT_SKIP_CONFIRM:
-		MOV 061h, #00h
-		RET
-
-OPT1_INIT:
-		MOV A, 070h
-		MOV 071h, A
-		; 显示 "no._d_d__" (适应6位)
-		; 35: n (0x1E)
-		; 34: o.(0x20)
-		; 33: _ (input 1)
-		; 32: _ (input 2)
-		; 31: _
-		; 30: _
-		; OPT1 提示 (TABLE_OPT1_PROMPT id=04)
-		MOV A, #04h
-		LCALL LED6_ApplyTable
-		MOV 03Bh, #03h    ; 光标从 33h 开始 (Buffer Index 3)
-		RET
-
-
-OPT2_HANDLER:
-		MOV A, 071h
-		CJNE A, 070h, OPT2_INIT
-		MOV A, 061h
-		CJNE A, #00h, OPT2_INPUT_HANDLE_KEY
-		SJMP OPT2_INPUT_MODE
-
-OPT2_INPUT_MODE:
-		RET
-
-OPT2_INPUT_HANDLE_KEY:
-		MOV A, 060h
-		ANL A, #0Fh
-		MOV R7, A
-		CLR C
-		SUBB A, #0Ah
-		JNC OPT2_INPUT_SPECIAL_KEY
-
-		MOV A, 03Bh
-        ADD A, #030h
-        MOV R0, A
-		MOV A, R7
-        MOV @R0, A
-
-		MOV A, 03Bh
-		CJNE A, #01h, OPT2_INPUT_DEC
-		SJMP OPT2_INPUT_DONE
-
-OPT2_INPUT_DEC:
-        DEC 03Bh
-
-OPT2_INPUT_DONE:
-		MOV 061h, #00h
-		RET
-
-OPT2_INPUT_SPECIAL_KEY:
-		MOV A, 060h
-		CJNE A, #0Bh, OPT2_INPUT_CHECK_CONFIRM
-		
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
- 		INC 03Bh
-		MOV A, 03Bh
-		CLR C
-		SUBB A, #04h
-		JNC OPT2_INPUT_BACKSPACE_LIMIT
-		MOV 061h, #00h
-		RET
-
-OPT2_INPUT_BACKSPACE_LIMIT:
-		MOV 03Bh, #03h
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
-		MOV 061h, #00h
-		RET
-
-OPT2_INPUT_CHECK_CONFIRM:
-		MOV A, 060h
-		CJNE A, #0Ah, OPT2_INPUT_SKIP_CONFIRM
-		
-		MOV A, 033h
-		MOV 052h, A
-		MOV A, 032h
-		MOV 053h, A
-		MOV 061h, #00h
-		MOV 070h, #OPT_ST
-		RET
-
-OPT2_INPUT_SKIP_CONFIRM:
-		MOV 061h, #00h
-		RET
-
-OPT2_INIT:
-		MOV A, 070h
-		MOV 071h, A
-		; 显示 "rL_d_d__"
-		; 35: r (0x12)
-		; 34: L (0x13)
-		; 33: _
-		; 32: _
-		; 31: _
-		; 30: _
-		; OPT2 提示 (TABLE_OPT2_PROMPT id=05)
-		MOV A, #05h
-		LCALL LED6_ApplyTable
-		MOV 03Bh, #03h    ; 光标从 33h 开始
-		RET
-
-
-OPT3_HANDLER:
-		MOV A, 071h
-		CJNE A, 070h, OPT3_INIT
-		MOV A, 061h
-		CJNE A, #00h, OPT3_INPUT_HANDLE_KEY
-		SJMP OPT3_INPUT_MODE
-
-OPT3_INPUT_MODE:
-		RET
-
-OPT3_INPUT_HANDLE_KEY:
-		MOV A, 060h
-		ANL A, #0Fh
-		MOV R7, A
-		CLR C
-		SUBB A, #0Ah
-		JNC OPT3_INPUT_SPECIAL_KEY
-
-		MOV A, 03Bh
-        ADD A, #030h
-        MOV R0, A
-		MOV A, R7
-        MOV @R0, A
-
-		MOV A, 03Bh
-		CJNE A, #04h, OPT3_INPUT_DEC ; 最低位 34 (0x04)
-		SJMP OPT3_INPUT_DONE
-
-OPT3_INPUT_DEC:
-        DEC 03Bh
-
-OPT3_INPUT_DONE:
-		MOV 061h, #00h
-		RET
-
-OPT3_INPUT_SPECIAL_KEY:
-		MOV A, 060h
-		CJNE A, #0Bh, OPT3_INPUT_CHECK_CONFIRM
-		
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
- 		INC 03Bh
-		MOV A, 03Bh
-		CLR C
-		SUBB A, #05h
-		JNC OPT3_INPUT_BACKSPACE_LIMIT
-		MOV 061h, #00h
-		RET
-
-OPT3_INPUT_BACKSPACE_LIMIT:
-		MOV 03Bh, #04h
-		MOV A, 03Bh
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
-		MOV 061h, #00h
-		RET
-
-OPT3_INPUT_CHECK_CONFIRM:
-		MOV A, 060h
-		CJNE A, #0Ah, OPT3_INPUT_SKIP_CONFIRM
-		
-		MOV A, 034h
-		MOV 054h, A
-		MOV 061h, #00h
-		MOV 070h, #OPT_ST
-		RET
-
-OPT3_INPUT_SKIP_CONFIRM:
-		MOV 061h, #00h
-		RET
-
-OPT3_INIT:
-		MOV A, 070h
-		MOV 071h, A
-		; 显示 "C._d____"
-		; 35: C. (0x22 -> SEG_TABLE[0x16] if remapped? No, user defined code)
-		; SEG_TABLE 增加定义 0x46 (index 23) 为 'C.'
-		; 35: C.
-		; 34: _
-		MOV 035h, #017h   ; 0x17 index is C. (Wait: index 17 in table is 0x0C 'P.'?? No)
-		; Let's check SEG_TABLE:
-		; 0..9 (0-9)
-		; A (10), b (11), C (12), d (13), E (14), F (15), _ (16), P. (17), r (18), L (19)
-		; 0. (20), 1. (21) ... 9. (29)
-		; n (30), o (31), o. (32), OFF (33), C. (34)
-		
-		; OPT3 提示 (TABLE_OPT3_PROMPT id=06)
-		MOV A, #06h
-		LCALL LED6_ApplyTable
-		MOV 03Bh, #04h    ; 光标从 34h 开始
-		RET
-
-
-PASS_HANDLER:
-		MOV A, 071h
-		CJNE A, 070h, PASS_INIT
-		MOV A, 061h
-		CJNE A, #00h, PASS_HANDLE_KEY
-		SJMP PASS_MODE
-
-PASS_HANDLE_KEY:
-		MOV A, 060h
-		ANL A, #0Fh
-		MOV R7, A
-		CLR C
-		SUBB A, #0Ah
-		JNC PASS_SKIP_UPDATE
-
-		; 数字键
-		MOV A, 039h
-        ADD A, #030h
-        MOV R0, A
-		MOV A, R7
-        MOV @R0, A
-
-		MOV A, 039h
-		CJNE A, #0FFh, PASS_KEY_DEC
-		SJMP PASS_KEY_DONE
-
-PASS_KEY_DEC:
-        DEC 039H
-
-PASS_KEY_DONE:
-		MOV 061h, #00h
-		SJMP PASS_MODE
-
-PASS_SKIP_UPDATE:
-		MOV A, 060h
-		CJNE A, #0Bh, PASS_MODE
-		; B键回退
-		INC 039h
-		MOV A, 039h
-		CLR C
-		SUBB A, #05h
-		JNC PASS_BACKSPACE_LIMIT ; 恢复为 4
-		MOV A, 039h
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
-		MOV 061h, #00h
-		SJMP PASS_MODE
-
-PASS_BACKSPACE_LIMIT:
-		MOV 039h, #04h
-		MOV A, 039h
-		ADD A, #030h
-		MOV R0, A
-		MOV @R0, #010h
-		MOV 061h, #00h
-		SJMP PASS_MODE
-
-PASS_INIT:
-		MOV A, 070h
-		MOV 071h, A      
-		MOV 070h, #PASS_ST
-		
-		; 显示 "P._____" (6位)
-		; 35: P. (0x11)
-		; 34~30: _
-		; PASS 模式显示 (TABLE_PASS_PROMPT id=07)
-		MOV A, #07h
-		LCALL LED6_ApplyTable
-		MOV 039h, #04h     ; 光标位置 4 (Buffer 34h)
-		RET
-
-PASS_MODE:
-		MOV A, 061h
-		CJNE A, #00h, PASS_MODE_CHECK_KEY
-		RET
-
-PASS_MODE_CHECK_KEY:
-		MOV A, 060h
-		CJNE A, #0Ah, PASS_MODE_SKIP_CONFIRM
-		
-		MOV A, 039h
-		CJNE A, #0FFh, PASS_CONFIRM_INCOMPLETE
-		LCALL PASS_VERIFY_PASSWORD
-		MOV 061h, #00h
-		RET
-
-PASS_CONFIRM_INCOMPLETE:
-		LCALL PASS_SHOW_ERROR
-		MOV 061h, #00h
-		RET
-
-PASS_MODE_SKIP_CONFIRM:
-		MOV 061h, #00h
-		RET
-
-PASS_VERIFY_PASSWORD:
-		; 验证 5 位密码 (Buffer 34..30) vs Table 0..4
-		MOV R0, #04h    ; Buffer Index
-		MOV R3, #00h    ; Table Index
-
-PASS_VERIFY_LOOP:
-		MOV A, R0
-		ADD A, #030h
-		MOV R1, A
-		MOV A, @R1      
-		MOV R2, A       
-		
-		MOV DPTR, #PASSWORD_TABLE
-		MOV A, R3
-		MOVC A, @A+DPTR 
-		
-		CJNE A, 02h, PASS_VERIFY_FAIL_CHECK
-		SJMP PASS_VERIFY_NEXT
-
-PASS_VERIFY_FAIL_CHECK:
-		MOV A, R2
-		MOV B, A
-		MOV A, R3
-		MOV DPTR, #PASSWORD_TABLE
-		MOVC A, @A+DPTR
-		CJNE A, B, PASS_VERIFY_FAIL
-
-PASS_VERIFY_NEXT:
-		DEC R0
-		INC R3
-		MOV A, R3
-		CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
-		LCALL PASS_SHOW_SUCCESS
-		RET
-
-PASS_VERIFY_FAIL:
-		LCALL PASS_SHOW_ERROR
-		RET
-
-PASS_SHOW_ERROR:
-		DEC 03Ah
-		MOV A, 03Ah
-		JZ PASS_ERROR_LOCKED
-		
-		; 显示 FALSEX (TABLE_PASS_ERROR_FALSEX id=08)，最后一位由剩余次数填充
-		MOV A, #08h
-		LCALL LED6_ApplyTable
-		MOV A, 03Ah
-		MOV 030h, A
-		
-		MOV R3, #06h
-PASS_ERROR_DELAY_OUTER:
-		MOV R4, #0F0h
-PASS_ERROR_DELAY_LOOP:
-		MOV R5, #0FFh
-PASS_ERROR_DELAY_INNER:
-		NOP
-		NOP
-		NOP
-		DJNZ R5, PASS_ERROR_DELAY_INNER
-		DJNZ R4, PASS_ERROR_DELAY_LOOP
-		DJNZ R3, PASS_ERROR_DELAY_OUTER
-		
-		AJMP PASS_INIT
-
-PASS_ERROR_LOCKED:
-	; 锁定显示（TABLE_PASS_ERROR_LOCKED id=09）
-	MOV A, #09h
-	LCALL LED6_ApplyTable
-		AJMP PASS_ERROR_LOCKED
-
-PASS_SHOW_SUCCESS:
-		MOV 070h, #OPT_ST
-		RET
 
 END

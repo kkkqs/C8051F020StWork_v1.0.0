@@ -1,6 +1,9 @@
+
+
 TMR1 SEGMENT CODE
 rseg TMR1
-
+$include (C8051F020.inc)	
+	
 EXTRN CODE(LED6_Refresh)
 
 PUBLIC Timer1_Init

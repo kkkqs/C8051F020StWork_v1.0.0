@@ -4,6 +4,7 @@ rseg LED6
 ; 包含表定义
 $INCLUDE (led6_tables.inc)
 $INCLUDE (../user/CONFIG.INC)
+$include (C8051F020.inc)
 
 PUBLIC LED6_Refresh
 PUBLIC LED6_ApplyTable
@@ -11,11 +12,11 @@ PUBLIC LED6_ApplyTable
 ; LED6_Refresh: 在 ISR 中被调用，快速输出当前缓冲的单位
 LED6_Refresh:
     MOV P0, #0FFh
-    MOV P2, #00h
+    MOV P2, #0FFh  ; Turn OFF all digits (PNP: High=OFF)
 
     MOV A, 038h
     MOV R2, A
-    ADD A, #030h
+    ADD A, #028h   ; Base Address 0x28
     MOV R0, A
     MOV A, @R0        ; 读 Buffer
     MOV B, A
@@ -28,12 +29,13 @@ LED6_Refresh:
     MOV DPTR, #BITMASK_TABLE
     MOV A, R2
     MOVC A, @A+DPTR
+    CPL A          ; Invert for PNP (Active Low)
     MOV R1, A
 
     MOV A, B
     MOV P0, A
-    MOV A, R1
-    MOV P2, A
+    
+    MOV P2, R1     ; Apply bitmask directly (P2.7..P2.2)
 
     INC 038h
     MOV A, 038h
@@ -98,13 +100,13 @@ LBL_DEFAULT:
     MOV DPTR, #TABLE_DISPLAY_INIT_BLANK
 
 LBL_COPY:
-    MOV R0, #035h    ; 指向 035h，逐字写入到 035..030
+    MOV R0, #028h    ; 指向 028h (Leftmost)
     MOV R3, #00h
 LBL_LOOP:
     MOV A, R3
     MOVC A, @A+DPTR
     MOV @R0, A
-    DEC R0
+    INC R0           ; 028h -> 02Dh
     INC R3
     MOV A, R3
     CJNE A, #06, LBL_LOOP

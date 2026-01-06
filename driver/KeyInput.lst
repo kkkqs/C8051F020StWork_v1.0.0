@@ -1,11 +1,11 @@
-A51 MACRO ASSEMBLER  KEYINPUT                                                             12/18/2025 23:34:02 PAGE     1
+A51 MACRO ASSEMBLER  KEYINPUT                                                             12/19/2025 20:25:37 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
 OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\driver\KeyInput.obj
-ASSEMBLER INVOKED BY: D:\1\Keil\C51\BIN\A51.EXE D:\Git\C8051F020StWork\driver\KeyInput.asm SET(SMALL) DEBUG PRINT(.\List
-                      ings\..\..\..\Git\C8051F020StWork\driver\KeyInput.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWo
-                      rk\driver\KeyInput.obj) EP
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\driver\KeyInput.asm NOMOD51 SET(SMALL) DEBUG PRI
+                      NT(.\Listings\..\..\..\Git\C8051F020StWork\driver\KeyInput.lst) OBJECT(.\Objects\..\..\..\Git\C805
+                      1F020StWork\driver\KeyInput.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
                       54     
 0042                  55     KBI_SHORT_PRESS:
 0042 754700           56         MOV 047h, #00h
-A51 MACRO ASSEMBLER  KEYINPUT                                                             12/18/2025 23:34:02 PAGE     2
+A51 MACRO ASSEMBLER  KEYINPUT                                                             12/19/2025 20:25:37 PAGE     2
 
 0045 754800           57         MOV 048h, #00h
 0048 800F             58         SJMP KBI_RETURN
@@ -82,7 +82,7 @@ LOC  OBJ            LINE     SOURCE
 0059 22               69         RET
                       70     
                       71     END
-A51 MACRO ASSEMBLER  KEYINPUT                                                             12/18/2025 23:34:02 PAGE     3
+A51 MACRO ASSEMBLER  KEYINPUT                                                             12/19/2025 20:25:37 PAGE     3
 
 SYMBOL TABLE LISTING
 ------ ----- -------

@@ -2,6 +2,9 @@
 
 KBD SEGMENT CODE
 rseg KBD
+	
+$include (C8051F020.inc)
+	
 PUBLIC MatrixKey
 
 MatrixKey:
@@ -10,61 +13,61 @@ MatrixKey:
 
                 CLR P1.3
                 JB P1.7,MK_SK1
-                AJMP MXK_1_CHECK
+                LJMP MXK_1_CHECK
 MK_SK1:
                 JB P1.6,MK_SK2
-                AJMP MXK_5_CHECK
+                LJMP MXK_5_CHECK
 MK_SK2:
                 JB P1.5,MK_SK3
-                AJMP MXK_9_CHECK
+                LJMP MXK_9_CHECK
 MK_SK3:
                 JB P1.4,MK_SK4
-                AJMP MXK_13_CHECK
+                LJMP MXK_13_CHECK
 MK_SK4:
                 MOV P1,#0FFh
 
                 CLR P1.2
                 JB P1.7,MK_SK5
-                AJMP MXK_2_CHECK
+                LJMP MXK_2_CHECK
 MK_SK5:
                 JB P1.6,MK_SK6
-                AJMP MXK_6_CHECK
+                LJMP MXK_6_CHECK
 MK_SK6:
                 JB P1.5,MK_SK7
-                AJMP MXK_10_CHECK
+                LJMP MXK_10_CHECK
 MK_SK7:
                 JB P1.4,MK_SK8
-                AJMP MXK_14_CHECK
+                LJMP MXK_14_CHECK
 MK_SK8:
                 MOV P1,#0FFh
 
                 CLR P1.1
                 JB P1.7,MK_SK9
-                AJMP MXK_3_CHECK
+                LJMP MXK_3_CHECK
 MK_SK9:
                 JB P1.6,MK_SK10
-                AJMP MXK_7_CHECK
+                LJMP MXK_7_CHECK
 MK_SK10:
                 JB P1.5,MK_SK11
-                AJMP MXK_11_CHECK
+                LJMP MXK_11_CHECK
 MK_SK11:
                 JB P1.4,MK_SK12
-                AJMP MXK_15_CHECK
+                LJMP MXK_15_CHECK
 MK_SK12:
                 MOV P1,#0FFh
 
                 CLR P1.0
                 JB P1.7,MK_SK13
-                AJMP MXK_4_CHECK
+                LJMP MXK_4_CHECK
 MK_SK13:
                 JB P1.6,MK_SK14
-                AJMP MXK_8_CHECK
+                LJMP MXK_8_CHECK
 MK_SK14:
                 JB P1.5,MK_SK15
-                AJMP MXK_12_CHECK
+                LJMP MXK_12_CHECK
 MK_SK15:
                 JB P1.4,MK_SK16
-                AJMP MXK_16_CHECK
+                LJMP MXK_16_CHECK
 MK_SK16:
                 MOV P1,#0FFh
                 RET
