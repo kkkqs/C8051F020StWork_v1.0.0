@@ -1,11 +1,11 @@
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     1
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\driver\LCD1602.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\driver\LCD1602.asm NOMOD51 SET(SMALL) DEBUG PRIN
-                      T(.\Listings\..\..\..\Git\C8051F020StWork\driver\LCD1602.lst) OBJECT(.\Objects\..\..\..\Git\C8051F
-                      020StWork\driver\LCD1602.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm NOMOD51 SET(SMALL) DE
+                      BUG PRINT(.\Listings\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.lst) OBJECT(.\Objects\..\..\
+                      C8051F020StWork_v1.0.0-main\driver\LCD1602.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A1          +1    54     EMI0TC   DATA  0A1H   ; EMIF TIMING CONTROL
   00A3          +1    55     EMI0CF   DATA  0A3H   ; EXTERNAL MEMORY INTERFACE (EMIF) CONFIGURATION
   00A4          +1    56     P0MDOUT  DATA  0A4H   ; PORT 0 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     2
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     2
 
   00A5          +1    57     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    58     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00E8          +1   120     ADC0CN   DATA  0E8H   ; ADC 0 CONTROL
   00E9          +1   121     PCA0L    DATA  0E9H   ; PCA 0 TIMER - LOW BYTE
   00EA          +1   122     PCA0CPL0 DATA  0EAH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 0 - LOW BYTE
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     3
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     3
 
   00EB          +1   123     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   124     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C0          +1   186     SMBTOE   BIT   SMB0CN.0 ; SMBUS 0 TIMEOUT ENABLE
   00C1          +1   187     SMBFTE   BIT   SMB0CN.1 ; SMBUS 0 FREE TIMER ENABLE
   00C2          +1   188     AA       BIT   SMB0CN.2 ; SMBUS 0 ASSERT/ACKNOWLEDGE FLAG
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     4
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     4
 
   00C3          +1   189     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   190     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
                      252     
                      253     ; Pin Definitions (P4.6=RS, P4.7=E, P3=Data)
                      254     ; P4 is on SFR Page 0x0F
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     5
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     5
 
   0040               255     LCD_RS_MASK  EQU 040h    ; P4.6 bit mask
   0080               256     LCD_E_MASK   EQU 080h    ; P4.7 bit mask
@@ -337,7 +337,7 @@ LOC  OBJ            LINE     SOURCE
 006C 8007            318         SJMP LCD_WR_COM
 006E                 319     LCD_WR_DAT:
 006E C0E0            320         PUSH ACC
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     6
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     6
 
 0070 120000   F      321         LCALL LCD_SET_RS      ; RS = 1 for data
 0073 D0E0            322         POP ACC
@@ -367,7 +367,7 @@ LOC  OBJ            LINE     SOURCE
 0095                 346     LCD_STR_END: 
 0095 22              347         RET
                      348     END
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     7
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -435,7 +435,7 @@ ENSMB. . . . . . .  B ADDR   00C0H.6 A
 ES . . . . . . . .  B ADDR   00A8H.4 A   
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     8
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     8
 
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
@@ -503,7 +503,7 @@ PCA0CPL3 . . . . .  D ADDR   00EDH   A
 PCA0CPL4 . . . . .  D ADDR   00EEH   A   
 PCA0CPM0 . . . . .  D ADDR   00DAH   A   
 PCA0CPM1 . . . . .  D ADDR   00DBH   A   
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE     9
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE     9
 
 PCA0CPM2 . . . . .  D ADDR   00DCH   A   
 PCA0CPM3 . . . . .  D ADDR   00DDH   A   
@@ -571,7 +571,7 @@ TCON . . . . . . .  D ADDR   0088H   A
 TF0. . . . . . . .  B ADDR   0088H.5 A   
 TF1. . . . . . . .  B ADDR   0088H.7 A   
 TF2. . . . . . . .  B ADDR   00C8H.7 A   
-A51 MACRO ASSEMBLER  LCD1602                                                              12/19/2025 20:25:37 PAGE    10
+A51 MACRO ASSEMBLER  LCD1602                                                              01/06/2026 22:05:31 PAGE    10
 
 TH0. . . . . . . .  D ADDR   008CH   A   
 TH1. . . . . . . .  D ADDR   008DH   A   

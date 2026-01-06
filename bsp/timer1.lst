@@ -1,10 +1,11 @@
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     1
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\bsp\timer1.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\
-                      Listings\..\..\..\Git\C8051F020StWork\bsp\timer1.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\C8051F020StWork_v1.0.0-main\bsp\timer1.asm NOMOD51 SET(SMALL) DEBUG 
+                      PRINT(.\Listings\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.lst) OBJECT(.\Objects\..\..\C8051F02
+                      0StWork_v1.0.0-main\bsp\timer1.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -64,9 +65,9 @@ LOC  OBJ            LINE     SOURCE
   00A4          +1    54     P0MDOUT  DATA  0A4H   ; PORT 0 OUTPUT MODE CONFIGURATION
   00A5          +1    55     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    56     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
-  00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     2
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     2
 
+  00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    58     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    59     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
   00AA          +1    60     ADC1CN  DATA  0AAH   ; ADC 1 CONTROL
@@ -132,9 +133,9 @@ LOC  OBJ            LINE     SOURCE
   00EA          +1   120     PCA0CPL0 DATA  0EAH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 0 - LOW BYTE
   00EB          +1   121     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   122     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
-  00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     3
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     3
 
+  00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   124     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   125     RSTSRC   DATA  0EFH   ; RESET SOURCE 
   00F0          +1   126     B        DATA  0F0H   ; B REGISTER
@@ -200,9 +201,9 @@ LOC  OBJ            LINE     SOURCE
   00C2          +1   186     AA       BIT   SMB0CN.2 ; SMBUS 0 ASSERT/ACKNOWLEDGE FLAG
   00C3          +1   187     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   188     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
-  00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     4
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     4
 
+  00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   190     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   191     ;
                 +1   192     ; T2CON C8H
@@ -268,9 +269,9 @@ LOC  OBJ            LINE     SOURCE
                      252         ; 配置中断使能（保留原设置）
 0009 75A88A          253         MOV IE,  #08Ah
 000C D28E            254         SETB TR1
-000E 22              255         RET
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     5
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     5
 
+000E 22              255         RET
                      256     
 000F                 257     TIMER1_ISR:
 000F C0D0            258         PUSH PSW
@@ -298,7 +299,7 @@ LOC  OBJ            LINE     SOURCE
 0034 32              280         RETI
                      281     
                      282     END
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     6
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     6
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -366,7 +367,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     7
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     7
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -434,7 +435,7 @@ PX0. . . . . . . .  B ADDR   00B8H.0 A
 PX1. . . . . . . .  B ADDR   00B8H.2 A   
 RB8. . . . . . . .  B ADDR   0098H.2 A   
 RCAP2H . . . . . .  D ADDR   00CBH   A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     8
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     8
 
 RCAP2L . . . . . .  D ADDR   00CAH   A   
 RCAP4H . . . . . .  D ADDR   00E5H   A   
@@ -502,7 +503,7 @@ TMR3CN . . . . . .  D ADDR   0091H   A
 TMR3H. . . . . . .  D ADDR   0095H   A   
 TMR3L. . . . . . .  D ADDR   0094H   A   
 TMR3RLH. . . . . .  D ADDR   0093H   A   
-A51 MACRO ASSEMBLER  TIMER1                                                               12/19/2025 20:25:37 PAGE     9
+A51 MACRO ASSEMBLER  TIMER1                                                               01/06/2026 22:05:32 PAGE     9
 
 TMR3RLL. . . . . .  D ADDR   0092H   A   
 TR0. . . . . . . .  B ADDR   0088H.4 A   

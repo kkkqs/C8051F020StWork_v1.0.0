@@ -1,10 +1,11 @@
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     1
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\driver\LED6.asm NOMOD51 SET(SMALL) DEBUG PRINT(.
-                      \Listings\..\..\..\Git\C8051F020StWork\driver\LED6.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\C8051F020StWork_v1.0.0-main\driver\LED6.asm NOMOD51 SET(SMALL) DEBUG
+                       PRINT(.\Listings\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.lst) OBJECT(.\Objects\..\..\C8051F
+                      020StWork_v1.0.0-main\driver\LED6.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -64,9 +65,9 @@ LOC  OBJ            LINE     SOURCE
                 +1    40     
                 +1    41     
                 +1    42     ; 全部熄灭显示（所有段关闭，值由 SEG_TABLE 的 OFF=0FFh 决定）
-003C FFFFFFFF   +1    43     TABLE_DISPLAY_ALL_OFF:       DB 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     2
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     2
 
+003C FFFFFFFF   +1    43     TABLE_DISPLAY_ALL_OFF:       DB 0FFh,0FFh,0FFh,0FFh,0FFh,0FFh
 0040 FFFF                    
                 +1    44     
                 +1    45     
@@ -132,9 +133,9 @@ LOC  OBJ            LINE     SOURCE
 0068 80402010   +1    96         DB 080h,040h,020h,010h,008h,004h
 006C 0804                    
                 +1    97     
-006E            +1    98     PASSWORD_TABLE:
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     3
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     3
 
+006E            +1    98     PASSWORD_TABLE:
 006E 01020304   +1    99         DB 01h,02h,03h,04h,05h
 0072 05                      
                 +1   100     
@@ -200,9 +201,9 @@ LOC  OBJ            LINE     SOURCE
                 +1   160     ;-----------------------------------------------------------------------------
                 +1   161     ;REGISTER DEFINITIONS
                 +1   162     ;
-  0080          +1   163     P0       DATA  080H   ; PORT 0
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     4
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     4
 
+  0080          +1   163     P0       DATA  080H   ; PORT 0
   0081          +1   164     SP       DATA  081H   ; STACK POINTER
   0082          +1   165     DPL      DATA  082H   ; DATA POINTER - LOW BYTE
   0083          +1   166     DPH      DATA  083H   ; DATA POINTER - HIGH BYTE
@@ -268,9 +269,9 @@ LOC  OBJ            LINE     SOURCE
   00C3          +1   226     SMB0ADR  DATA  0C3H   ; SMBUS 0 SLAVE ADDRESS
   00C4          +1   227     ADC0GTL  DATA  0C4H   ; ADC 0 GREATER-THAN REGISTER - LOW BYTE
   00C5          +1   228     ADC0GTH  DATA  0C5H   ; ADC 0 GREATER-THAN REGISTER - HIGH BYTE
-  00C6          +1   229     ADC0LTL  DATA  0C6H   ; ADC 0 LESS-THAN REGISTER - LOW BYTE
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     5
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     5
 
+  00C6          +1   229     ADC0LTL  DATA  0C6H   ; ADC 0 LESS-THAN REGISTER - LOW BYTE
   00C7          +1   230     ADC0LTH  DATA  0C7H   ; ADC 0 LESS-THAN REGISTER - HIGH BYTE
   00C8          +1   231     T2CON    DATA  0C8H   ; TIMER 2 CONTROL
   00C9          +1   232     T4CON    DATA  0C9H   ; TIMER 4 CONTROL
@@ -336,9 +337,9 @@ LOC  OBJ            LINE     SOURCE
   008A          +1   292     IT1      BIT   TCON.2 ; EXT. INTERRUPT 1 TYPE
   008B          +1   293     IE1      BIT   TCON.3 ; EXT. INTERRUPT 1 EDGE FLAG
   008C          +1   294     TR0      BIT   TCON.4 ; TIMER 0 ON/OFF CONTROL
-  008D          +1   295     TF0      BIT   TCON.5 ; TIMER 0 OVERFLOW FLAG
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     6
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     6
 
+  008D          +1   295     TF0      BIT   TCON.5 ; TIMER 0 OVERFLOW FLAG
   008E          +1   296     TR1      BIT   TCON.6 ; TIMER 1 ON/OFF CONTROL
   008F          +1   297     TF1      BIT   TCON.7 ; TIMER 1 OVERFLOW FLAG
                 +1   298     ;
@@ -404,9 +405,9 @@ LOC  OBJ            LINE     SOURCE
   00DA          +1   358     CCF2     BIT   PCA0CN.2 ; PCA 0 MODULE 2 INTERRUPT FLAG
   00DB          +1   359     CCF3     BIT   PCA0CN.3 ; PCA 0 MODULE 3 INTERRUPT FLAG
   00DC          +1   360     CCF4     BIT   PCA0CN.4 ; PCA 0 MODULE 4 INTERRUPT FLAG
-  00DE          +1   361     CR       BIT   PCA0CN.6 ; PCA 0 COUNTER RUN CONTROL BIT
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     7
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     7
 
+  00DE          +1   361     CR       BIT   PCA0CN.6 ; PCA 0 COUNTER RUN CONTROL BIT
   00DF          +1   362     CF       BIT   PCA0CN.7 ; PCA 0 COUNTER OVERFLOW FLAG
                 +1   363     ;
                 +1   364     ; ADC0CN E8H
@@ -472,9 +473,9 @@ LOC  OBJ            LINE     SOURCE
                      424     ; LED6_ApplyTable
                      425     ; 输入: A = 表 ID
                      426     ; 映射：
-                     427     ;   00h TABLE_DISPLAY_INIT_BLANK
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     8
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     8
 
+                     427     ;   00h TABLE_DISPLAY_INIT_BLANK
                      428     ;   01h TABLE_DISPLAY_RUN_BLANK
                      429     ;   02h TABLE_MENU_MAIN_OPT
                      430     ;   03h TABLE_OPT_ERR011
@@ -540,13 +541,13 @@ LOC  OBJ            LINE     SOURCE
 010A D083            490         POP DPH
 010C D082            491         POP DPL
 010E D0F0            492         POP B
-0110 D0E0            493         POP ACC
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE     9
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE     9
 
+0110 D0E0            493         POP ACC
 0112 22              494         RET
                      495     
                      496     END
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE    10
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE    10
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -614,7 +615,7 @@ EIP2 . . . . . . . . . .  D ADDR   00F7H   A
 ELEV_ARRIVED . . . . . .  N NUMB   0022H   A   
 ELEV_CLOSE . . . . . . .  N NUMB   0023H   A   
 ELEV_DIR . . . . . . . .  N NUMB   0064H   A   
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE    11
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE    11
 
 ELEV_RUN . . . . . . . .  N NUMB   0021H   A   
 ELEV_ST. . . . . . . . .  N NUMB   0020H   A   
@@ -682,7 +683,7 @@ P0MDOUT. . . . . . . . .  D ADDR   00A4H   A
 P1 . . . . . . . . . . .  D ADDR   0090H   A   
 P1MDIN . . . . . . . . .  D ADDR   00BDH   A   
 P1MDOUT. . . . . . . . .  D ADDR   00A5H   A   
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE    12
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE    12
 
 P2 . . . . . . . . . . .  D ADDR   00A0H   A   
 P2MDOUT. . . . . . . . .  D ADDR   00A6H   A   
@@ -750,7 +751,7 @@ SEG_TABLE. . . . . . . .  C ADDR   0042H   R   SEG=LED6
 SI . . . . . . . . . . .  B ADDR   00C0H.3 A   
 SLVSEL . . . . . . . . .  B ADDR   00F8H.2 A   
 SM0. . . . . . . . . . .  B ADDR   0098H.7 A   
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE    13
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE    13
 
 SM1. . . . . . . . . . .  B ADDR   0098H.6 A   
 SM2. . . . . . . . . . .  B ADDR   0098H.5 A   
@@ -819,5 +820,5 @@ REGISTER BANK(S) USED: 0
 
 
 ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
-A51 MACRO ASSEMBLER  LED6                                                                 12/19/2025 20:25:37 PAGE    14
+A51 MACRO ASSEMBLER  LED6                                                                 01/06/2026 22:05:31 PAGE    14
 

@@ -199,8 +199,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\user\main.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -211,8 +211,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\Init_Device.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\user\Init_Device.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -231,8 +231,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -240,11 +240,11 @@
       <GroupNumber>2</GroupNumber>
       <FileNumber>4</FileNumber>
       <FileType>2</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -255,8 +255,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -275,8 +275,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -287,8 +287,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer0.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -299,8 +299,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -311,8 +311,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Delay.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\bsp\Delay.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -339,8 +339,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -351,8 +351,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -363,8 +363,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</FilenameWithoutPath>
+      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</PathWithFileName>
+      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

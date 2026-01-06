@@ -1,10 +1,11 @@
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     1
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\user\main.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\user\main.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\L
-                      istings\..\..\..\Git\C8051F020StWork\user\main.lst) OBJECT(.\Objects\..\..\..\Git\C8051F020StWork\user\main.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\C8051F020StWork_v1.0.0-main\user\main.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\C8051F020StWork_v1.0.0-main\user\main.ASM NOMOD51 SET(SMALL) DEBUG P
+                      RINT(.\Listings\..\..\C8051F020StWork_v1.0.0-main\user\main.lst) OBJECT(.\Objects\..\..\C8051F020S
+                      tWork_v1.0.0-main\user\main.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -64,9 +65,9 @@ LOC  OBJ            LINE     SOURCE
                 +1    46     
 0026            +1    47     BITMASK_TABLE:
 0026 80402010   +1    48         DB 080h,040h,020h,010h,008h,004h
-002A 0804                    
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     2
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     2
 
+002A 0804                    
                 +1    49     
 002C            +1    50     PASSWORD_TABLE:
 002C 01020304   +1    51         DB 01h,02h,03h,04h,05h
@@ -132,9 +133,9 @@ LOC  OBJ            LINE     SOURCE
                 +1   110     ;       REVISION 1.0    
                 +1   111     ;
                 +1   112     ;-----------------------------------------------------------------------------
-                +1   113     ;REGISTER DEFINITIONS
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     3
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     3
 
+                +1   113     ;REGISTER DEFINITIONS
                 +1   114     ;
   0080          +1   115     P0       DATA  080H   ; PORT 0
   0081          +1   116     SP       DATA  081H   ; STACK POINTER
@@ -200,9 +201,9 @@ LOC  OBJ            LINE     SOURCE
   00C1          +1   176     SMB0STA  DATA  0C1H   ; SMBUS 0 STATUS
   00C2          +1   177     SMB0DAT  DATA  0C2H   ; SMBUS 0 DATA 
   00C3          +1   178     SMB0ADR  DATA  0C3H   ; SMBUS 0 SLAVE ADDRESS
-  00C4          +1   179     ADC0GTL  DATA  0C4H   ; ADC 0 GREATER-THAN REGISTER - LOW BYTE
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     4
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     4
 
+  00C4          +1   179     ADC0GTL  DATA  0C4H   ; ADC 0 GREATER-THAN REGISTER - LOW BYTE
   00C5          +1   180     ADC0GTH  DATA  0C5H   ; ADC 0 GREATER-THAN REGISTER - HIGH BYTE
   00C6          +1   181     ADC0LTL  DATA  0C6H   ; ADC 0 LESS-THAN REGISTER - LOW BYTE
   00C7          +1   182     ADC0LTH  DATA  0C7H   ; ADC 0 LESS-THAN REGISTER - HIGH BYTE
@@ -268,9 +269,9 @@ LOC  OBJ            LINE     SOURCE
   0088          +1   242     IT0      BIT   TCON.0 ; EXT. INTERRUPT 0 TYPE
   0089          +1   243     IE0      BIT   TCON.1 ; EXT. INTERRUPT 0 EDGE FLAG
   008A          +1   244     IT1      BIT   TCON.2 ; EXT. INTERRUPT 1 TYPE
-  008B          +1   245     IE1      BIT   TCON.3 ; EXT. INTERRUPT 1 EDGE FLAG
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     5
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     5
 
+  008B          +1   245     IE1      BIT   TCON.3 ; EXT. INTERRUPT 1 EDGE FLAG
   008C          +1   246     TR0      BIT   TCON.4 ; TIMER 0 ON/OFF CONTROL
   008D          +1   247     TF0      BIT   TCON.5 ; TIMER 0 OVERFLOW FLAG
   008E          +1   248     TR1      BIT   TCON.6 ; TIMER 1 ON/OFF CONTROL
@@ -336,9 +337,9 @@ LOC  OBJ            LINE     SOURCE
   00D8          +1   308     CCF0     BIT   PCA0CN.0 ; PCA 0 MODULE 0 INTERRUPT FLAG
   00D9          +1   309     CCF1     BIT   PCA0CN.1 ; PCA 0 MODULE 1 INTERRUPT FLAG
   00DA          +1   310     CCF2     BIT   PCA0CN.2 ; PCA 0 MODULE 2 INTERRUPT FLAG
-  00DB          +1   311     CCF3     BIT   PCA0CN.3 ; PCA 0 MODULE 3 INTERRUPT FLAG
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     6
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     6
 
+  00DB          +1   311     CCF3     BIT   PCA0CN.3 ; PCA 0 MODULE 3 INTERRUPT FLAG
   00DC          +1   312     CCF4     BIT   PCA0CN.4 ; PCA 0 MODULE 4 INTERRUPT FLAG
   00DE          +1   313     CR       BIT   PCA0CN.6 ; PCA 0 COUNTER RUN CONTROL BIT
   00DF          +1   314     CF       BIT   PCA0CN.7 ; PCA 0 COUNTER OVERFLOW FLAG
@@ -404,9 +405,9 @@ LOC  OBJ            LINE     SOURCE
 0211 757000          374             MOV 070h, #00h
 0214 757100          375             MOV 071h, #00h
                      376     
-0217 7544FF          377             MOV 044h, #0FFh
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     7
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     7
 
+0217 7544FF          377             MOV 044h, #0FFh
 021A 754500          378             MOV 045h, #00h
 021D 7546FF          379             MOV 046h, #0FFh
 0220 754700          380             MOV 047h, #00h
@@ -472,9 +473,9 @@ LOC  OBJ            LINE     SOURCE
 025A 80DB            440             SJMP LOOP
 025C                 441     CHECK_ELEV4:
 025C B42305          442             CJNE A,#ELEV_CLOSE, CHECK_OPT
-025F 120000   F      443             LCALL RunningTask_Handler
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     8
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     8
 
+025F 120000   F      443             LCALL RunningTask_Handler
 0262 80D3            444             SJMP LOOP
 0264                 445     CHECK_OPT:
 0264 B40105          446             CJNE A,#OPT_ST, CHECK_OPT1
@@ -500,7 +501,7 @@ LOC  OBJ            LINE     SOURCE
 028C 4137            466             AJMP LOOP
                      467     
                      468     END
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE     9
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE     9
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -568,7 +569,7 @@ DAC0L . . . . . . . . . .  D ADDR   00D2H   A
 DAC1CN. . . . . . . . . .  D ADDR   00D7H   A   
 DAC1H . . . . . . . . . .  D ADDR   00D6H   A   
 DAC1L . . . . . . . . . .  D ADDR   00D5H   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE    10
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE    10
 
 DEBUG_ON. . . . . . . . .  N NUMB   0067H   A   
 DELAY_MS. . . . . . . . .  C ADDR   -----       EXT
@@ -636,7 +637,7 @@ OSCICN. . . . . . . . . .  D ADDR   00B2H   A
 OSCXCN. . . . . . . . . .  D ADDR   00B1H   A   
 OUT_SEL_VAL . . . . . . .  N NUMB   0066H   A   
 OV. . . . . . . . . . . .  B ADDR   00D0H.2 A   
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE    11
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE    11
 
 P . . . . . . . . . . . .  B ADDR   00D0H.0 A   
 P0. . . . . . . . . . . .  D ADDR   0080H   A   
@@ -704,7 +705,7 @@ SADDR0. . . . . . . . . .  D ADDR   00A9H   A
 SADDR1. . . . . . . . . .  D ADDR   00F3H   A   
 SADEN0. . . . . . . . . .  D ADDR   00B9H   A   
 SADEN1. . . . . . . . . .  D ADDR   00AEH   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 12/19/2025 20:25:37 PAGE    12
+A51 MACRO ASSEMBLER  MAIN                                                                 01/06/2026 22:05:31 PAGE    12
 
 SBUF0 . . . . . . . . . .  D ADDR   0099H   A   
 SBUF1 . . . . . . . . . .  D ADDR   00F2H   A   
