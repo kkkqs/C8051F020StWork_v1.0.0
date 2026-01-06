@@ -1,11 +1,11 @@
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     1
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
-OBJECT MODULE PLACED IN .\Objects\..\..\..\Git\C8051F020StWork\Tasks\runningTask.obj
-ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\Git\C8051F020StWork\Tasks\runningTask.asm NOMOD51 SET(SMALL) DEBUG P
-                      RINT(.\Listings\..\..\..\Git\C8051F020StWork\Tasks\runningTask.lst) OBJECT(.\Objects\..\..\..\Git\
-                      C8051F020StWork\Tasks\runningTask.obj) EP
+OBJECT MODULE PLACED IN .\Objects\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE C:\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm NOMOD51 SET(SMALL)
+                       DEBUG PRINT(.\Listings\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.lst) OBJECT(.\Objects\
+                      ..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.obj) EP
 
 LOC  OBJ            LINE     SOURCE
 
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
 0018 19120278                
 001C 0010                    
 001E ABA323FF   +1    49         DB 0ABh,0A3h,023h,0FFh,046h,0C1h,0BFh,0FFh
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     2
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     2
 
 0022 46C1BFFF                
                 +1    50     
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
                      110     
                      111     
                      112     EXTRN CODE(LED6_ApplyTable)
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     3
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     3
 
                      113     
                      114     PUBLIC RunningTask_Init
@@ -146,1074 +146,1165 @@ LOC  OBJ            LINE     SOURCE
 0039 20202020                
 003D 20202020                
 0041 00                      
-0042                 120     LCD_STR_OUT_PREFIX:
-0042 4F75743A        121         DB 'O','u','t',':',' ', 00h
-0046 2000                    
-0048                 122     LCD_STR_UP:
-0048 55702020        123         DB 'U','p',' ',' ', 00h
-004C 00                      
-004D                 124     LCD_STR_DOWN:
-004D 446F776E        125         DB 'D','o','w','n', 00h
-0051 00                      
-0052                 126     LCD_STR_EMPTY:
-0052 20202020        127         DB ' ',' ',' ',' ', 00h
-0056 00                      
-                     128     
-0057                 129     LCD_MSG_OPEN:
-0057 2020206F        130         DB ' ',' ',' ','o','p','e','n',' ','d','o','o','r',' ',' ',' ',' ', 00h
-005B 70656E20                
-005F 646F6F72                
-0063 20202020                
+0042                 120         LCD_MSG_WELCOME:
+0042 57656C63        121         DB 'W','e','l','c','o','m','e',' ',' ',' ',' ',' ',' ',' ',' ',' ', 00h
+0046 6F6D6520                
+004A 20202020                
+004E 20202020                
+0052 00                      
+0053                 122     LCD_STR_OUT_PREFIX:
+0053 4F75743A        123         DB 'O','u','t',':',' ', 00h
+0057 2000                    
+0059                 124     LCD_STR_UP:
+0059 55702020        125         DB 'U','p',' ',' ', 00h
+005D 00                      
+005E                 126     LCD_STR_DOWN:
+005E 446F776E        127         DB 'D','o','w','n', 00h
+0062 00                      
+0063                 128     LCD_STR_EMPTY:
+0063 20202020        129         DB ' ',' ',' ',' ', 00h
 0067 00                      
-0068                 131     LCD_MSG_CLOSE:
-0068 20202063        132         DB ' ',' ',' ','c','l','o','s','e',' ','d','o','o','r',' ',' ',' ', 00h
-006C 6C6F7365                
-0070 20646F6F                
-0074 72202020                
+                     130     
+0068                 131     LCD_MSG_OPEN:
+0068 2020206F        132         DB ' ',' ',' ','o','p','e','n',' ','d','o','o','r',' ',' ',' ',' ', 00h
+006C 70656E20                
+0070 646F6F72                
+0074 20202020                
 0078 00                      
-0079                 133     LCD_MSG_RUN:
-0079 20202052        134         DB ' ',' ',' ','R','u','n','n','i','n','g','.','.','.',' ',' ',' ', 00h
-007D 756E6E69                
-0081 6E672E2E                
-0085 2E202020                
+0079                 133     LCD_MSG_CLOSE:
+0079 20202063        134         DB ' ',' ',' ','c','l','o','s','e',' ','d','o','o','r',' ',' ',' ', 00h
+007D 6C6F7365                
+0081 20646F6F                
+0085 72202020                
 0089 00                      
-                     135     
-                     136     ; Initialize running task: set up elevator defaults
-008A                 137     RunningTask_Init:
-008A 755601          138         MOV CUR_FLr, #01h      ; 默认 1楼
-008D 755900          139         MOV ONE_SEC_CNT, #00h
-0090 755700          140         MOV ELEV_TIMER, #00h
-0093 755801          141         MOV ELEV_TARGET, #01h
-                     142         
-                     143         ; Init Request Bitmaps (all clear)
-0096 755C00          144         MOV INT_REQ_LO, #00h
-0099 755D00          145         MOV INT_REQ_HI, #00h
-009C 755E00          146         MOV EXT_UP_LO, #00h
-009F 755F00          147         MOV EXT_UP_HI, #00h
-00A2 756200          148         MOV EXT_DN_LO, #00h
-00A5 756300          149         MOV EXT_DN_HI, #00h
-00A8 756400          150         MOV ELEV_DIR, #00h     ; Stopped
-                     151         
-                     152         ; Init Input Mode
-00AB 756500          153         MOV INPUT_MODE, #00h   ; Default Inside
-00AE 756601          154         MOV OUT_SEL_VAL, #01h  ; Default selection
+008A                 135     LCD_MSG_RUN:
+008A 20202052        136         DB ' ',' ',' ','R','u','n','n','i','n','g','.','.','.',' ',' ',' ', 00h
+008E 756E6E69                
+0092 6E672E2E                
+0096 2E202020                
+009A 00                      
+009B                 137     LCD_MSG_FL:
+009B 464C3A20        138         DB 'F','L',':',' ', 00h
+009F 00                      
+                     139     
+                     140     ; Initialize running task: set up elevator defaults
+00A0                 141     RunningTask_Init:
+00A0 755601          142         MOV CUR_FLr, #01h      ; 默认 1楼
+00A3 755900          143         MOV ONE_SEC_CNT, #00h
+00A6 755700          144         MOV ELEV_TIMER, #00h
+00A9 755801          145         MOV ELEV_TARGET, #01h
+                     146         
+                     147         ; Init Request Bitmaps (all clear)
+00AC 755C00          148         MOV INT_REQ_LO, #00h
+00AF 755D00          149         MOV INT_REQ_HI, #00h
+00B2 755E00          150         MOV EXT_UP_LO, #00h
+00B5 755F00          151         MOV EXT_UP_HI, #00h
+00B8 756200          152         MOV EXT_DN_LO, #00h
+00BB 756300          153         MOV EXT_DN_HI, #00h
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     4
+
+00BE 756400          154         MOV ELEV_DIR, #00h     ; Stopped
                      155         
-                     156         ; Init LCD
-00B1 120000   F      157         LCALL LCD_INIT
-00B4 120000   F      158         LCALL LCD_CLEAR
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     4
-
-00B7 900000   F      159         MOV DPTR, #LCD_MSG_INSIDE
-00BA 120000   F      160         LCALL LCD_SHOW_STR
-00BD 22              161         RET
-                     162     
-                     163     ; Handler implements the RUN_HANDLER logic from main.ASM
-00BE                 164     RunningTask_Handler:
-                     165         ; Dispatcher: RUN or ELEV states
-00BE E570            166         MOV A, 070h
-00C0 B40039          167         CJNE A, #RUN_ST, CHECK_ELEV_RUN
-                     168         ; RUN state
-00C3 E571            169         MOV A, 071h
-00C5 B57019          170         CJNE A, 070h, RT_INIT
-                     171     
-00C8 E561            172         MOV A, 061h
-00CA B40002          173         CJNE A, #00h, RT_HANDLE_KEY
-00CD 8018            174         SJMP RT_MODE
+                     156         ; Init Input Mode
+00C1 756500          157         MOV INPUT_MODE, #00h   ; Default Inside
+00C4 756601          158         MOV OUT_SEL_VAL, #01h  ; Default selection
+                     159         
+                     160         ; Init LCD
+00C7 120000   F      161         LCALL LCD_INIT
+00CA 120000   F      162         LCALL LCD_CLEAR
+00CD 900000   F      163         MOV DPTR, #LCD_MSG_WELCOME
+00D0 120000   F      164         LCALL LCD_SHOW_STR
+00D3 22              165         RET
+                     166     
+                     167     ; Handler implements the RUN_HANDLER logic from main.ASM
+00D4                 168     RunningTask_Handler:
+                     169         ; Dispatcher: RUN or ELEV states
+00D4 E570            170         MOV A, 070h
+00D6 B40039          171         CJNE A, #RUN_ST, CHECK_ELEV_RUN
+                     172         ; RUN state
+00D9 E571            173         MOV A, 071h
+00DB B57019          174         CJNE A, 070h, RT_INIT
                      175     
-00CF                 176     RT_HANDLE_KEY:
-00CF E560            177         MOV A, 060h
-00D1 B48A08          178         CJNE A, #08Ah, RT_HANDLE_OTHER
-00D4 757002          179         MOV 070h, #PASS_ST
-00D7 756100          180         MOV 061h, #00h
-00DA 800B            181         SJMP RT_MODE
-                     182     
-00DC                 183     RT_HANDLE_OTHER:
-00DC 756100          184         MOV 061h, #00h
-00DF 8006            185         SJMP RT_MODE
+00DE E561            176         MOV A, 061h
+00E0 B40002          177         CJNE A, #00h, RT_HANDLE_KEY
+00E3 8018            178         SJMP RT_MODE
+                     179     
+00E5                 180     RT_HANDLE_KEY:
+00E5 E560            181         MOV A, 060h
+00E7 B48A08          182         CJNE A, #08Ah, RT_HANDLE_OTHER
+00EA 757002          183         MOV 070h, #PASS_ST
+00ED 756100          184         MOV 061h, #00h
+00F0 800B            185         SJMP RT_MODE
                      186     
-00E1                 187     RT_INIT:
-00E1 E570            188         MOV A, 070h
-00E3 F571            189         MOV 071h, A
-00E5 8000            190         SJMP RT_MODE
-                     191     
-00E7                 192     RT_MODE:
-                     193         ; 检查配置是否完成 (050h!=10h 表示 OPT1 已设置)
-00E7 E550            194         MOV A, 050h
-00E9 B41009          195         CJNE A, #010h, RT_CONFIG_DONE
-                     196         ; 未完成配置，显示空白等待
-00EC 7401            197         MOV A, #01h
-00EE 120000   F      198         LCALL LED6_ApplyTable
-00F1 753904          199         MOV 039h, #04h
-00F4 22              200         RET
-00F5                 201     RT_CONFIG_DONE:
-                     202         ; 配置完成，切换到电梯待机状态
-00F5 757020          203         MOV 070h, #ELEV_ST
-00F8 7571FF          204         MOV 071h, #0FFh        ; 强制刷新
-00FB 22              205         RET
-                     206     
-00FC                 207     CHECK_ELEV_RUN:
-00FC B42004          208         CJNE A, #ELEV_ST, CHECK_ELEV_RUN2
-00FF 120000   F      209         LCALL ELEV_HANDLER
-0102 22              210         RET
-0103                 211     CHECK_ELEV_RUN2:
-0103 B42104          212         CJNE A, #ELEV_RUN, CHECK_ELEV_ARR
-0106 120000   F      213         LCALL ELEV_RUN_HANDLER
-0109 22              214         RET
-010A                 215     CHECK_ELEV_ARR:
-010A B42204          216         CJNE A, #ELEV_ARRIVED, CHECK_ELEV_CLOSE
-010D 120000   F      217         LCALL ELEV_ARRIVED_HANDLER
-0110 22              218         RET
-0111                 219     CHECK_ELEV_CLOSE:
-0111 B42304          220         CJNE A, #ELEV_CLOSE, RT_RETURN
-0114 120000   F      221         LCALL ELEV_CLOSE_HANDLER
-0117 22              222         RET
-0118                 223     RT_RETURN:
-0118 22              224         RET
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     5
+00F2                 187     RT_HANDLE_OTHER:
+00F2 756100          188         MOV 061h, #00h
+00F5 8006            189         SJMP RT_MODE
+                     190     
+00F7                 191     RT_INIT:
+00F7 E570            192         MOV A, 070h
+00F9 F571            193         MOV 071h, A
+00FB 8000            194         SJMP RT_MODE
+                     195     
+00FD                 196     RT_MODE:
+                     197         ; 检查配置是否完成 (050h!=10h 表示 OPT1 已设置)
+00FD E550            198         MOV A, 050h
+00FF B41009          199         CJNE A, #010h, RT_CONFIG_DONE
+                     200         ; 未完成配置，显示空白等待
+0102 7401            201         MOV A, #01h
+0104 120000   F      202         LCALL LED6_ApplyTable
+0107 753904          203         MOV 039h, #04h
+010A 22              204         RET
+010B                 205     RT_CONFIG_DONE:
+                     206         ; 配置完成，切换到电梯待机状态
+010B 757020          207         MOV 070h, #ELEV_ST
+010E 7571FF          208         MOV 071h, #0FFh        ; 强制刷新
+0111 22              209         RET
+                     210     
+0112                 211     CHECK_ELEV_RUN:
+0112 B42004          212         CJNE A, #ELEV_ST, CHECK_ELEV_RUN2
+0115 120000   F      213         LCALL ELEV_HANDLER
+0118 22              214         RET
+0119                 215     CHECK_ELEV_RUN2:
+0119 B42104          216         CJNE A, #ELEV_RUN, CHECK_ELEV_ARR
+011C 120000   F      217         LCALL ELEV_RUN_HANDLER
+011F 22              218         RET
+0120                 219     CHECK_ELEV_ARR:
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     5
 
-                     225     
-                     226     ; --------------------
-                     227     ; Elevator handlers (ported from teammate code)
-                     228     ; Uses variables: CUR_FLr (056h), ELEV_TIMER (057h), ELEV_TARGET (058h), ONE_SEC_CNT (059h)
-                     229     ; --------------------
-                     230     
-0119                 231     ELEV_HANDLER:
-0119 E571            232         MOV A, 071h
-011B B57022          233         CJNE A, 070h, ELEV_INIT
-                     234         
-                     235         ; 1. Check for new key input and set bitmap
-011E 120000   F      236         LCALL CHECK_AND_SET_REQUEST
-                     237     
-                     238         ; 2. Find next target using SCAN algorithm
-0121 120000   F      239         LCALL SCAN_FIND_NEXT_TARGET
-0124 5016            240         JNC ELEV_IDLE_RET      ; No request, stay idle
-                     241         
-                     242         ; R6 has target floor
-0126 EE              243         MOV A, R6
-                     244         
-                     245         ; Check if target == current
-0127 B55610          246         CJNE A, CUR_FLr, ELEV_START_MOVE
-                     247         
-                     248         ; Target == Current -> Clear request and Open Door
-012A 120000   F      249         LCALL CLEAR_FLOOR_REQUEST  ; Clear request for R6
-012D 757022          250         MOV 070h, #ELEV_ARRIVED
-0130 755705          251         MOV ELEV_TIMER, #05h
-0133 755900          252         MOV ONE_SEC_CNT, #00h
-0136 7571FF          253         MOV 071h, #0FFh
-0139 22              254         RET
-                     255     
-013A                 256     ELEV_START_MOVE:
-                     257         ; Target != Current -> Start Moving
-013A 800F            258         SJMP ELEV_DIFF
-                     259     
-013C                 260     ELEV_IDLE_RET:
-013C 756400          261         MOV ELEV_DIR, #00h     ; Stop direction
-013F 22              262         RET
-                     263     
-0140                 264     ELEV_INIT:
-0140 E570            265         MOV A, 070h
-0142 F571            266         MOV 071h, A
-0144 120000   F      267         LCALL LCD_CLEAR
-0147 120000   F      268         LCALL SHOW_OPEN_FLOOR
-014A 22              269         RET
-                     270     
-014B                 271     ELEV_DIFF:
-014B 8E58            272         MOV ELEV_TARGET, R6
+0120 B42204          220         CJNE A, #ELEV_ARRIVED, CHECK_ELEV_CLOSE
+0123 120000   F      221         LCALL ELEV_ARRIVED_HANDLER
+0126 22              222         RET
+0127                 223     CHECK_ELEV_CLOSE:
+0127 B42304          224         CJNE A, #ELEV_CLOSE, RT_RETURN
+012A 120000   F      225         LCALL ELEV_CLOSE_HANDLER
+012D 22              226         RET
+012E                 227     RT_RETURN:
+012E 22              228         RET
+                     229     
+                     230     ; --------------------
+                     231     ; Elevator handlers (ported from teammate code)
+                     232     ; Uses variables: CUR_FLr (056h), ELEV_TIMER (057h), ELEV_TARGET (058h), ONE_SEC_CNT (059h)
+                     233     ; --------------------
+                     234     
+012F                 235     ELEV_HANDLER:
+012F E571            236         MOV A, 071h
+0131 B57054          237         CJNE A, 070h, ELEV_INIT
+                     238         
+                     239         ; 1. Check for new key input and set bitmap
+0134 120000   F      240         LCALL CHECK_AND_SET_REQUEST
+                     241     
+                     242         ; --- Added: Idle Open Logic ---
+                     243         ; Check Internal Open Key ('C')
+0137 E561            244         MOV A, 061h
+0139 6009            245         JZ EH_CHECK_CUR_FL
+013B E560            246         MOV A, 060h
+013D 540F            247         ANL A, #0Fh
+013F B40C02          248         CJNE A, #0Ch, EH_CHECK_CUR_FL
+                     249         ; 'C' pressed -> Open
+0142 800C            250         SJMP EH_OPEN_NOW
+                     251     
+0144                 252     EH_CHECK_CUR_FL:
+                     253         ; Check request at current floor (Int/Ext)
+0144 AE56            254         MOV R6, CUR_FLr
+0146 120000   F      255         LCALL CHECK_FLOOR_REQUEST
+0149 5012            256         JNC EH_SCAN
+                     257         ; Request at current floor -> Open
+014B 120000   F      258         LCALL CLEAR_FLOOR_REQUEST
+014E 8000            259         SJMP EH_OPEN_NOW
+                     260         ; ------------------------------
+                     261     
+0150                 262     EH_OPEN_NOW:
+0150 757022          263         MOV 070h, #ELEV_ARRIVED
+0153 755705          264         MOV ELEV_TIMER, #05h
+0156 755900          265         MOV ONE_SEC_CNT, #00h
+0159 7571FF          266         MOV 071h, #0FFh
+015C 22              267         RET
+                     268     
+015D                 269     EH_SCAN:
+                     270         ; 2. Find next target using SCAN algorithm
+015D 120000   F      271         LCALL SCAN_FIND_NEXT_TARGET
+0160 500B            272         JNC ELEV_CHECK_PARK    ; No request, check parking logic
                      273         
-                     274         ; Determine direction using Index comparison (avoids signed number issues)
-                     275         ; Convert Target to Index
-014D C006            276         PUSH 06h              ; Save R6
-014F 120000   F      277         LCALL FLOOR_TO_INDEX
-0152 EC              278         MOV A, R4
-0153 FB              279         MOV R3, A             ; R3 = Target Index
-                     280         
-                     281         ; Convert Current to Index
-0154 AE56            282         MOV R6, CUR_FLr
-0156 120000   F      283         LCALL FLOOR_TO_INDEX  ; R4 = Current Index
-0159 D006            284         POP 06h               ; Restore R6 (Target Floor)
-                     285         
-                     286         ; Compare: if Target Index > Current Index, go up
-015B EB              287         MOV A, R3
-015C C3              288         CLR C
-015D 9C              289         SUBB A, R4            ; A = Target Index - Current Index
-015E 400B            290         JC E_GO_DOWN
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     6
+                     274         ; R6 has target floor
+0162 EE              275         MOV A, R6
+                     276         
+                     277         ; Check if target == current
+0163 B55605          278         CJNE A, CUR_FLr, ELEV_START_MOVE
+                     279         
+                     280         ; Target == Current -> Clear request and Open Door
+0166 120000   F      281         LCALL CLEAR_FLOOR_REQUEST  ; Clear request for R6
+0169 80E5            282         SJMP EH_OPEN_NOW
+                     283     
+016B                 284     ELEV_START_MOVE:
+                     285         ; Target != Current -> Start Moving
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     6
 
-0160 6009            291         JZ E_GO_DOWN          ; Should not happen, but safety
-                     292         ; Go Up
-0162 756401          293         MOV ELEV_DIR, #01h
-0165 7D23            294         MOV R5, #35           ; 'U'
-0167 F557            295         MOV ELEV_TIMER, A     ; Travel time = index difference
-0169 800A            296         SJMP E_START
-016B                 297     E_GO_DOWN:
-016B 756402          298         MOV ELEV_DIR, #02h
-016E 7D0D            299         MOV R5, #13           ; 'd'
-                     300         ; Calculate travel time = Current Index - Target Index
-0170 EC              301         MOV A, R4
-0171 C3              302         CLR C
-0172 9B              303         SUBB A, R3
-0173 F557            304         MOV ELEV_TIMER, A
-                     305         
-0175                 306     E_START:
-0175 757021          307         MOV 070h, #ELEV_RUN
-0178 756100          308         MOV 061h, #00h
-                     309         
-                     310         ; LCD Update
-017B 120000   F      311         LCALL LCD_CLEAR
-017E 900000   F      312         MOV DPTR, #LCD_MSG_RUN
-0181 120000   F      313         LCALL LCD_SHOW_STR
-                     314         
-0184 8D28            315         MOV 028h, R5           ; Dir
-0186 752925          316         MOV 029h, #37          ; Space
-                     317         
-0189 120000   F      318         LCALL UPDATE_CUR_DISPLAY
-018C 120000   F      319         LCALL UPDATE_TGT_DISPLAY
-                     320         
-018F 22              321         RET
-                     322     
-0190                 323     ELEV_RUN_HANDLER:
-                     324         ; Running display handled by buffer written in E_START
-0190 E571            325         MOV A, 071h
-0192 B57020          326         CJNE A, 070h, ER_INIT
-                     327         
-                     328         ; Update Display with CUR_FLr (Dynamic Update)
-0195 120000   F      329         LCALL UPDATE_CUR_DISPLAY
-                     330     
-                     331         ; Check if we should stop at current floor (途中停靠)
-0198 AE56            332         MOV R6, CUR_FLr
-019A 120000   F      333         LCALL CHECK_FLOOR_REQUEST
-019D 5012            334         JNC ER_CHK_INT_KEY     ; No request at current floor
+016B 8026            286         SJMP ELEV_DIFF
+                     287     
+016D                 288     ELEV_CHECK_PARK:
+                     289         ; No requests: Decide Parking Floor (1 or 8) based on proximity
+                     290         ; Index 2 (Flr 1) vs Index 9 (Flr 8). Split at Floor 4/5.
+016D AE56            291         MOV R6, CUR_FLr
+016F 120000   F      292         LCALL FLOOR_TO_INDEX  ; R4 = Current Index
+0172 EC              293         MOV A, R4
+0173 B40600          294         CJNE A, #06h, ECP_TEST
+0176                 295     ECP_TEST:
+0176 5004            296         JNC ECP_GO_8          ; If A >= 6 (Floor 5+), Go Floor 8
+                     297         
+0178 7E01            298         MOV R6, #01h          ; Else Go Floor 1
+017A 8002            299         SJMP ECP_EXEC
+                     300         
+017C                 301     ECP_GO_8:
+017C 7E08            302         MOV R6, #08h
+                     303     
+017E                 304     ECP_EXEC:
+017E EE              305         MOV A, R6
+017F B55604          306         CJNE A, CUR_FLr, ECP_MOVE
+                     307         ; Already at parking floor -> Idle
+0182 756400          308         MOV ELEV_DIR, #00h
+0185 22              309         RET
+0186                 310     ECP_MOVE:
+                     311         ; Not at parking floor -> Move to target (R6)
+0186 800B            312         SJMP ELEV_DIFF
+                     313     
+0188                 314     ELEV_INIT:
+0188 E570            315         MOV A, 070h
+018A F571            316         MOV 071h, A
+018C 120000   F      317         LCALL LCD_CLEAR
+018F 120000   F      318         LCALL SHOW_OPEN_FLOOR
+0192 22              319         RET
+                     320     
+0193                 321     ELEV_DIFF:
+0193 8E58            322         MOV ELEV_TARGET, R6
+                     323         
+                     324         ; Determine direction using Index comparison (avoids signed number issues)
+                     325         ; Convert Target to Index
+0195 C006            326         PUSH 06h              ; Save R6
+0197 120000   F      327         LCALL FLOOR_TO_INDEX
+019A EC              328         MOV A, R4
+019B FB              329         MOV R3, A             ; R3 = Target Index
+                     330         
+                     331         ; Convert Current to Index
+019C AE56            332         MOV R6, CUR_FLr
+019E 120000   F      333         LCALL FLOOR_TO_INDEX  ; R4 = Current Index
+01A1 D006            334         POP 06h               ; Restore R6 (Target Floor)
                      335         
-                     336         ; There's a request at current floor!
-                     337         ; Clear the request
-019F AE56            338         MOV R6, CUR_FLr
-01A1 120000   F      339         LCALL CLEAR_FLOOR_REQUEST
-                     340         
-                     341         ; Transition to Arrived
-01A4 757022          342         MOV 070h, #ELEV_ARRIVED
-01A7 755705          343         MOV ELEV_TIMER, #05h
-01AA 755900          344         MOV ONE_SEC_CNT, #00h
-01AD 7571FF          345         MOV 071h, #0FFh
-01B0 22              346         RET
-                     347     
-01B1                 348     ER_CHK_INT_KEY:
-                     349         ; Listen for new keys
-01B1 120000   F      350         LCALL CHECK_AND_SET_REQUEST
-01B4 22              351         RET
-                     352     
-01B5                 353     ER_INIT:
-01B5 E570            354         MOV A, 070h
-01B7 F571            355         MOV 071h, A
-01B9 22              356         RET
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     7
+                     336         ; Compare: if Target Index > Current Index, go up
+01A3 EB              337         MOV A, R3
+01A4 C3              338         CLR C
+01A5 9C              339         SUBB A, R4            ; A = Target Index - Current Index
+01A6 400B            340         JC E_GO_DOWN
+01A8 6009            341         JZ E_GO_DOWN          ; Should not happen, but safety
+                     342         ; Go Up
+01AA 756401          343         MOV ELEV_DIR, #01h
+01AD 7D23            344         MOV R5, #35           ; 'U'
+01AF F557            345         MOV ELEV_TIMER, A     ; Travel time = index difference
+01B1 800A            346         SJMP E_START
+01B3                 347     E_GO_DOWN:
+01B3 756402          348         MOV ELEV_DIR, #02h
+01B6 7D0D            349         MOV R5, #13           ; 'd'
+                     350         ; Calculate travel time = Current Index - Target Index
+01B8 EC              351         MOV A, R4
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     7
 
-                     357     
-01BA                 358     ELEV_ARRIVED_HANDLER:
-01BA E571            359         MOV A, 071h
-01BC B57051          360         CJNE A, 070h, EA_INIT
-                     361         
-                     362         ; Check D key (Close)
-01BF E561            363         MOV A, 061h
-01C1 6017            364         JZ EA_CHECK_REQ
-01C3 E560            365         MOV A, 060h
-01C5 540F            366         ANL A, #0Fh
-01C7 B40D10          367         CJNE A, #0Dh, EA_CHECK_REQ
-                     368         ; D pressed -> Close
-01CA 757023          369         MOV 070h, #ELEV_CLOSE
-01CD 755702          370         MOV ELEV_TIMER, #02h
-01D0 755900          371         MOV ONE_SEC_CNT, #00h
-01D3 7571FF          372         MOV 071h, #0FFh
-01D6 756100          373         MOV 061h, #00h
-01D9 22              374         RET
-                     375     
-01DA                 376     EA_CHECK_REQ:
-                     377         ; Check for floor keys to set bitmap
-01DA 120000   F      378         LCALL CHECK_AND_SET_REQUEST
-01DD 8000            379         SJMP EA_BLINK_LOGIC
+01B9 C3              352         CLR C
+01BA 9B              353         SUBB A, R3
+01BB F557            354         MOV ELEV_TIMER, A
+                     355         
+01BD                 356     E_START:
+01BD 757021          357         MOV 070h, #ELEV_RUN
+01C0 756100          358         MOV 061h, #00h
+                     359         
+                     360         ; LCD Update
+01C3 120000   F      361         LCALL LCD_CLEAR
+01C6 900000   F      362         MOV DPTR, #LCD_MSG_RUN
+01C9 120000   F      363         LCALL LCD_SHOW_STR
+                     364         
+01CC 8D28            365         MOV 028h, R5           ; Dir
+01CE 752925          366         MOV 029h, #37          ; Space
+                     367         
+01D1 120000   F      368         LCALL UPDATE_CUR_DISPLAY
+01D4 120000   F      369         LCALL UPDATE_TGT_DISPLAY
+                     370         
+01D7 22              371         RET
+                     372     
+01D8                 373     ELEV_RUN_HANDLER:
+                     374         ; Running display handled by buffer written in E_START
+01D8 E571            375         MOV A, 071h
+01DA B57020          376         CJNE A, 070h, ER_INIT
+                     377         
+                     378         ; Update Display with CUR_FLr (Dynamic Update)
+01DD 120000   F      379         LCALL UPDATE_CUR_DISPLAY
                      380     
-01DF                 381     EA_BLINK_LOGIC:
-01DF E559            382         MOV A, ONE_SEC_CNT
-01E1 C3              383         CLR C
-01E2 9432            384         SUBB A, #50
-01E4 5008            385         JNC EA_OFF
-                     386         ; ON
-01E6 752814          387         MOV 028h, #20          ; '0.'
-01E9 752911          388         MOV 029h, #17          ; 'P.'
-01EC 8006            389         SJMP EA_TAIL
-01EE                 390     EA_OFF:
-                     391         ; OFF
-01EE 752825          392         MOV 028h, #37          ; ' '
-01F1 752925          393         MOV 029h, #37          ; ' '
-01F4                 394     EA_TAIL:
-01F4 752A25          395         MOV 02Ah, #37          ; ' '
-01F7 752B25          396         MOV 02Bh, #37          ; ' '
-01FA E556            397         MOV A, CUR_FLr
-01FC 20E707          398         JB ACC.7, ARR_NEG
-01FF 752C25          399         MOV 02Ch, #37          ; ' '
-0202 85562D          400         MOV 02Dh, CUR_FLr
-0205 22              401         RET
-0206                 402     ARR_NEG:
-0206 752C24          403         MOV 02Ch, #36          ; '-'
-0209 E556            404         MOV A, CUR_FLr
-020B F4              405         CPL A
-020C 04              406         INC A
-020D F52D            407         MOV 02Dh, A
-020F 22              408         RET
-0210                 409     EA_INIT:
-0210 E570            410         MOV A, 070h
-0212 F571            411         MOV 071h, A
-                     412         
-                     413         ; Clear request for current floor (arrived at target)
-0214 AE56            414         MOV R6, CUR_FLr
-0216 120000   F      415         LCALL CLEAR_FLOOR_REQUEST
-                     416         
-                     417         ; LCD Update
-0219 120000   F      418         LCALL LCD_CLEAR
-021C 900000   F      419         MOV DPTR, #LCD_MSG_OPEN
-021F 120000   F      420         LCALL LCD_SHOW_STR
-                     421         
-0222 22              422         RET
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     8
+                     381         ; Check if we should stop at current floor (途中停靠)
+01E0 AE56            382         MOV R6, CUR_FLr
+01E2 120000   F      383         LCALL CHECK_FLOOR_REQUEST
+01E5 5012            384         JNC ER_CHK_INT_KEY     ; No request at current floor
+                     385         
+                     386         ; There's a request at current floor!
+                     387         ; Clear the request
+01E7 AE56            388         MOV R6, CUR_FLr
+01E9 120000   F      389         LCALL CLEAR_FLOOR_REQUEST
+                     390         
+                     391         ; Transition to Arrived
+01EC 757022          392         MOV 070h, #ELEV_ARRIVED
+01EF 755705          393         MOV ELEV_TIMER, #05h
+01F2 755900          394         MOV ONE_SEC_CNT, #00h
+01F5 7571FF          395         MOV 071h, #0FFh
+01F8 22              396         RET
+                     397     
+01F9                 398     ER_CHK_INT_KEY:
+                     399         ; Listen for new keys
+01F9 120000   F      400         LCALL CHECK_AND_SET_REQUEST
+01FC 22              401         RET
+                     402     
+01FD                 403     ER_INIT:
+01FD E570            404         MOV A, 070h
+01FF F571            405         MOV 071h, A
+0201 22              406         RET
+                     407     
+0202                 408     ELEV_ARRIVED_HANDLER:
+0202 E571            409         MOV A, 071h
+0204 B57051          410         CJNE A, 070h, EA_INIT
+                     411         
+                     412         ; Check D key (Close)
+0207 E561            413         MOV A, 061h
+0209 6017            414         JZ EA_CHECK_REQ
+020B E560            415         MOV A, 060h
+020D 540F            416         ANL A, #0Fh
+020F B40D10          417         CJNE A, #0Dh, EA_CHECK_REQ
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     8
 
-                     423     
-0223                 424     ELEV_CLOSE_HANDLER:
-0223 E571            425         MOV A, 071h
-0225 B57047          426         CJNE A, 070h, EC_INIT
-                     427         
-                     428         ; Check C key (Reopen) or Current Floor Key
-0228 E561            429         MOV A, 061h
-022A 601C            430         JZ EC_CHECK_REQ
-022C E560            431         MOV A, 060h
-022E 540F            432         ANL A, #0Fh
-0230 B40C02          433         CJNE A, #0Ch, EC_CHECK_CUR
-                     434         ; C pressed -> Reopen
-0233 8003            435         SJMP EC_REOPEN
-0235                 436     EC_CHECK_CUR:
-0235 B55610          437         CJNE A, CUR_FLr, EC_CHECK_REQ
-                     438         ; Current Floor pressed -> Reopen
-0238                 439     EC_REOPEN:
-0238 757022          440         MOV 070h, #ELEV_ARRIVED
-023B 755705          441         MOV ELEV_TIMER, #05h
-023E 755900          442         MOV ONE_SEC_CNT, #00h
-0241 7571FF          443         MOV 071h, #0FFh
-0244 756100          444         MOV 061h, #00h
-0247 22              445         RET
-                     446     
-0248                 447     EC_CHECK_REQ:
-0248 120000   F      448         LCALL CHECK_AND_SET_REQUEST
-024B 8000            449         SJMP EC_BLINK_LOGIC
-                     450     
-024D                 451     EC_BLINK_LOGIC:
-024D E559            452         MOV A, ONE_SEC_CNT
-024F C3              453         CLR C
-0250 9432            454         SUBB A, #50
-0252 5008            455         JNC EC_OFF
-                     456         ; ON
-0254 75280C          457         MOV 028h, #12          ; 'C'
-0257 752913          458         MOV 029h, #19          ; 'L'
-025A 8006            459         SJMP EC_TAIL
-025C                 460     EC_OFF:
-025C 752825          461         MOV 028h, #37
-025F 752925          462         MOV 029h, #37
-0262                 463     EC_TAIL:
-0262 752A25          464         MOV 02Ah, #37
-0265 752B25          465         MOV 02Bh, #37
-0268 752C25          466         MOV 02Ch, #37
-026B 752D25          467         MOV 02Dh, #37
-026E 22              468         RET
-026F                 469     EC_INIT:
-026F E570            470         MOV A, 070h
-0271 F571            471         MOV 071h, A
-                     472         ; MOV P2, #00h           ; Closing: LEDs ON (Removed for LCD compatibility)
-                     473         
-                     474         ; LCD Update
-0273 120000   F      475         LCALL LCD_CLEAR
-0276 900000   F      476         MOV DPTR, #LCD_MSG_CLOSE
-0279 120000   F      477         LCALL LCD_SHOW_STR
-                     478         
-027C 22              479         RET
-                     480     
-                     481     ; Show open floor helper
-027D                 482     SHOW_OPEN_FLOOR:
-027D 120000   F      483         LCALL LCD_CLEAR ; Ensure clear
-0280 752814          484         MOV 028h, #20          ; '0.'
-0283 752911          485         MOV 029h, #17          ; 'P.'
-0286 752A25          486         MOV 02Ah, #37          ; ' '
-0289 752B25          487         MOV 02Bh, #37          ; ' '
-028C E556            488         MOV A, CUR_FLr
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE     9
+                     418         ; D pressed -> Close
+0212 757023          419         MOV 070h, #ELEV_CLOSE
+0215 755702          420         MOV ELEV_TIMER, #02h
+0218 755900          421         MOV ONE_SEC_CNT, #00h
+021B 7571FF          422         MOV 071h, #0FFh
+021E 756100          423         MOV 061h, #00h
+0221 22              424         RET
+                     425     
+0222                 426     EA_CHECK_REQ:
+                     427         ; Check for floor keys to set bitmap
+0222 120000   F      428         LCALL CHECK_AND_SET_REQUEST
+0225 8000            429         SJMP EA_BLINK_LOGIC
+                     430     
+0227                 431     EA_BLINK_LOGIC:
+0227 E559            432         MOV A, ONE_SEC_CNT
+0229 C3              433         CLR C
+022A 9432            434         SUBB A, #50
+022C 5008            435         JNC EA_OFF
+                     436         ; ON
+022E 752814          437         MOV 028h, #20          ; '0.'
+0231 752911          438         MOV 029h, #17          ; 'P.'
+0234 8006            439         SJMP EA_TAIL
+0236                 440     EA_OFF:
+                     441         ; OFF
+0236 752825          442         MOV 028h, #37          ; ' '
+0239 752925          443         MOV 029h, #37          ; ' '
+023C                 444     EA_TAIL:
+023C 752A25          445         MOV 02Ah, #37          ; ' '
+023F 752B25          446         MOV 02Bh, #37          ; ' '
+0242 E556            447         MOV A, CUR_FLr
+0244 20E707          448         JB ACC.7, ARR_NEG
+0247 752C25          449         MOV 02Ch, #37          ; ' '
+024A 85562D          450         MOV 02Dh, CUR_FLr
+024D 22              451         RET
+024E                 452     ARR_NEG:
+024E 752C24          453         MOV 02Ch, #36          ; '-'
+0251 E556            454         MOV A, CUR_FLr
+0253 F4              455         CPL A
+0254 04              456         INC A
+0255 F52D            457         MOV 02Dh, A
+0257 22              458         RET
+0258                 459     EA_INIT:
+0258 E570            460         MOV A, 070h
+025A F571            461         MOV 071h, A
+                     462         
+                     463         ; Clear request for current floor (arrived at target)
+025C AE56            464         MOV R6, CUR_FLr
+025E 120000   F      465         LCALL CLEAR_FLOOR_REQUEST
+                     466         
+                     467         ; LCD Update
+0261 120000   F      468         LCALL LCD_CLEAR
+0264 900000   F      469         MOV DPTR, #LCD_MSG_OPEN
+0267 120000   F      470         LCALL LCD_SHOW_STR
+                     471         
+026A 22              472         RET
+                     473     
+026B                 474     ELEV_CLOSE_HANDLER:
+026B E571            475         MOV A, 071h
+026D B57047          476         CJNE A, 070h, EC_INIT
+                     477         
+                     478         ; Check C key (Reopen) or Current Floor Key
+0270 E561            479         MOV A, 061h
+0272 601C            480         JZ EC_CHECK_REQ
+0274 E560            481         MOV A, 060h
+0276 540F            482         ANL A, #0Fh
+0278 B40C02          483         CJNE A, #0Ch, EC_CHECK_CUR
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE     9
 
-028E 20E707          489         JB ACC.7, SOF_NEG
-0291 752C25          490         MOV 02Ch, #37          ; ' '
-0294 85562D          491         MOV 02Dh, CUR_FLr
-0297 22              492         RET
-0298                 493     SOF_NEG:
-0298 752C24          494         MOV 02Ch, #36          ; '-'
-029B E556            495         MOV A, CUR_FLr
-029D F4              496         CPL A
-029E 04              497         INC A
-029F F52D            498         MOV 02Dh, A
-02A1 22              499         RET
+                     484         ; C pressed -> Reopen
+027B 8003            485         SJMP EC_REOPEN
+027D                 486     EC_CHECK_CUR:
+027D B55610          487         CJNE A, CUR_FLr, EC_CHECK_REQ
+                     488         ; Current Floor pressed -> Reopen
+0280                 489     EC_REOPEN:
+0280 757022          490         MOV 070h, #ELEV_ARRIVED
+0283 755705          491         MOV ELEV_TIMER, #05h
+0286 755900          492         MOV ONE_SEC_CNT, #00h
+0289 7571FF          493         MOV 071h, #0FFh
+028C 756100          494         MOV 061h, #00h
+028F 22              495         RET
+                     496     
+0290                 497     EC_CHECK_REQ:
+0290 120000   F      498         LCALL CHECK_AND_SET_REQUEST
+0293 8000            499         SJMP EC_BLINK_LOGIC
                      500     
-                     501     ; ---------------------------------------------------------
-                     502     ; Queue Helper Functions
-                     503     ; ---------------------------------------------------------
-                     504     
-                     505     ; Check if key is floor key (0-9), if so push to queue
-                     506     ; Mapping:
-                     507     ; Key 0 -> Floor -2 (FEh)
-                     508     ; Key 1 -> Floor -1 (FFh)
-                     509     ; Key 2 -> Floor 1  (01h)
-                     510     ; ...
-                     511     ; Key 9 -> Floor 8  (08h)
-                     512     ; Key E (14) -> External Up (Push CUR_FLr to EXT_Q)
-                     513     ; Key F (15) -> External Down (Push CUR_FLr to EXT_Q)
-                     514     ; Helper to map Key (R7) to Floor (R6). CY=1 if valid.
-02A2                 515     GET_FLOOR_FROM_KEY:
-02A2 EF              516         MOV A, R7
-02A3 C3              517         CLR C
-02A4 940A            518         SUBB A, #0Ah
-02A6 5011            519         JNC GFK_INVALID      ; If Key >= 10, return CY=0
-                     520     
-                     521         ; Key is 0-9
-02A8 EF              522         MOV A, R7
-02A9 6006            523         JZ GFK_KEY_0     ; If Key == 0
-                     524         
-02AB 14              525         DEC A            ; A = Key - 1
-02AC 6007            526         JZ GFK_KEY_1     ; If Key == 1 (A became 0)
-                     527         
-                     528         ; Key >= 2, Target = Key - 1
-02AE FE              529         MOV R6, A
-02AF D3              530         SETB C
-02B0 22              531         RET
-                     532     
-02B1                 533     GFK_KEY_0:
-02B1 7EFE            534         MOV R6, #0FEh    ; -2
-02B3 D3              535         SETB C
-02B4 22              536         RET
-                     537     
-02B5                 538     GFK_KEY_1:
-02B5 7EFF            539         MOV R6, #0FFh    ; -1
-02B7 D3              540         SETB C
-02B8 22              541         RET
-                     542     
-02B9                 543     GFK_INVALID:
-02B9 C3              544         CLR C
-02BA 22              545         RET
-                     546     
-                     547     ; Helper to print Floor Number (R6) to LCD at current cursor
-02BB                 548     LCD_PRINT_FLOOR:
-02BB EE              549         MOV A, R6
-02BC 20E70C          550         JB ACC.7, LPF_NEG
-                     551         ; Positive
-02BF 7420            552         MOV A, #' '
-02C1 120000   F      553         LCALL LCD_WR_DAT
-02C4 EE              554         MOV A, R6
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    10
+0295                 501     EC_BLINK_LOGIC:
+0295 E559            502         MOV A, ONE_SEC_CNT
+0297 C3              503         CLR C
+0298 9432            504         SUBB A, #50
+029A 5008            505         JNC EC_OFF
+                     506         ; ON
+029C 75280C          507         MOV 028h, #12          ; 'C'
+029F 752913          508         MOV 029h, #19          ; 'L'
+02A2 8006            509         SJMP EC_TAIL
+02A4                 510     EC_OFF:
+02A4 752825          511         MOV 028h, #37
+02A7 752925          512         MOV 029h, #37
+02AA                 513     EC_TAIL:
+02AA 752A25          514         MOV 02Ah, #37
+02AD 752B25          515         MOV 02Bh, #37
+02B0 752C25          516         MOV 02Ch, #37
+02B3 752D25          517         MOV 02Dh, #37
+02B6 22              518         RET
+02B7                 519     EC_INIT:
+02B7 E570            520         MOV A, 070h
+02B9 F571            521         MOV 071h, A
+                     522         ; MOV P2, #00h           ; Closing: LEDs ON (Removed for LCD compatibility)
+                     523         
+                     524         ; LCD Update
+02BB 120000   F      525         LCALL LCD_CLEAR
+02BE 900000   F      526         MOV DPTR, #LCD_MSG_CLOSE
+02C1 120000   F      527         LCALL LCD_SHOW_STR
+                     528         
+02C4 22              529         RET
+                     530     
+                     531     ; Show open floor helper (Now shows FL + Floor for Idle)
+02C5                 532     SHOW_OPEN_FLOOR:
+02C5 120000   F      533         LCALL LCD_CLEAR ; Ensure clear
+                     534         
+                     535         ; Line 1: Welcome
+02C8 7480            536         MOV A, #80h
+02CA 120000   F      537         LCALL LCD_WR_CMD
+02CD 900000   F      538         MOV DPTR, #LCD_MSG_WELCOME
+02D0 120000   F      539         LCALL LCD_SHOW_STR
+                     540     
+                     541         ; Line 2: FL: [Floor]
+02D3 74C0            542         MOV A, #0C0h
+02D5 120000   F      543         LCALL LCD_WR_CMD
+02D8 900000   F      544         MOV DPTR, #LCD_MSG_FL
+02DB 120000   F      545         LCALL LCD_SHOW_STR
+02DE AE56            546         MOV R6, CUR_FLr
+02E0 120000   F      547         LCALL LCD_PRINT_FLOOR
+                     548         
+                     549         ; LED6 Update
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    10
 
-02C5 2430            555         ADD A, #'0'
-02C7 120000   F      556         LCALL LCD_WR_DAT
-02CA 22              557         RET
-02CB                 558     LPF_NEG:
-02CB 742D            559         MOV A, #'-'
-02CD 120000   F      560         LCALL LCD_WR_DAT
-02D0 EE              561         MOV A, R6
-02D1 F4              562         CPL A
-02D2 04              563         INC A
-02D3 2430            564         ADD A, #'0'
-02D5 120000   F      565         LCALL LCD_WR_DAT
-02D8 22              566         RET
-                     567     
-                     568     ; Helper to show Outside Status
-                     569     ; R6 = Floor, R5 = Action (0=None, 1=Up, 2=Down)
-02D9                 570     SHOW_OUTSIDE_STATUS:
-02D9 7480            571         MOV A, #80h
-02DB 120000   F      572         LCALL LCD_WR_CMD
-                     573         
-02DE 900000   F      574         MOV DPTR, #LCD_STR_OUT_PREFIX
-02E1 120000   F      575         LCALL LCD_SHOW_STR
-                     576         
-02E4 120000   F      577         LCALL LCD_PRINT_FLOOR
-                     578         
-02E7 7420            579         MOV A, #' '
-02E9 120000   F      580         LCALL LCD_WR_DAT
-                     581         
-02EC ED              582         MOV A, R5
-02ED 6011            583         JZ SOS_NONE
-02EF 14              584         DEC A
-02F0 6007            585         JZ SOS_UP
-                     586         ; Down
-02F2 900000   F      587         MOV DPTR, #LCD_STR_DOWN
-02F5 120000   F      588         LCALL LCD_SHOW_STR
-02F8 22              589         RET
-02F9                 590     SOS_UP:
-02F9 900000   F      591         MOV DPTR, #LCD_STR_UP
-02FC 120000   F      592         LCALL LCD_SHOW_STR
-02FF 22              593         RET
-0300                 594     SOS_NONE:
-0300 900000   F      595         MOV DPTR, #LCD_STR_EMPTY
-0303 120000   F      596         LCALL LCD_SHOW_STR
-0306 22              597         RET
+02E3 75280F          550         MOV 028h, #15          ; 'F'
+02E6 752913          551         MOV 029h, #19          ; 'L'
+02E9 752A25          552         MOV 02Ah, #37          ; ' '
+02EC 752B25          553         MOV 02Bh, #37          ; ' '
+02EF E556            554         MOV A, CUR_FLr
+02F1 20E707          555         JB ACC.7, SOF_NEG
+02F4 752C25          556         MOV 02Ch, #37          ; ' '
+02F7 85562D          557         MOV 02Dh, CUR_FLr
+02FA 22              558         RET
+02FB                 559     SOF_NEG:
+02FB 752C24          560         MOV 02Ch, #36          ; '-'
+02FE E556            561         MOV A, CUR_FLr
+0300 F4              562         CPL A
+0301 04              563         INC A
+0302 F52D            564         MOV 02Dh, A
+0304 22              565         RET
+                     566     
+                     567     ; ---------------------------------------------------------
+                     568     ; Queue Helper Functions
+                     569     ; ---------------------------------------------------------
+                     570     
+                     571     ; Check if key is floor key (0-9), if so push to queue
+                     572     ; Mapping:
+                     573     ; Key 0 -> Floor -2 (FEh)
+                     574     ; Key 1 -> Floor -1 (FFh)
+                     575     ; Key 2 -> Floor 1  (01h)
+                     576     ; ...
+                     577     ; Key 9 -> Floor 8  (08h)
+                     578     ; Key E (14) -> External Up (Push CUR_FLr to EXT_Q)
+                     579     ; Key F (15) -> External Down (Push CUR_FLr to EXT_Q)
+                     580     ; Helper to map Key (R7) to Floor (R6). CY=1 if valid.
+0305                 581     GET_FLOOR_FROM_KEY:
+0305 EF              582         MOV A, R7
+0306 C3              583         CLR C
+0307 940A            584         SUBB A, #0Ah
+0309 5011            585         JNC GFK_INVALID      ; If Key >= 10, return CY=0
+                     586     
+                     587         ; Key is 0-9
+030B EF              588         MOV A, R7
+030C 6006            589         JZ GFK_KEY_0     ; If Key == 0
+                     590         
+030E 14              591         DEC A            ; A = Key - 1
+030F 6007            592         JZ GFK_KEY_1     ; If Key == 1 (A became 0)
+                     593         
+                     594         ; Key >= 2, Target = Key - 1
+0311 FE              595         MOV R6, A
+0312 D3              596         SETB C
+0313 22              597         RET
                      598     
-0307                 599     CHECK_AND_SET_REQUEST:
-0307 E561            600         MOV A, 061h
-0309 6078            601         JZ CASR_RET
-030B E560            602         MOV A, 060h
-030D 540F            603         ANL A, #0Fh
-030F FF              604         MOV R7, A
-                     605         
-                     606         ; Check for 'A' (Mode Switch)
-0310 BF0A20          607         CJNE R7, #0Ah, CASR_CHK_MODE
-                     608         
-                     609         ; Toggle Mode
-0313 E565            610         MOV A, INPUT_MODE
-0315 6401            611         XRL A, #01h
-0317 F565            612         MOV INPUT_MODE, A
-                     613         
-                     614         ; Update LCD
-0319 E565            615         MOV A, INPUT_MODE
-031B 6009            616         JZ CASR_SHOW_INSIDE
-                     617         
-                     618         ; Show Outside (Default Select)
-031D AE66            619         MOV R6, OUT_SEL_VAL
-031F 7D00            620         MOV R5, #00h
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    11
+0314                 599     GFK_KEY_0:
+0314 7EFE            600         MOV R6, #0FEh    ; -2
+0316 D3              601         SETB C
+0317 22              602         RET
+                     603     
+0318                 604     GFK_KEY_1:
+0318 7EFF            605         MOV R6, #0FFh    ; -1
+031A D3              606         SETB C
+031B 22              607         RET
+                     608     
+031C                 609     GFK_INVALID:
+031C C3              610         CLR C
+031D 22              611         RET
+                     612     
+                     613     ; Helper to print Floor Number (R6) to LCD at current cursor
+031E                 614     LCD_PRINT_FLOOR:
+031E EE              615         MOV A, R6
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    11
 
-0321 120000   F      621         LCALL SHOW_OUTSIDE_STATUS
-0324 805A            622         SJMP CASR_CONSUME
-                     623         
-0326                 624     CASR_SHOW_INSIDE:
-0326 7480            625         MOV A, #80h
-0328 120000   F      626         LCALL LCD_WR_CMD
-032B 900000   F      627         MOV DPTR, #LCD_MSG_INSIDE
-032E 120000   F      628         LCALL LCD_SHOW_STR
-0331 804D            629         SJMP CASR_CONSUME
-                     630     
-0333                 631     CASR_CHK_MODE:
-0333 E565            632         MOV A, INPUT_MODE
-0335 7014            633         JNZ CASR_OUTSIDE_MODE
-                     634         
-                     635         ; --- INSIDE MODE ---
-                     636         ; Check 0-9
-0337 120000   F      637         LCALL GET_FLOOR_FROM_KEY
-033A 5005            638         JNC CASR_IN_CHK_OTHER
-                     639         ; Valid Floor in R6 -> Set Internal Bitmap
-033C 120000   F      640         LCALL SET_INT_REQUEST
-033F 803F            641         SJMP CASR_CONSUME
+031F 20E70C          616         JB ACC.7, LPF_NEG
+                     617         ; Positive
+0322 7420            618         MOV A, #' '
+0324 120000   F      619         LCALL LCD_WR_DAT
+0327 EE              620         MOV A, R6
+0328 2430            621         ADD A, #'0'
+032A 120000   F      622         LCALL LCD_WR_DAT
+032D 22              623         RET
+032E                 624     LPF_NEG:
+032E 742D            625         MOV A, #'-'
+0330 120000   F      626         LCALL LCD_WR_DAT
+0333 EE              627         MOV A, R6
+0334 F4              628         CPL A
+0335 04              629         INC A
+0336 2430            630         ADD A, #'0'
+0338 120000   F      631         LCALL LCD_WR_DAT
+033B 22              632         RET
+                     633     
+                     634     ; Helper to show Outside Status
+                     635     ; R6 = Floor, R5 = Action (0=None, 1=Up, 2=Down)
+033C                 636     SHOW_OUTSIDE_STATUS:
+033C 7480            637         MOV A, #80h
+033E 120000   F      638         LCALL LCD_WR_CMD
+                     639         
+0341 900000   F      640         MOV DPTR, #LCD_STR_OUT_PREFIX
+0344 120000   F      641         LCALL LCD_SHOW_STR
                      642         
-0341                 643     CASR_IN_CHK_OTHER:
-                     644         ; Check E/F -> Ignore
-0341 BF0E02          645         CJNE R7, #0Eh, CASR_IN_CHK_F
-0344 803A            646         SJMP CASR_CONSUME
-0346                 647     CASR_IN_CHK_F:
-0346 BF0F3A          648         CJNE R7, #0Fh, CASR_RET
-0349 8035            649         SJMP CASR_CONSUME
-                     650     
-                     651         ; --- OUTSIDE MODE ---
-034B                 652     CASR_OUTSIDE_MODE:
-                     653         ; Check 0-9
-034B 120000   F      654         LCALL GET_FLOOR_FROM_KEY
-034E 5009            655         JNC CASR_OUT_CHK_OTHER
-                     656         ; Valid Floor -> Store selection
-0350 8E66            657         MOV OUT_SEL_VAL, R6
-                     658         ; Update Display
-0352 7D00            659         MOV R5, #00h
-0354 120000   F      660         LCALL SHOW_OUTSIDE_STATUS
-0357 8027            661         SJMP CASR_CONSUME
-                     662     
-0359                 663     CASR_OUT_CHK_OTHER:
-                     664         ; Check E/F -> Set External Bitmap
-0359 BF0E09          665         CJNE R7, #0Eh, CASR_OUT_CHK_F
-                     666         ; Key E (Up)
-035C AE66            667         MOV R6, OUT_SEL_VAL
-035E 120000   F      668         LCALL SET_EXT_UP_REQUEST
-0361 7D01            669         MOV R5, #01h
-0363 800A            670         SJMP CASR_OUT_SHOW
-0365                 671     CASR_OUT_CHK_F:
-0365 BF0F0E          672         CJNE R7, #0Fh, CASR_OUT_CHK_CD
-                     673         ; Key F (Down)
-0368 AE66            674         MOV R6, OUT_SEL_VAL
-036A 120000   F      675         LCALL SET_EXT_DN_REQUEST
-036D 7D02            676         MOV R5, #02h
-                     677         
-036F                 678     CASR_OUT_SHOW:
-036F AE66            679         MOV R6, OUT_SEL_VAL
-0371 120000   F      680         LCALL SHOW_OUTSIDE_STATUS
-0374 800A            681         SJMP CASR_CONSUME
-                     682     
-0376                 683     CASR_OUT_CHK_CD:
-                     684         ; Check C/D -> Consume (Ignore)
-0376 BF0C02          685         CJNE R7, #0Ch, CASR_OUT_CHK_D
-0379 8005            686         SJMP CASR_CONSUME
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    12
+0347 120000   F      643         LCALL LCD_PRINT_FLOOR
+                     644         
+034A 7420            645         MOV A, #' '
+034C 120000   F      646         LCALL LCD_WR_DAT
+                     647         
+034F ED              648         MOV A, R5
+0350 6011            649         JZ SOS_NONE
+0352 14              650         DEC A
+0353 6007            651         JZ SOS_UP
+                     652         ; Down
+0355 900000   F      653         MOV DPTR, #LCD_STR_DOWN
+0358 120000   F      654         LCALL LCD_SHOW_STR
+035B 22              655         RET
+035C                 656     SOS_UP:
+035C 900000   F      657         MOV DPTR, #LCD_STR_UP
+035F 120000   F      658         LCALL LCD_SHOW_STR
+0362 22              659         RET
+0363                 660     SOS_NONE:
+0363 900000   F      661         MOV DPTR, #LCD_STR_EMPTY
+0366 120000   F      662         LCALL LCD_SHOW_STR
+0369 22              663         RET
+                     664     
+036A                 665     CHECK_AND_SET_REQUEST:
+036A E561            666         MOV A, 061h
+036C 6078            667         JZ CASR_RET
+036E E560            668         MOV A, 060h
+0370 540F            669         ANL A, #0Fh
+0372 FF              670         MOV R7, A
+                     671         
+                     672         ; Check for 'A' (Mode Switch)
+0373 BF0A20          673         CJNE R7, #0Ah, CASR_CHK_MODE
+                     674         
+                     675         ; Toggle Mode
+0376 E565            676         MOV A, INPUT_MODE
+0378 6401            677         XRL A, #01h
+037A F565            678         MOV INPUT_MODE, A
+                     679         
+                     680         ; Update LCD
+037C E565            681         MOV A, INPUT_MODE
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    12
 
-037B                 687     CASR_OUT_CHK_D:
-037B BF0D05          688         CJNE R7, #0Dh, CASR_RET
-037E 8000            689         SJMP CASR_CONSUME
-                     690     
-0380                 691     CASR_CONSUME:
-0380 756100          692         MOV 061h, #00h
-0383                 693     CASR_RET:
-0383 22              694         RET
-                     695     
-                     696     ; ---------------------------------------------------------
-                     697     ; Bitmap Helper Functions
-                     698     ; ---------------------------------------------------------
-                     699     
-                     700     ; Convert Floor (R6) to Bit Index (R4)
-                     701     ; Floor -2 -> Index 0, Floor -1 -> Index 1
-                     702     ; Floor 1 -> Index 2, Floor 2 -> Index 3, ... Floor 8 -> Index 10
-                     703     ; Returns: R4 = bit index (0-10)
-0384                 704     FLOOR_TO_INDEX:
-0384 EE              705         MOV A, R6
-0385 20E703          706         JB ACC.7, FTI_NEG
-                     707         ; Positive floor (1-8) -> Index = Floor + 1
-0388 04              708         INC A
-0389 FC              709         MOV R4, A
-038A 22              710         RET
-038B                 711     FTI_NEG:
-                     712         ; Negative floor: -2 (FEh) -> 0, -1 (FFh) -> 1
-                     713         ; Index = Floor + 2
-038B 2402            714         ADD A, #02h
-038D FC              715         MOV R4, A
-038E 22              716         RET
-                     717     
-                     718     ; Convert Bit Index (R4) to Floor (R6)
-038F                 719     INDEX_TO_FLOOR:
-038F EC              720         MOV A, R4
-0390 B40003          721         CJNE A, #00h, ITF_CHK1
-0393 7EFE            722         MOV R6, #0FEh   ; -2
-0395 22              723         RET
-0396                 724     ITF_CHK1:
-0396 B40103          725         CJNE A, #01h, ITF_POS
-0399 7EFF            726         MOV R6, #0FFh   ; -1
-039B 22              727         RET
-039C                 728     ITF_POS:
-                     729         ; Index >= 2: Floor = Index - 1
-039C 14              730         DEC A
-039D FE              731         MOV R6, A
-039E 22              732         RET
-                     733     
-                     734     ; Set bit for floor R6 in Internal Request bitmap
-039F                 735     SET_INT_REQUEST:
-039F 120000   F      736         LCALL FLOOR_TO_INDEX
-                     737         ; R4 = bit index
-03A2 EC              738         MOV A, R4
-03A3 C3              739         CLR C
-03A4 9408            740         SUBB A, #08h
-03A6 5009            741         JNC SIR_HI
-                     742         ; Low byte (index 0-7)
-03A8 120000   F      743         LCALL GET_BIT_MASK   ; R3 = mask for bit R4
-03AB E55C            744         MOV A, INT_REQ_LO
-03AD 4B              745         ORL A, R3
-03AE F55C            746         MOV INT_REQ_LO, A
-03B0 22              747         RET
-03B1                 748     SIR_HI:
-                     749         ; High byte (index 8-10)
-03B1 EC              750         MOV A, R4
-03B2 C3              751         CLR C
-03B3 9408            752         SUBB A, #08h
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    13
+037E 6009            682         JZ CASR_SHOW_INSIDE
+                     683         
+                     684         ; Show Outside (Default Select)
+0380 AE66            685         MOV R6, OUT_SEL_VAL
+0382 7D00            686         MOV R5, #00h
+0384 120000   F      687         LCALL SHOW_OUTSIDE_STATUS
+0387 805A            688         SJMP CASR_CONSUME
+                     689         
+0389                 690     CASR_SHOW_INSIDE:
+0389 7480            691         MOV A, #80h
+038B 120000   F      692         LCALL LCD_WR_CMD
+038E 900000   F      693         MOV DPTR, #LCD_MSG_INSIDE
+0391 120000   F      694         LCALL LCD_SHOW_STR
+0394 804D            695         SJMP CASR_CONSUME
+                     696     
+0396                 697     CASR_CHK_MODE:
+0396 E565            698         MOV A, INPUT_MODE
+0398 7014            699         JNZ CASR_OUTSIDE_MODE
+                     700         
+                     701         ; --- INSIDE MODE ---
+                     702         ; Check 0-9
+039A 120000   F      703         LCALL GET_FLOOR_FROM_KEY
+039D 5005            704         JNC CASR_IN_CHK_OTHER
+                     705         ; Valid Floor in R6 -> Set Internal Bitmap
+039F 120000   F      706         LCALL SET_INT_REQUEST
+03A2 803F            707         SJMP CASR_CONSUME
+                     708         
+03A4                 709     CASR_IN_CHK_OTHER:
+                     710         ; Check E/F -> Ignore
+03A4 BF0E02          711         CJNE R7, #0Eh, CASR_IN_CHK_F
+03A7 803A            712         SJMP CASR_CONSUME
+03A9                 713     CASR_IN_CHK_F:
+03A9 BF0F3A          714         CJNE R7, #0Fh, CASR_RET
+03AC 8035            715         SJMP CASR_CONSUME
+                     716     
+                     717         ; --- OUTSIDE MODE ---
+03AE                 718     CASR_OUTSIDE_MODE:
+                     719         ; Check 0-9
+03AE 120000   F      720         LCALL GET_FLOOR_FROM_KEY
+03B1 5009            721         JNC CASR_OUT_CHK_OTHER
+                     722         ; Valid Floor -> Store selection
+03B3 8E66            723         MOV OUT_SEL_VAL, R6
+                     724         ; Update Display
+03B5 7D00            725         MOV R5, #00h
+03B7 120000   F      726         LCALL SHOW_OUTSIDE_STATUS
+03BA 8027            727         SJMP CASR_CONSUME
+                     728     
+03BC                 729     CASR_OUT_CHK_OTHER:
+                     730         ; Check E/F -> Set External Bitmap
+03BC BF0E09          731         CJNE R7, #0Eh, CASR_OUT_CHK_F
+                     732         ; Key E (Up)
+03BF AE66            733         MOV R6, OUT_SEL_VAL
+03C1 120000   F      734         LCALL SET_EXT_UP_REQUEST
+03C4 7D01            735         MOV R5, #01h
+03C6 800A            736         SJMP CASR_OUT_SHOW
+03C8                 737     CASR_OUT_CHK_F:
+03C8 BF0F0E          738         CJNE R7, #0Fh, CASR_OUT_CHK_CD
+                     739         ; Key F (Down)
+03CB AE66            740         MOV R6, OUT_SEL_VAL
+03CD 120000   F      741         LCALL SET_EXT_DN_REQUEST
+03D0 7D02            742         MOV R5, #02h
+                     743         
+03D2                 744     CASR_OUT_SHOW:
+03D2 AE66            745         MOV R6, OUT_SEL_VAL
+03D4 120000   F      746         LCALL SHOW_OUTSIDE_STATUS
+03D7 800A            747         SJMP CASR_CONSUME
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    13
 
-03B5 FC              753         MOV R4, A
-03B6 120000   F      754         LCALL GET_BIT_MASK
-03B9 E55D            755         MOV A, INT_REQ_HI
-03BB 4B              756         ORL A, R3
-03BC F55D            757         MOV INT_REQ_HI, A
-03BE 22              758         RET
-                     759     
-                     760     ; Set bit for floor R6 in External UP Request bitmap
-03BF                 761     SET_EXT_UP_REQUEST:
-03BF 120000   F      762         LCALL FLOOR_TO_INDEX
-03C2 EC              763         MOV A, R4
-03C3 C3              764         CLR C
-03C4 9408            765         SUBB A, #08h
-03C6 5009            766         JNC SEUR_HI
-03C8 120000   F      767         LCALL GET_BIT_MASK
-03CB E55E            768         MOV A, EXT_UP_LO
-03CD 4B              769         ORL A, R3
-03CE F55E            770         MOV EXT_UP_LO, A
-03D0 22              771         RET
-03D1                 772     SEUR_HI:
-03D1 EC              773         MOV A, R4
-03D2 C3              774         CLR C
-03D3 9408            775         SUBB A, #08h
-03D5 FC              776         MOV R4, A
-03D6 120000   F      777         LCALL GET_BIT_MASK
-03D9 E55F            778         MOV A, EXT_UP_HI
-03DB 4B              779         ORL A, R3
-03DC F55F            780         MOV EXT_UP_HI, A
-03DE 22              781         RET
-                     782     
-                     783     ; Set bit for floor R6 in External DOWN Request bitmap
-03DF                 784     SET_EXT_DN_REQUEST:
-03DF 120000   F      785         LCALL FLOOR_TO_INDEX
-03E2 EC              786         MOV A, R4
-03E3 C3              787         CLR C
-03E4 9408            788         SUBB A, #08h
-03E6 5009            789         JNC SEDR_HI
-03E8 120000   F      790         LCALL GET_BIT_MASK
-03EB E562            791         MOV A, EXT_DN_LO
-03ED 4B              792         ORL A, R3
-03EE F562            793         MOV EXT_DN_LO, A
-03F0 22              794         RET
-03F1                 795     SEDR_HI:
-03F1 EC              796         MOV A, R4
-03F2 C3              797         CLR C
-03F3 9408            798         SUBB A, #08h
-03F5 FC              799         MOV R4, A
-03F6 120000   F      800         LCALL GET_BIT_MASK
-03F9 E563            801         MOV A, EXT_DN_HI
-03FB 4B              802         ORL A, R3
-03FC F563            803         MOV EXT_DN_HI, A
-03FE 22              804         RET
-                     805     
-                     806     ; Get bit mask for bit index R4 (0-7), return in R3
-03FF                 807     GET_BIT_MASK:
-03FF EC              808         MOV A, R4
-0400 900000   F      809         MOV DPTR, #BIT_MASK_TBL
-0403 93              810         MOVC A, @A+DPTR
-0404 FB              811         MOV R3, A
-0405 22              812         RET
-                     813     
-0406                 814     BIT_MASK_TBL:
-0406 01020408        815         DB 001h, 002h, 004h, 008h, 010h, 020h, 040h, 080h
-040A 10204080                
-                     816     
-                     817     ; Clear request for floor R6 from all bitmaps
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    14
+                     748     
+03D9                 749     CASR_OUT_CHK_CD:
+                     750         ; Check C/D -> Consume (Ignore)
+03D9 BF0C02          751         CJNE R7, #0Ch, CASR_OUT_CHK_D
+03DC 8005            752         SJMP CASR_CONSUME
+03DE                 753     CASR_OUT_CHK_D:
+03DE BF0D05          754         CJNE R7, #0Dh, CASR_RET
+03E1 8000            755         SJMP CASR_CONSUME
+                     756     
+03E3                 757     CASR_CONSUME:
+03E3 756100          758         MOV 061h, #00h
+03E6                 759     CASR_RET:
+03E6 22              760         RET
+                     761     
+                     762     ; ---------------------------------------------------------
+                     763     ; Bitmap Helper Functions
+                     764     ; ---------------------------------------------------------
+                     765     
+                     766     ; Convert Floor (R6) to Bit Index (R4)
+                     767     ; Floor -2 -> Index 0, Floor -1 -> Index 1
+                     768     ; Floor 1 -> Index 2, Floor 2 -> Index 3, ... Floor 8 -> Index 10
+                     769     ; Returns: R4 = bit index (0-10)
+03E7                 770     FLOOR_TO_INDEX:
+03E7 EE              771         MOV A, R6
+03E8 20E703          772         JB ACC.7, FTI_NEG
+                     773         ; Positive floor (1-8) -> Index = Floor + 1
+03EB 04              774         INC A
+03EC FC              775         MOV R4, A
+03ED 22              776         RET
+03EE                 777     FTI_NEG:
+                     778         ; Negative floor: -2 (FEh) -> 0, -1 (FFh) -> 1
+                     779         ; Index = Floor + 2
+03EE 2402            780         ADD A, #02h
+03F0 FC              781         MOV R4, A
+03F1 22              782         RET
+                     783     
+                     784     ; Convert Bit Index (R4) to Floor (R6)
+03F2                 785     INDEX_TO_FLOOR:
+03F2 EC              786         MOV A, R4
+03F3 B40003          787         CJNE A, #00h, ITF_CHK1
+03F6 7EFE            788         MOV R6, #0FEh   ; -2
+03F8 22              789         RET
+03F9                 790     ITF_CHK1:
+03F9 B40103          791         CJNE A, #01h, ITF_POS
+03FC 7EFF            792         MOV R6, #0FFh   ; -1
+03FE 22              793         RET
+03FF                 794     ITF_POS:
+                     795         ; Index >= 2: Floor = Index - 1
+03FF 14              796         DEC A
+0400 FE              797         MOV R6, A
+0401 22              798         RET
+                     799     
+                     800     ; Set bit for floor R6 in Internal Request bitmap
+0402                 801     SET_INT_REQUEST:
+0402 120000   F      802         LCALL FLOOR_TO_INDEX
+                     803         ; R4 = bit index
+0405 EC              804         MOV A, R4
+0406 C3              805         CLR C
+0407 9408            806         SUBB A, #08h
+0409 5009            807         JNC SIR_HI
+                     808         ; Low byte (index 0-7)
+040B 120000   F      809         LCALL GET_BIT_MASK   ; R3 = mask for bit R4
+040E E55C            810         MOV A, INT_REQ_LO
+0410 4B              811         ORL A, R3
+0411 F55C            812         MOV INT_REQ_LO, A
+0413 22              813         RET
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    14
 
-040E                 818     CLEAR_FLOOR_REQUEST:
-040E 120000   F      819         LCALL FLOOR_TO_INDEX
-0411 EC              820         MOV A, R4
-0412 C3              821         CLR C
-0413 9408            822         SUBB A, #08h
-0415 5016            823         JNC CFR_HI
-                     824         ; Low byte
-0417 120000   F      825         LCALL GET_BIT_MASK
-041A EB              826         MOV A, R3
-041B F4              827         CPL A           ; Invert mask
-041C FB              828         MOV R3, A
-041D E55C            829         MOV A, INT_REQ_LO
-041F 5B              830         ANL A, R3
-0420 F55C            831         MOV INT_REQ_LO, A
-0422 E55E            832         MOV A, EXT_UP_LO
-0424 5B              833         ANL A, R3
-0425 F55E            834         MOV EXT_UP_LO, A
-0427 E562            835         MOV A, EXT_DN_LO
-0429 5B              836         ANL A, R3
-042A F562            837         MOV EXT_DN_LO, A
-042C 22              838         RET
-042D                 839     CFR_HI:
-042D EC              840         MOV A, R4
-042E C3              841         CLR C
-042F 9408            842         SUBB A, #08h
-0431 FC              843         MOV R4, A
-0432 120000   F      844         LCALL GET_BIT_MASK
-0435 EB              845         MOV A, R3
-0436 F4              846         CPL A
-0437 FB              847         MOV R3, A
-0438 E55D            848         MOV A, INT_REQ_HI
-043A 5B              849         ANL A, R3
-043B F55D            850         MOV INT_REQ_HI, A
-043D E55F            851         MOV A, EXT_UP_HI
-043F 5B              852         ANL A, R3
-0440 F55F            853         MOV EXT_UP_HI, A
-0442 E563            854         MOV A, EXT_DN_HI
-0444 5B              855         ANL A, R3
-0445 F563            856         MOV EXT_DN_HI, A
-0447 22              857         RET
-                     858     
-                     859     ; Check if there's any request at floor R6
-                     860     ; Returns CY=1 if request exists
-0448                 861     CHECK_FLOOR_REQUEST:
-0448 120000   F      862         LCALL FLOOR_TO_INDEX
-044B EC              863         MOV A, R4
-044C C3              864         CLR C
-044D 9408            865         SUBB A, #08h
-044F 5020            866         JNC CHKFR_HI
-                     867         ; Low byte
-0451 120000   F      868         LCALL GET_BIT_MASK
-                     869         ; Check Internal
-0454 E55C            870         MOV A, INT_REQ_LO
-0456 5B              871         ANL A, R3
-0457 703D            872         JNZ CHKFR_FOUND
-                     873         ; Check External UP (only if going up)
-0459 E564            874         MOV A, ELEV_DIR
-045B B40107          875         CJNE A, #01h, CHKFR_LO_DN
-045E E55E            876         MOV A, EXT_UP_LO
-0460 5B              877         ANL A, R3
-0461 7033            878         JNZ CHKFR_FOUND
-0463 802F            879         SJMP CHKFR_NOTFOUND
-0465                 880     CHKFR_LO_DN:
-                     881         ; Check External DOWN (only if going down)
-0465 E564            882         MOV A, ELEV_DIR
-0467 B4022A          883         CJNE A, #02h, CHKFR_NOTFOUND
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    15
+0414                 814     SIR_HI:
+                     815         ; High byte (index 8-10)
+0414 EC              816         MOV A, R4
+0415 C3              817         CLR C
+0416 9408            818         SUBB A, #08h
+0418 FC              819         MOV R4, A
+0419 120000   F      820         LCALL GET_BIT_MASK
+041C E55D            821         MOV A, INT_REQ_HI
+041E 4B              822         ORL A, R3
+041F F55D            823         MOV INT_REQ_HI, A
+0421 22              824         RET
+                     825     
+                     826     ; Set bit for floor R6 in External UP Request bitmap
+0422                 827     SET_EXT_UP_REQUEST:
+0422 120000   F      828         LCALL FLOOR_TO_INDEX
+0425 EC              829         MOV A, R4
+0426 C3              830         CLR C
+0427 9408            831         SUBB A, #08h
+0429 5009            832         JNC SEUR_HI
+042B 120000   F      833         LCALL GET_BIT_MASK
+042E E55E            834         MOV A, EXT_UP_LO
+0430 4B              835         ORL A, R3
+0431 F55E            836         MOV EXT_UP_LO, A
+0433 22              837         RET
+0434                 838     SEUR_HI:
+0434 EC              839         MOV A, R4
+0435 C3              840         CLR C
+0436 9408            841         SUBB A, #08h
+0438 FC              842         MOV R4, A
+0439 120000   F      843         LCALL GET_BIT_MASK
+043C E55F            844         MOV A, EXT_UP_HI
+043E 4B              845         ORL A, R3
+043F F55F            846         MOV EXT_UP_HI, A
+0441 22              847         RET
+                     848     
+                     849     ; Set bit for floor R6 in External DOWN Request bitmap
+0442                 850     SET_EXT_DN_REQUEST:
+0442 120000   F      851         LCALL FLOOR_TO_INDEX
+0445 EC              852         MOV A, R4
+0446 C3              853         CLR C
+0447 9408            854         SUBB A, #08h
+0449 5009            855         JNC SEDR_HI
+044B 120000   F      856         LCALL GET_BIT_MASK
+044E E562            857         MOV A, EXT_DN_LO
+0450 4B              858         ORL A, R3
+0451 F562            859         MOV EXT_DN_LO, A
+0453 22              860         RET
+0454                 861     SEDR_HI:
+0454 EC              862         MOV A, R4
+0455 C3              863         CLR C
+0456 9408            864         SUBB A, #08h
+0458 FC              865         MOV R4, A
+0459 120000   F      866         LCALL GET_BIT_MASK
+045C E563            867         MOV A, EXT_DN_HI
+045E 4B              868         ORL A, R3
+045F F563            869         MOV EXT_DN_HI, A
+0461 22              870         RET
+                     871     
+                     872     ; Get bit mask for bit index R4 (0-7), return in R3
+0462                 873     GET_BIT_MASK:
+0462 EC              874         MOV A, R4
+0463 900000   F      875         MOV DPTR, #BIT_MASK_TBL
+0466 93              876         MOVC A, @A+DPTR
+0467 FB              877         MOV R3, A
+0468 22              878         RET
+                     879     
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    15
 
-046A E562            884         MOV A, EXT_DN_LO
-046C 5B              885         ANL A, R3
-046D 7027            886         JNZ CHKFR_FOUND
-046F 8023            887         SJMP CHKFR_NOTFOUND
-                     888         
-0471                 889     CHKFR_HI:
-0471 EC              890         MOV A, R4
-0472 C3              891         CLR C
-0473 9408            892         SUBB A, #08h
-0475 FC              893         MOV R4, A
-0476 120000   F      894         LCALL GET_BIT_MASK
-                     895         ; Check Internal
-0479 E55D            896         MOV A, INT_REQ_HI
-047B 5B              897         ANL A, R3
-047C 7018            898         JNZ CHKFR_FOUND
-                     899         ; Check External based on direction
-047E E564            900         MOV A, ELEV_DIR
-0480 B40107          901         CJNE A, #01h, CHKFR_HI_DN
-0483 E55F            902         MOV A, EXT_UP_HI
-0485 5B              903         ANL A, R3
-0486 700E            904         JNZ CHKFR_FOUND
-0488 800A            905         SJMP CHKFR_NOTFOUND
-048A                 906     CHKFR_HI_DN:
-048A E564            907         MOV A, ELEV_DIR
-048C B40205          908         CJNE A, #02h, CHKFR_NOTFOUND
-048F E563            909         MOV A, EXT_DN_HI
-0491 5B              910         ANL A, R3
-0492 7002            911         JNZ CHKFR_FOUND
-                     912         
-0494                 913     CHKFR_NOTFOUND:
-0494 C3              914         CLR C
-0495 22              915         RET
-0496                 916     CHKFR_FOUND:
-0496 D3              917         SETB C
-0497 22              918         RET
-                     919     
-                     920     ; ---------------------------------------------------------
-                     921     ; SCAN Algorithm: Find next target floor
-                     922     ; Returns: R6 = target floor, CY=1 if found, CY=0 if no request
-                     923     ; ---------------------------------------------------------
-0498                 924     SCAN_FIND_NEXT_TARGET:
-                     925         ; First check if any request exists
-0498 E55C            926         MOV A, INT_REQ_LO
-049A 455D            927         ORL A, INT_REQ_HI
-049C 455E            928         ORL A, EXT_UP_LO
-049E 455F            929         ORL A, EXT_UP_HI
-04A0 4562            930         ORL A, EXT_DN_LO
-04A2 4563            931         ORL A, EXT_DN_HI
-04A4 7002            932         JNZ SCAN_HAS_REQ
-04A6 C3              933         CLR C
-04A7 22              934         RET
-                     935     
-04A8                 936     SCAN_HAS_REQ:
-                     937         ; Get current floor index
-04A8 AE56            938         MOV R6, CUR_FLr
-04AA 120000   F      939         LCALL FLOOR_TO_INDEX
-04AD EC              940         MOV A, R4
-04AE FD              941         MOV R5, A         ; R5 = current index
-                     942         
-                     943         ; R2 = tried flags: bit0=tried up, bit1=tried down
-04AF 7A00            944         MOV R2, #00h
+0469                 880     BIT_MASK_TBL:
+0469 01020408        881         DB 001h, 002h, 004h, 008h, 010h, 020h, 040h, 080h
+046D 10204080                
+                     882     
+                     883     ; Clear request for floor R6 from all bitmaps
+0471                 884     CLEAR_FLOOR_REQUEST:
+0471 120000   F      885         LCALL FLOOR_TO_INDEX
+0474 EC              886         MOV A, R4
+0475 C3              887         CLR C
+0476 9408            888         SUBB A, #08h
+0478 5016            889         JNC CFR_HI
+                     890         ; Low byte
+047A 120000   F      891         LCALL GET_BIT_MASK
+047D EB              892         MOV A, R3
+047E F4              893         CPL A           ; Invert mask
+047F FB              894         MOV R3, A
+0480 E55C            895         MOV A, INT_REQ_LO
+0482 5B              896         ANL A, R3
+0483 F55C            897         MOV INT_REQ_LO, A
+0485 E55E            898         MOV A, EXT_UP_LO
+0487 5B              899         ANL A, R3
+0488 F55E            900         MOV EXT_UP_LO, A
+048A E562            901         MOV A, EXT_DN_LO
+048C 5B              902         ANL A, R3
+048D F562            903         MOV EXT_DN_LO, A
+048F 22              904         RET
+0490                 905     CFR_HI:
+0490 EC              906         MOV A, R4
+0491 C3              907         CLR C
+0492 9408            908         SUBB A, #08h
+0494 FC              909         MOV R4, A
+0495 120000   F      910         LCALL GET_BIT_MASK
+0498 EB              911         MOV A, R3
+0499 F4              912         CPL A
+049A FB              913         MOV R3, A
+049B E55D            914         MOV A, INT_REQ_HI
+049D 5B              915         ANL A, R3
+049E F55D            916         MOV INT_REQ_HI, A
+04A0 E55F            917         MOV A, EXT_UP_HI
+04A2 5B              918         ANL A, R3
+04A3 F55F            919         MOV EXT_UP_HI, A
+04A5 E563            920         MOV A, EXT_DN_HI
+04A7 5B              921         ANL A, R3
+04A8 F563            922         MOV EXT_DN_HI, A
+04AA 22              923         RET
+                     924     
+                     925     ; Check if there's any request at floor R6
+                     926     ; Returns CY=1 if request exists
+04AB                 927     CHECK_FLOOR_REQUEST:
+04AB 120000   F      928         LCALL FLOOR_TO_INDEX
+04AE EC              929         MOV A, R4
+04AF C3              930         CLR C
+04B0 9408            931         SUBB A, #08h
+04B2 5020            932         JNC CHKFR_HI
+                     933         
+                     934         ; Low Byte
+04B4 120000   F      935         LCALL GET_BIT_MASK
+                     936         ; Check Internal
+04B7 E55C            937         MOV A, INT_REQ_LO
+04B9 5B              938         ANL A, R3
+04BA 703F            939         JNZ CHKFR_FOUND
+                     940         
+                     941         ; Check External - Dir dependent
+04BC E564            942         MOV A, ELEV_DIR
+04BE B40202          943         CJNE A, #02h, CFR_LO_CHK_UP  ; If Dir != 2 (0 or 1), check UP
+04C1 800A            944         SJMP CFR_LO_CHK_DN           ; If Dir == 2, check DOWN only
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    16
+
                      945         
-                     946         ; Check direction: if stopped (0), default to up (1)
-04B1 E564            947         MOV A, ELEV_DIR
-04B3 6005            948         JZ SCAN_DEFAULT_UP
-04B5 B40205          949         CJNE A, #02h, SCAN_TRY_UP
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    16
+04C3                 946     CFR_LO_CHK_UP:
+04C3 E55E            947         MOV A, EXT_UP_LO
+04C5 5B              948         ANL A, R3
+04C6 7033            949         JNZ CHKFR_FOUND
+                     950         
+                     951         ; If Dir=1 (Up), we are done (don't check down)
+04C8 E564            952         MOV A, ELEV_DIR
+04CA B4002C          953         CJNE A, #00h, CHKFR_NOTFOUND ; If Dir != 0 (i.e. 1), Ret Not Found
+                     954         
+                     955         ; If Dir=0, Fall through to check DOWN
+                     956         
+04CD                 957     CFR_LO_CHK_DN:
+04CD E562            958         MOV A, EXT_DN_LO
+04CF 5B              959         ANL A, R3
+04D0 7029            960         JNZ CHKFR_FOUND
+04D2 8025            961         SJMP CHKFR_NOTFOUND
+                     962         
+04D4                 963     CHKFR_HI:
+                     964         ; High Byte adjustment logic
+04D4 EC              965         MOV A, R4
+04D5 C3              966         CLR C
+04D6 9408            967         SUBB A, #08h
+04D8 FC              968         MOV R4, A
+04D9 120000   F      969         LCALL GET_BIT_MASK
+                     970         
+                     971         ; Check Internal
+04DC E55D            972         MOV A, INT_REQ_HI
+04DE 5B              973         ANL A, R3
+04DF 701A            974         JNZ CHKFR_FOUND
+                     975         
+                     976         ; Check External
+04E1 E564            977         MOV A, ELEV_DIR
+04E3 B40202          978         CJNE A, #02h, CFR_HI_CHK_UP
+04E6 800A            979         SJMP CFR_HI_CHK_DN
+                     980         
+04E8                 981     CFR_HI_CHK_UP:
+04E8 E55F            982         MOV A, EXT_UP_HI
+04EA 5B              983         ANL A, R3
+04EB 700E            984         JNZ CHKFR_FOUND
+                     985         
+04ED E564            986         MOV A, ELEV_DIR
+04EF B40007          987         CJNE A, #00h, CHKFR_NOTFOUND
+                     988         
+04F2                 989     CFR_HI_CHK_DN:
+04F2 E563            990         MOV A, EXT_DN_HI
+04F4 5B              991         ANL A, R3
+04F5 7004            992         JNZ CHKFR_FOUND
+04F7 8000            993         SJMP CHKFR_NOTFOUND
+                     994         
+04F9                 995     CHKFR_NOTFOUND:
+04F9 C3              996         CLR C
+04FA 22              997         RET
+04FB                 998     CHKFR_FOUND:
+04FB D3              999         SETB C
+04FC 22             1000         RET
+                    1001     
+                    1002     ; ---------------------------------------------------------
+                    1003     ; SCAN Algorithm: Find next target floor
+                    1004     ; Returns: R6 = target floor, CY=1 if found, CY=0 if no request
+                    1005     ; ---------------------------------------------------------
+04FD                1006     SCAN_FIND_NEXT_TARGET:
+                    1007         ; First check if any request exists
+04FD E55C           1008         MOV A, INT_REQ_LO
+04FF 455D           1009         ORL A, INT_REQ_HI
+0501 455E           1010         ORL A, EXT_UP_LO
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    17
 
-04B8 8024            950         SJMP SCAN_TRY_DOWN
-                     951         
-04BA                 952     SCAN_DEFAULT_UP:
-04BA 756401          953         MOV ELEV_DIR, #01h   ; Default direction up
-                     954     
-04BD                 955     SCAN_TRY_UP:
-                     956         ; Mark that we tried up
-04BD EA              957         MOV A, R2
-04BE 4401            958         ORL A, #01h
-04C0 FA              959         MOV R2, A
-                     960         
-                     961         ; Try to find request above or at current floor
-04C1 ED              962         MOV A, R5
-04C2 FC              963         MOV R4, A         ; Start from current index
-04C3                 964     SCAN_UP_LOOP:
-                     965         ; Check if there's request at R4
-04C3 120000   F      966         LCALL INDEX_TO_FLOOR
-04C6 EE              967         MOV A, R6
-04C7 B55602          968         CJNE A, CUR_FLr, SCAN_UP_CHK
-04CA 8005            969         SJMP SCAN_UP_NEXT  ; Skip current floor
-04CC                 970     SCAN_UP_CHK:
-04CC 120000   F      971         LCALL SCAN_CHECK_UP_REQUEST
-04CF 4030            972         JC SCAN_FOUND
-04D1                 973     SCAN_UP_NEXT:
-04D1 0C              974         INC R4
-04D2 EC              975         MOV A, R4
-04D3 B40BED          976         CJNE A, #11, SCAN_UP_LOOP
-                     977         
-                     978         ; No request above, check if we already tried down
-04D6 EA              979         MOV A, R2
-04D7 5402            980         ANL A, #02h
-04D9 7021            981         JNZ SCAN_FAIL       ; Already tried down
-                     982         
-                     983         ; Switch to down
-04DB 756402          984         MOV ELEV_DIR, #02h
-                     985         ; Fall through to SCAN_TRY_DOWN
-                     986     
-04DE                 987     SCAN_TRY_DOWN:
-                     988         ; Mark that we tried down
-04DE EA              989         MOV A, R2
-04DF 4402            990         ORL A, #02h
-04E1 FA              991         MOV R2, A
-                     992         
-                     993         ; Try to find request below current floor
-04E2 ED              994         MOV A, R5
-04E3 FC              995         MOV R4, A         ; Start from current index
-04E4                 996     SCAN_DN_LOOP:
-04E4 EC              997         MOV A, R4
-04E5 600B            998         JZ SCAN_DN_DONE   ; Reached bottom
-04E7 1C              999         DEC R4
-04E8 120000   F     1000         LCALL INDEX_TO_FLOOR
-04EB 120000   F     1001         LCALL SCAN_CHECK_DN_REQUEST
-04EE 4011           1002         JC SCAN_FOUND
-04F0 80F2           1003         SJMP SCAN_DN_LOOP
-                    1004     
-04F2                1005     SCAN_DN_DONE:
-                    1006         ; No request below, check if we already tried up
-04F2 EA             1007         MOV A, R2
-04F3 5401           1008         ANL A, #01h
-04F5 7005           1009         JNZ SCAN_FAIL       ; Already tried up
-                    1010         
-                    1011         ; Switch to up
-04F7 756401         1012         MOV ELEV_DIR, #01h
-04FA 80C1           1013         SJMP SCAN_TRY_UP
-                    1014     
-04FC                1015     SCAN_FAIL:
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    17
+0503 455F           1011         ORL A, EXT_UP_HI
+0505 4562           1012         ORL A, EXT_DN_LO
+0507 4563           1013         ORL A, EXT_DN_HI
+0509 7002           1014         JNZ SCAN_HAS_REQ
+050B C3             1015         CLR C
+050C 22             1016         RET
+                    1017     
+050D                1018     SCAN_HAS_REQ:
+                    1019         ; Get current floor index
+050D AE56           1020         MOV R6, CUR_FLr
+050F 120000   F     1021         LCALL FLOOR_TO_INDEX
+0512 EC             1022         MOV A, R4
+0513 FD             1023         MOV R5, A         ; R5 = current index
+                    1024         
+                    1025         ; R2 = tried flags: bit0=tried up, bit1=tried down
+0514 7A00           1026         MOV R2, #00h
+                    1027         
+                    1028         ; Check direction: if stopped (0), default to up (1)
+0516 E564           1029         MOV A, ELEV_DIR
+0518 6005           1030         JZ SCAN_DEFAULT_UP
+051A B40205         1031         CJNE A, #02h, SCAN_TRY_UP
+051D 8024           1032         SJMP SCAN_TRY_DOWN
+                    1033         
+051F                1034     SCAN_DEFAULT_UP:
+051F 756401         1035         MOV ELEV_DIR, #01h   ; Default direction up
+                    1036     
+0522                1037     SCAN_TRY_UP:
+                    1038         ; Mark that we tried up
+0522 EA             1039         MOV A, R2
+0523 4401           1040         ORL A, #01h
+0525 FA             1041         MOV R2, A
+                    1042         
+                    1043         ; Try to find request above or at current floor
+0526 ED             1044         MOV A, R5
+0527 FC             1045         MOV R4, A         ; Start from current index
+0528                1046     SCAN_UP_LOOP:
+                    1047         ; Check if there's request at R4
+0528 120000   F     1048         LCALL INDEX_TO_FLOOR
+052B EE             1049         MOV A, R6
+052C B55602         1050         CJNE A, CUR_FLr, SCAN_UP_CHK
+052F 8005           1051         SJMP SCAN_UP_NEXT  ; Skip current floor
+0531                1052     SCAN_UP_CHK:
+0531 120000   F     1053         LCALL SCAN_CHECK_UP_REQUEST
+0534 4030           1054         JC SCAN_FOUND
+0536                1055     SCAN_UP_NEXT:
+0536 0C             1056         INC R4
+0537 EC             1057         MOV A, R4
+0538 B40BED         1058         CJNE A, #11, SCAN_UP_LOOP
+                    1059         
+                    1060         ; No request above, check if we already tried down
+053B EA             1061         MOV A, R2
+053C 5402           1062         ANL A, #02h
+053E 7021           1063         JNZ SCAN_FAIL       ; Already tried down
+                    1064         
+                    1065         ; Switch to down
+0540 756402         1066         MOV ELEV_DIR, #02h
+                    1067         ; Fall through to SCAN_TRY_DOWN
+                    1068     
+0543                1069     SCAN_TRY_DOWN:
+                    1070         ; Mark that we tried down
+0543 EA             1071         MOV A, R2
+0544 4402           1072         ORL A, #02h
+0546 FA             1073         MOV R2, A
+                    1074         
+                    1075         ; Try to find request below current floor
+0547 ED             1076         MOV A, R5
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    18
 
-04FC 756400         1016         MOV ELEV_DIR, #00h   ; Reset direction
-04FF C3             1017         CLR C
-0500 22             1018         RET
-                    1019     
-0501                1020     SCAN_FOUND:
-                    1021         ; R6 has the target floor
-0501 D3             1022         SETB C
-0502 22             1023         RET
-                    1024     
-                    1025     ; Check if floor R6 has request for UP direction
-                    1026     ; (Internal or External UP)
-0503                1027     SCAN_CHECK_UP_REQUEST:
-0503 C004           1028         PUSH 04h
-0505 120000   F     1029         LCALL FLOOR_TO_INDEX
-0508 EC             1030         MOV A, R4
-0509 C3             1031         CLR C
-050A 9408           1032         SUBB A, #08h
-050C 500F           1033         JNC SCUR_HI
-050E 120000   F     1034         LCALL GET_BIT_MASK
-                    1035         ; Always check Internal
-0511 E55C           1036         MOV A, INT_REQ_LO
-0513 5B             1037         ANL A, R3
-0514 701D           1038         JNZ SCUR_FOUND
-                    1039         ; Also check External UP
-0516 E55E           1040         MOV A, EXT_UP_LO
-0518 5B             1041         ANL A, R3
-0519 7018           1042         JNZ SCUR_FOUND
-051B 8012           1043         SJMP SCUR_NOTFOUND
-051D                1044     SCUR_HI:
-051D EC             1045         MOV A, R4
-051E C3             1046         CLR C
-051F 9408           1047         SUBB A, #08h
-0521 FC             1048         MOV R4, A
-0522 120000   F     1049         LCALL GET_BIT_MASK
-0525 E55D           1050         MOV A, INT_REQ_HI
-0527 5B             1051         ANL A, R3
-0528 7009           1052         JNZ SCUR_FOUND
-052A E55F           1053         MOV A, EXT_UP_HI
-052C 5B             1054         ANL A, R3
-052D 7004           1055         JNZ SCUR_FOUND
-052F                1056     SCUR_NOTFOUND:
-052F D004           1057         POP 04h
-0531 C3             1058         CLR C
-0532 22             1059         RET
-0533                1060     SCUR_FOUND:
-0533 D004           1061         POP 04h
-0535 D3             1062         SETB C
-0536 22             1063         RET
-                    1064     
-                    1065     ; Check if floor R6 has request for DOWN direction
-                    1066     ; (Internal or External DOWN)
-0537                1067     SCAN_CHECK_DN_REQUEST:
-0537 C004           1068         PUSH 04h
-0539 120000   F     1069         LCALL FLOOR_TO_INDEX
-053C EC             1070         MOV A, R4
-053D C3             1071         CLR C
-053E 9408           1072         SUBB A, #08h
-0540 500F           1073         JNC SCDR_HI
-0542 120000   F     1074         LCALL GET_BIT_MASK
-                    1075         ; Always check Internal
-0545 E55C           1076         MOV A, INT_REQ_LO
-0547 5B             1077         ANL A, R3
-0548 701D           1078         JNZ SCDR_FOUND
-                    1079         ; Also check External DOWN
-054A E562           1080         MOV A, EXT_DN_LO
-054C 5B             1081         ANL A, R3
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    18
+0548 FC             1077         MOV R4, A         ; Start from current index
+0549                1078     SCAN_DN_LOOP:
+0549 EC             1079         MOV A, R4
+054A 600B           1080         JZ SCAN_DN_DONE   ; Reached bottom
+054C 1C             1081         DEC R4
+054D 120000   F     1082         LCALL INDEX_TO_FLOOR
+0550 120000   F     1083         LCALL SCAN_CHECK_DN_REQUEST
+0553 4011           1084         JC SCAN_FOUND
+0555 80F2           1085         SJMP SCAN_DN_LOOP
+                    1086     
+0557                1087     SCAN_DN_DONE:
+                    1088         ; No request below, check if we already tried up
+0557 EA             1089         MOV A, R2
+0558 5401           1090         ANL A, #01h
+055A 7005           1091         JNZ SCAN_FAIL       ; Already tried up
+                    1092         
+                    1093         ; Switch to up
+055C 756401         1094         MOV ELEV_DIR, #01h
+055F 80C1           1095         SJMP SCAN_TRY_UP
+                    1096     
+0561                1097     SCAN_FAIL:
+0561 756400         1098         MOV ELEV_DIR, #00h   ; Reset direction
+0564 C3             1099         CLR C
+0565 22             1100         RET
+                    1101     
+0566                1102     SCAN_FOUND:
+                    1103         ; R6 has the target floor
+0566 D3             1104         SETB C
+0567 22             1105         RET
+                    1106     
+                    1107     ; Check if floor R6 has request for UP direction
+                    1108     ; (Internal or External UP)
+0568                1109     SCAN_CHECK_UP_REQUEST:
+0568 C004           1110         PUSH 04h
+056A 120000   F     1111         LCALL FLOOR_TO_INDEX
+056D EC             1112         MOV A, R4
+056E C3             1113         CLR C
+056F 9408           1114         SUBB A, #08h
+0571 500F           1115         JNC SCUR_HI
+0573 120000   F     1116         LCALL GET_BIT_MASK
+                    1117         ; Always check Internal
+0576 E55C           1118         MOV A, INT_REQ_LO
+0578 5B             1119         ANL A, R3
+0579 701D           1120         JNZ SCUR_FOUND
+                    1121         ; Also check External UP
+057B E55E           1122         MOV A, EXT_UP_LO
+057D 5B             1123         ANL A, R3
+057E 7018           1124         JNZ SCUR_FOUND
+0580 8012           1125         SJMP SCUR_NOTFOUND
+0582                1126     SCUR_HI:
+0582 EC             1127         MOV A, R4
+0583 C3             1128         CLR C
+0584 9408           1129         SUBB A, #08h
+0586 FC             1130         MOV R4, A
+0587 120000   F     1131         LCALL GET_BIT_MASK
+058A E55D           1132         MOV A, INT_REQ_HI
+058C 5B             1133         ANL A, R3
+058D 7009           1134         JNZ SCUR_FOUND
+058F E55F           1135         MOV A, EXT_UP_HI
+0591 5B             1136         ANL A, R3
+0592 7004           1137         JNZ SCUR_FOUND
+0594                1138     SCUR_NOTFOUND:
+0594 D004           1139         POP 04h
+0596 C3             1140         CLR C
+0597 22             1141         RET
+0598                1142     SCUR_FOUND:
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    19
 
-054D 7018           1082         JNZ SCDR_FOUND
-054F 8012           1083         SJMP SCDR_NOTFOUND
-0551                1084     SCDR_HI:
-0551 EC             1085         MOV A, R4
-0552 C3             1086         CLR C
-0553 9408           1087         SUBB A, #08h
-0555 FC             1088         MOV R4, A
-0556 120000   F     1089         LCALL GET_BIT_MASK
-0559 E55D           1090         MOV A, INT_REQ_HI
-055B 5B             1091         ANL A, R3
-055C 7009           1092         JNZ SCDR_FOUND
-055E E563           1093         MOV A, EXT_DN_HI
-0560 5B             1094         ANL A, R3
-0561 7004           1095         JNZ SCDR_FOUND
-0563                1096     SCDR_NOTFOUND:
-0563 D004           1097         POP 04h
-0565 C3             1098         CLR C
-0566 22             1099         RET
-0567                1100     SCDR_FOUND:
-0567 D004           1101         POP 04h
-0569 D3             1102         SETB C
-056A 22             1103         RET
-                    1104     
-                    1105     ; ---------------------------------------------------------
-                    1106     ; Display Helpers
-                    1107     ; ---------------------------------------------------------
-                    1108     
-                    1109     ; Update Current Floor at 02Ah/02Bh
-056B                1110     UPDATE_CUR_DISPLAY:
-056B E556           1111         MOV A, CUR_FLr
-056D 20E707         1112         JB ACC.7, UCD_NEG
-0570 752A25         1113         MOV 02Ah, #37      ; Space
-0573 85562B         1114         MOV 02Bh, CUR_FLr
-0576 22             1115         RET
-0577                1116     UCD_NEG:
-0577 752A24         1117         MOV 02Ah, #36      ; '-'
-057A E556           1118         MOV A, CUR_FLr
-057C F4             1119         CPL A
-057D 04             1120         INC A
-057E F52B           1121         MOV 02Bh, A
-0580 22             1122         RET
-                    1123     
-                    1124     ; Update Target Floor at 02Ch/02Dh
-0581                1125     UPDATE_TGT_DISPLAY:
-0581 E558           1126         MOV A, ELEV_TARGET
-0583 20E707         1127         JB ACC.7, UTD_NEG
-0586 752C25         1128         MOV 02Ch, #37      ; Space
-0589 85582D         1129         MOV 02Dh, ELEV_TARGET
-058C 22             1130         RET
-058D                1131     UTD_NEG:
-058D 752C24         1132         MOV 02Ch, #36      ; '-'
-0590 E558           1133         MOV A, ELEV_TARGET
-0592 F4             1134         CPL A
-0593 04             1135         INC A
-0594 F52D           1136         MOV 02Dh, A
-0596 22             1137         RET
-                    1138     
-                    1139     END
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    19
+0598 D004           1143         POP 04h
+059A D3             1144         SETB C
+059B 22             1145         RET
+                    1146     
+                    1147     ; Check if floor R6 has request for DOWN direction
+                    1148     ; (Internal or External DOWN)
+059C                1149     SCAN_CHECK_DN_REQUEST:
+059C C004           1150         PUSH 04h
+059E 120000   F     1151         LCALL FLOOR_TO_INDEX
+05A1 EC             1152         MOV A, R4
+05A2 C3             1153         CLR C
+05A3 9408           1154         SUBB A, #08h
+05A5 500F           1155         JNC SCDR_HI
+05A7 120000   F     1156         LCALL GET_BIT_MASK
+                    1157         ; Always check Internal
+05AA E55C           1158         MOV A, INT_REQ_LO
+05AC 5B             1159         ANL A, R3
+05AD 701D           1160         JNZ SCDR_FOUND
+                    1161         ; Also check External DOWN
+05AF E562           1162         MOV A, EXT_DN_LO
+05B1 5B             1163         ANL A, R3
+05B2 7018           1164         JNZ SCDR_FOUND
+05B4 8012           1165         SJMP SCDR_NOTFOUND
+05B6                1166     SCDR_HI:
+05B6 EC             1167         MOV A, R4
+05B7 C3             1168         CLR C
+05B8 9408           1169         SUBB A, #08h
+05BA FC             1170         MOV R4, A
+05BB 120000   F     1171         LCALL GET_BIT_MASK
+05BE E55D           1172         MOV A, INT_REQ_HI
+05C0 5B             1173         ANL A, R3
+05C1 7009           1174         JNZ SCDR_FOUND
+05C3 E563           1175         MOV A, EXT_DN_HI
+05C5 5B             1176         ANL A, R3
+05C6 7004           1177         JNZ SCDR_FOUND
+05C8                1178     SCDR_NOTFOUND:
+05C8 D004           1179         POP 04h
+05CA C3             1180         CLR C
+05CB 22             1181         RET
+05CC                1182     SCDR_FOUND:
+05CC D004           1183         POP 04h
+05CE D3             1184         SETB C
+05CF 22             1185         RET
+                    1186     
+                    1187     ; ---------------------------------------------------------
+                    1188     ; Display Helpers
+                    1189     ; ---------------------------------------------------------
+                    1190     
+                    1191     ; Update Current Floor at 02Ah/02Bh
+05D0                1192     UPDATE_CUR_DISPLAY:
+05D0 E556           1193         MOV A, CUR_FLr
+05D2 20E707         1194         JB ACC.7, UCD_NEG
+05D5 752A25         1195         MOV 02Ah, #37      ; Space
+05D8 85562B         1196         MOV 02Bh, CUR_FLr
+05DB 22             1197         RET
+05DC                1198     UCD_NEG:
+05DC 752A24         1199         MOV 02Ah, #36      ; '-'
+05DF E556           1200         MOV A, CUR_FLr
+05E1 F4             1201         CPL A
+05E2 04             1202         INC A
+05E3 F52B           1203         MOV 02Bh, A
+05E5 22             1204         RET
+                    1205     
+                    1206     ; Update Target Floor at 02Ch/02Dh
+05E6                1207     UPDATE_TGT_DISPLAY:
+05E6 E558           1208         MOV A, ELEV_TARGET
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    20
+
+05E8 20E707         1209         JB ACC.7, UTD_NEG
+05EB 752C25         1210         MOV 02Ch, #37      ; Space
+05EE 85582D         1211         MOV 02Dh, ELEV_TARGET
+05F1 22             1212         RET
+05F2                1213     UTD_NEG:
+05F2 752C24         1214         MOV 02Ch, #36      ; '-'
+05F5 E558           1215         MOV A, ELEV_TARGET
+05F7 F4             1216         CPL A
+05F8 04             1217         INC A
+05F9 F52D           1218         MOV 02Dh, A
+05FB 22             1219         RET
+                    1220     
+                    1221     END
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    21
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -1222,104 +1313,115 @@ SYMBOL TABLE LISTING
 N A M E                T Y P E  V A L U E   ATTRIBUTES
 
 ACC . . . . . . . . .  D ADDR   00E0H   A   
-ARR_NEG . . . . . . .  C ADDR   0206H   R   SEG=RUNNING
+ARR_NEG . . . . . . .  C ADDR   024EH   R   SEG=RUNNING
 BITMASK_TABLE . . . .  C ADDR   0026H   R   SEG=RUNNING
-BIT_MASK_TBL. . . . .  C ADDR   0406H   R   SEG=RUNNING
+BIT_MASK_TBL. . . . .  C ADDR   0469H   R   SEG=RUNNING
 BLINK_TIMER . . . . .  N NUMB   005AH   A   
 BLINK_TOGGLE. . . . .  N NUMB   005BH   A   
-CASR_CHK_MODE . . . .  C ADDR   0333H   R   SEG=RUNNING
-CASR_CONSUME. . . . .  C ADDR   0380H   R   SEG=RUNNING
-CASR_IN_CHK_F . . . .  C ADDR   0346H   R   SEG=RUNNING
-CASR_IN_CHK_OTHER . .  C ADDR   0341H   R   SEG=RUNNING
-CASR_OUTSIDE_MODE . .  C ADDR   034BH   R   SEG=RUNNING
-CASR_OUT_CHK_CD . . .  C ADDR   0376H   R   SEG=RUNNING
-CASR_OUT_CHK_D. . . .  C ADDR   037BH   R   SEG=RUNNING
-CASR_OUT_CHK_F. . . .  C ADDR   0365H   R   SEG=RUNNING
-CASR_OUT_CHK_OTHER. .  C ADDR   0359H   R   SEG=RUNNING
-CASR_OUT_SHOW . . . .  C ADDR   036FH   R   SEG=RUNNING
-CASR_RET. . . . . . .  C ADDR   0383H   R   SEG=RUNNING
-CASR_SHOW_INSIDE. . .  C ADDR   0326H   R   SEG=RUNNING
-CFR_HI. . . . . . . .  C ADDR   042DH   R   SEG=RUNNING
-CHECK_AND_SET_REQUEST  C ADDR   0307H   R   SEG=RUNNING
-CHECK_ELEV_ARR. . . .  C ADDR   010AH   R   SEG=RUNNING
-CHECK_ELEV_CLOSE. . .  C ADDR   0111H   R   SEG=RUNNING
-CHECK_ELEV_RUN. . . .  C ADDR   00FCH   R   SEG=RUNNING
-CHECK_ELEV_RUN2 . . .  C ADDR   0103H   R   SEG=RUNNING
-CHECK_FLOOR_REQUEST .  C ADDR   0448H   R   SEG=RUNNING
-CHKFR_FOUND . . . . .  C ADDR   0496H   R   SEG=RUNNING
-CHKFR_HI. . . . . . .  C ADDR   0471H   R   SEG=RUNNING
-CHKFR_HI_DN . . . . .  C ADDR   048AH   R   SEG=RUNNING
-CHKFR_LO_DN . . . . .  C ADDR   0465H   R   SEG=RUNNING
-CHKFR_NOTFOUND. . . .  C ADDR   0494H   R   SEG=RUNNING
-CLEAR_FLOOR_REQUEST .  C ADDR   040EH   R   SEG=RUNNING
+CASR_CHK_MODE . . . .  C ADDR   0396H   R   SEG=RUNNING
+CASR_CONSUME. . . . .  C ADDR   03E3H   R   SEG=RUNNING
+CASR_IN_CHK_F . . . .  C ADDR   03A9H   R   SEG=RUNNING
+CASR_IN_CHK_OTHER . .  C ADDR   03A4H   R   SEG=RUNNING
+CASR_OUTSIDE_MODE . .  C ADDR   03AEH   R   SEG=RUNNING
+CASR_OUT_CHK_CD . . .  C ADDR   03D9H   R   SEG=RUNNING
+CASR_OUT_CHK_D. . . .  C ADDR   03DEH   R   SEG=RUNNING
+CASR_OUT_CHK_F. . . .  C ADDR   03C8H   R   SEG=RUNNING
+CASR_OUT_CHK_OTHER. .  C ADDR   03BCH   R   SEG=RUNNING
+CASR_OUT_SHOW . . . .  C ADDR   03D2H   R   SEG=RUNNING
+CASR_RET. . . . . . .  C ADDR   03E6H   R   SEG=RUNNING
+CASR_SHOW_INSIDE. . .  C ADDR   0389H   R   SEG=RUNNING
+CFR_HI. . . . . . . .  C ADDR   0490H   R   SEG=RUNNING
+CFR_HI_CHK_DN . . . .  C ADDR   04F2H   R   SEG=RUNNING
+CFR_HI_CHK_UP . . . .  C ADDR   04E8H   R   SEG=RUNNING
+CFR_LO_CHK_DN . . . .  C ADDR   04CDH   R   SEG=RUNNING
+CFR_LO_CHK_UP . . . .  C ADDR   04C3H   R   SEG=RUNNING
+CHECK_AND_SET_REQUEST  C ADDR   036AH   R   SEG=RUNNING
+CHECK_ELEV_ARR. . . .  C ADDR   0120H   R   SEG=RUNNING
+CHECK_ELEV_CLOSE. . .  C ADDR   0127H   R   SEG=RUNNING
+CHECK_ELEV_RUN. . . .  C ADDR   0112H   R   SEG=RUNNING
+CHECK_ELEV_RUN2 . . .  C ADDR   0119H   R   SEG=RUNNING
+CHECK_FLOOR_REQUEST .  C ADDR   04ABH   R   SEG=RUNNING
+CHKFR_FOUND . . . . .  C ADDR   04FBH   R   SEG=RUNNING
+CHKFR_HI. . . . . . .  C ADDR   04D4H   R   SEG=RUNNING
+CHKFR_NOTFOUND. . . .  C ADDR   04F9H   R   SEG=RUNNING
+CLEAR_FLOOR_REQUEST .  C ADDR   0471H   R   SEG=RUNNING
 CUR_FLR . . . . . . .  N NUMB   0056H   A   
 DEBUG_ON. . . . . . .  N NUMB   0067H   A   
-EA_BLINK_LOGIC. . . .  C ADDR   01DFH   R   SEG=RUNNING
-EA_CHECK_REQ. . . . .  C ADDR   01DAH   R   SEG=RUNNING
-EA_INIT . . . . . . .  C ADDR   0210H   R   SEG=RUNNING
-EA_OFF. . . . . . . .  C ADDR   01EEH   R   SEG=RUNNING
-EA_TAIL . . . . . . .  C ADDR   01F4H   R   SEG=RUNNING
-EC_BLINK_LOGIC. . . .  C ADDR   024DH   R   SEG=RUNNING
-EC_CHECK_CUR. . . . .  C ADDR   0235H   R   SEG=RUNNING
-EC_CHECK_REQ. . . . .  C ADDR   0248H   R   SEG=RUNNING
-EC_INIT . . . . . . .  C ADDR   026FH   R   SEG=RUNNING
-EC_OFF. . . . . . . .  C ADDR   025CH   R   SEG=RUNNING
-EC_REOPEN . . . . . .  C ADDR   0238H   R   SEG=RUNNING
-EC_TAIL . . . . . . .  C ADDR   0262H   R   SEG=RUNNING
+EA_BLINK_LOGIC. . . .  C ADDR   0227H   R   SEG=RUNNING
+EA_CHECK_REQ. . . . .  C ADDR   0222H   R   SEG=RUNNING
+EA_INIT . . . . . . .  C ADDR   0258H   R   SEG=RUNNING
+EA_OFF. . . . . . . .  C ADDR   0236H   R   SEG=RUNNING
+EA_TAIL . . . . . . .  C ADDR   023CH   R   SEG=RUNNING
+ECP_EXEC. . . . . . .  C ADDR   017EH   R   SEG=RUNNING
+ECP_GO_8. . . . . . .  C ADDR   017CH   R   SEG=RUNNING
+ECP_MOVE. . . . . . .  C ADDR   0186H   R   SEG=RUNNING
+ECP_TEST. . . . . . .  C ADDR   0176H   R   SEG=RUNNING
+EC_BLINK_LOGIC. . . .  C ADDR   0295H   R   SEG=RUNNING
+EC_CHECK_CUR. . . . .  C ADDR   027DH   R   SEG=RUNNING
+EC_CHECK_REQ. . . . .  C ADDR   0290H   R   SEG=RUNNING
+EC_INIT . . . . . . .  C ADDR   02B7H   R   SEG=RUNNING
+EC_OFF. . . . . . . .  C ADDR   02A4H   R   SEG=RUNNING
+EC_REOPEN . . . . . .  C ADDR   0280H   R   SEG=RUNNING
+EC_TAIL . . . . . . .  C ADDR   02AAH   R   SEG=RUNNING
+EH_CHECK_CUR_FL . . .  C ADDR   0144H   R   SEG=RUNNING
+EH_OPEN_NOW . . . . .  C ADDR   0150H   R   SEG=RUNNING
+EH_SCAN . . . . . . .  C ADDR   015DH   R   SEG=RUNNING
 ELEV_ARRIVED. . . . .  N NUMB   0022H   A   
-ELEV_ARRIVED_HANDLER.  C ADDR   01BAH   R   SEG=RUNNING
+ELEV_ARRIVED_HANDLER.  C ADDR   0202H   R   SEG=RUNNING
+ELEV_CHECK_PARK . . .  C ADDR   016DH   R   SEG=RUNNING
 ELEV_CLOSE. . . . . .  N NUMB   0023H   A   
-ELEV_CLOSE_HANDLER. .  C ADDR   0223H   R   SEG=RUNNING
-ELEV_DIFF . . . . . .  C ADDR   014BH   R   SEG=RUNNING
+ELEV_CLOSE_HANDLER. .  C ADDR   026BH   R   SEG=RUNNING
+ELEV_DIFF . . . . . .  C ADDR   0193H   R   SEG=RUNNING
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    22
+
 ELEV_DIR. . . . . . .  N NUMB   0064H   A   
-ELEV_HANDLER. . . . .  C ADDR   0119H   R   SEG=RUNNING
-ELEV_IDLE_RET . . . .  C ADDR   013CH   R   SEG=RUNNING
-ELEV_INIT . . . . . .  C ADDR   0140H   R   SEG=RUNNING
+ELEV_HANDLER. . . . .  C ADDR   012FH   R   SEG=RUNNING
+ELEV_INIT . . . . . .  C ADDR   0188H   R   SEG=RUNNING
 ELEV_RUN. . . . . . .  N NUMB   0021H   A   
-ELEV_RUN_HANDLER. . .  C ADDR   0190H   R   SEG=RUNNING
+ELEV_RUN_HANDLER. . .  C ADDR   01D8H   R   SEG=RUNNING
 ELEV_ST . . . . . . .  N NUMB   0020H   A   
-ELEV_START_MOVE . . .  C ADDR   013AH   R   SEG=RUNNING
+ELEV_START_MOVE . . .  C ADDR   016BH   R   SEG=RUNNING
 ELEV_TARGET . . . . .  N NUMB   0058H   A   
 ELEV_TIMER. . . . . .  N NUMB   0057H   A   
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    20
-
-ER_CHK_INT_KEY. . . .  C ADDR   01B1H   R   SEG=RUNNING
-ER_INIT . . . . . . .  C ADDR   01B5H   R   SEG=RUNNING
+ER_CHK_INT_KEY. . . .  C ADDR   01F9H   R   SEG=RUNNING
+ER_INIT . . . . . . .  C ADDR   01FDH   R   SEG=RUNNING
 EXT_DN_HI . . . . . .  N NUMB   0063H   A   
 EXT_DN_LO . . . . . .  N NUMB   0062H   A   
 EXT_UP_HI . . . . . .  N NUMB   005FH   A   
 EXT_UP_LO . . . . . .  N NUMB   005EH   A   
-E_GO_DOWN . . . . . .  C ADDR   016BH   R   SEG=RUNNING
-E_START . . . . . . .  C ADDR   0175H   R   SEG=RUNNING
-FLOOR_TO_INDEX. . . .  C ADDR   0384H   R   SEG=RUNNING
-FTI_NEG . . . . . . .  C ADDR   038BH   R   SEG=RUNNING
-GET_BIT_MASK. . . . .  C ADDR   03FFH   R   SEG=RUNNING
-GET_FLOOR_FROM_KEY. .  C ADDR   02A2H   R   SEG=RUNNING
-GFK_INVALID . . . . .  C ADDR   02B9H   R   SEG=RUNNING
-GFK_KEY_0 . . . . . .  C ADDR   02B1H   R   SEG=RUNNING
-GFK_KEY_1 . . . . . .  C ADDR   02B5H   R   SEG=RUNNING
-INDEX_TO_FLOOR. . . .  C ADDR   038FH   R   SEG=RUNNING
+E_GO_DOWN . . . . . .  C ADDR   01B3H   R   SEG=RUNNING
+E_START . . . . . . .  C ADDR   01BDH   R   SEG=RUNNING
+FLOOR_TO_INDEX. . . .  C ADDR   03E7H   R   SEG=RUNNING
+FTI_NEG . . . . . . .  C ADDR   03EEH   R   SEG=RUNNING
+GET_BIT_MASK. . . . .  C ADDR   0462H   R   SEG=RUNNING
+GET_FLOOR_FROM_KEY. .  C ADDR   0305H   R   SEG=RUNNING
+GFK_INVALID . . . . .  C ADDR   031CH   R   SEG=RUNNING
+GFK_KEY_0 . . . . . .  C ADDR   0314H   R   SEG=RUNNING
+GFK_KEY_1 . . . . . .  C ADDR   0318H   R   SEG=RUNNING
+INDEX_TO_FLOOR. . . .  C ADDR   03F2H   R   SEG=RUNNING
 INPUT_MODE. . . . . .  N NUMB   0065H   A   
 INT_REQ_HI. . . . . .  N NUMB   005DH   A   
 INT_REQ_LO. . . . . .  N NUMB   005CH   A   
-ITF_CHK1. . . . . . .  C ADDR   0396H   R   SEG=RUNNING
-ITF_POS . . . . . . .  C ADDR   039CH   R   SEG=RUNNING
+ITF_CHK1. . . . . . .  C ADDR   03F9H   R   SEG=RUNNING
+ITF_POS . . . . . . .  C ADDR   03FFH   R   SEG=RUNNING
 LCD_CLEAR . . . . . .  C ADDR   -----       EXT
 LCD_INIT. . . . . . .  C ADDR   -----       EXT
-LCD_MSG_CLOSE . . . .  C ADDR   0068H   R   SEG=RUNNING
+LCD_MSG_CLOSE . . . .  C ADDR   0079H   R   SEG=RUNNING
+LCD_MSG_FL. . . . . .  C ADDR   009BH   R   SEG=RUNNING
 LCD_MSG_INSIDE. . . .  C ADDR   0031H   R   SEG=RUNNING
-LCD_MSG_OPEN. . . . .  C ADDR   0057H   R   SEG=RUNNING
-LCD_MSG_RUN . . . . .  C ADDR   0079H   R   SEG=RUNNING
-LCD_PRINT_FLOOR . . .  C ADDR   02BBH   R   SEG=RUNNING
+LCD_MSG_OPEN. . . . .  C ADDR   0068H   R   SEG=RUNNING
+LCD_MSG_RUN . . . . .  C ADDR   008AH   R   SEG=RUNNING
+LCD_MSG_WELCOME . . .  C ADDR   0042H   R   SEG=RUNNING
+LCD_PRINT_FLOOR . . .  C ADDR   031EH   R   SEG=RUNNING
 LCD_SHOW_STR. . . . .  C ADDR   -----       EXT
-LCD_STR_DOWN. . . . .  C ADDR   004DH   R   SEG=RUNNING
-LCD_STR_EMPTY . . . .  C ADDR   0052H   R   SEG=RUNNING
-LCD_STR_OUT_PREFIX. .  C ADDR   0042H   R   SEG=RUNNING
-LCD_STR_UP. . . . . .  C ADDR   0048H   R   SEG=RUNNING
+LCD_STR_DOWN. . . . .  C ADDR   005EH   R   SEG=RUNNING
+LCD_STR_EMPTY . . . .  C ADDR   0063H   R   SEG=RUNNING
+LCD_STR_OUT_PREFIX. .  C ADDR   0053H   R   SEG=RUNNING
+LCD_STR_UP. . . . . .  C ADDR   0059H   R   SEG=RUNNING
 LCD_WR_CMD. . . . . .  C ADDR   -----       EXT
 LCD_WR_DAT. . . . . .  C ADDR   -----       EXT
 LED6_APPLYTABLE . . .  C ADDR   -----       EXT
-LPF_NEG . . . . . . .  C ADDR   02CBH   R   SEG=RUNNING
+LPF_NEG . . . . . . .  C ADDR   032EH   R   SEG=RUNNING
 ONE_SEC_CNT . . . . .  N NUMB   0059H   A   
 OPT1_ST . . . . . . .  N NUMB   0011H   A   
 OPT2_ST . . . . . . .  N NUMB   0012H   A   
@@ -1328,54 +1430,54 @@ OPT_ST. . . . . . . .  N NUMB   0001H   A
 OUT_SEL_VAL . . . . .  N NUMB   0066H   A   
 PASSWORD_TABLE. . . .  C ADDR   002CH   R   SEG=RUNNING
 PASS_ST . . . . . . .  N NUMB   0002H   A   
-RT_CONFIG_DONE. . . .  C ADDR   00F5H   R   SEG=RUNNING
-RT_HANDLE_KEY . . . .  C ADDR   00CFH   R   SEG=RUNNING
-RT_HANDLE_OTHER . . .  C ADDR   00DCH   R   SEG=RUNNING
-RT_INIT . . . . . . .  C ADDR   00E1H   R   SEG=RUNNING
-RT_MODE . . . . . . .  C ADDR   00E7H   R   SEG=RUNNING
-RT_RETURN . . . . . .  C ADDR   0118H   R   SEG=RUNNING
-RUNNING . . . . . . .  C SEG    0597H       REL=UNIT
-RUNNINGTASK_HANDLER .  C ADDR   00BEH   R   SEG=RUNNING
-RUNNINGTASK_INIT. . .  C ADDR   008AH   R   SEG=RUNNING
+RT_CONFIG_DONE. . . .  C ADDR   010BH   R   SEG=RUNNING
+RT_HANDLE_KEY . . . .  C ADDR   00E5H   R   SEG=RUNNING
+RT_HANDLE_OTHER . . .  C ADDR   00F2H   R   SEG=RUNNING
+RT_INIT . . . . . . .  C ADDR   00F7H   R   SEG=RUNNING
+RT_MODE . . . . . . .  C ADDR   00FDH   R   SEG=RUNNING
+RT_RETURN . . . . . .  C ADDR   012EH   R   SEG=RUNNING
+RUNNING . . . . . . .  C SEG    05FCH       REL=UNIT
+RUNNINGTASK_HANDLER .  C ADDR   00D4H   R   SEG=RUNNING
+RUNNINGTASK_INIT. . .  C ADDR   00A0H   R   SEG=RUNNING
 RUN_ST. . . . . . . .  N NUMB   0000H   A   
-SCAN_CHECK_DN_REQUEST  C ADDR   0537H   R   SEG=RUNNING
-SCAN_CHECK_UP_REQUEST  C ADDR   0503H   R   SEG=RUNNING
-SCAN_DEFAULT_UP . . .  C ADDR   04BAH   R   SEG=RUNNING
-SCAN_DN_DONE. . . . .  C ADDR   04F2H   R   SEG=RUNNING
-SCAN_DN_LOOP. . . . .  C ADDR   04E4H   R   SEG=RUNNING
-SCAN_FAIL . . . . . .  C ADDR   04FCH   R   SEG=RUNNING
-SCAN_FIND_NEXT_TARGET  C ADDR   0498H   R   SEG=RUNNING
-SCAN_FOUND. . . . . .  C ADDR   0501H   R   SEG=RUNNING
-SCAN_HAS_REQ. . . . .  C ADDR   04A8H   R   SEG=RUNNING
-SCAN_TRY_DOWN . . . .  C ADDR   04DEH   R   SEG=RUNNING
-SCAN_TRY_UP . . . . .  C ADDR   04BDH   R   SEG=RUNNING
-A51 MACRO ASSEMBLER  RUNNINGTASK                                                          12/19/2025 20:25:38 PAGE    21
+A51 MACRO ASSEMBLER  RUNNINGTASK                                                          01/06/2026 22:05:32 PAGE    23
 
-SCAN_UP_CHK . . . . .  C ADDR   04CCH   R   SEG=RUNNING
-SCAN_UP_LOOP. . . . .  C ADDR   04C3H   R   SEG=RUNNING
-SCAN_UP_NEXT. . . . .  C ADDR   04D1H   R   SEG=RUNNING
-SCDR_FOUND. . . . . .  C ADDR   0567H   R   SEG=RUNNING
-SCDR_HI . . . . . . .  C ADDR   0551H   R   SEG=RUNNING
-SCDR_NOTFOUND . . . .  C ADDR   0563H   R   SEG=RUNNING
-SCUR_FOUND. . . . . .  C ADDR   0533H   R   SEG=RUNNING
-SCUR_HI . . . . . . .  C ADDR   051DH   R   SEG=RUNNING
-SCUR_NOTFOUND . . . .  C ADDR   052FH   R   SEG=RUNNING
-SEDR_HI . . . . . . .  C ADDR   03F1H   R   SEG=RUNNING
+SCAN_CHECK_DN_REQUEST  C ADDR   059CH   R   SEG=RUNNING
+SCAN_CHECK_UP_REQUEST  C ADDR   0568H   R   SEG=RUNNING
+SCAN_DEFAULT_UP . . .  C ADDR   051FH   R   SEG=RUNNING
+SCAN_DN_DONE. . . . .  C ADDR   0557H   R   SEG=RUNNING
+SCAN_DN_LOOP. . . . .  C ADDR   0549H   R   SEG=RUNNING
+SCAN_FAIL . . . . . .  C ADDR   0561H   R   SEG=RUNNING
+SCAN_FIND_NEXT_TARGET  C ADDR   04FDH   R   SEG=RUNNING
+SCAN_FOUND. . . . . .  C ADDR   0566H   R   SEG=RUNNING
+SCAN_HAS_REQ. . . . .  C ADDR   050DH   R   SEG=RUNNING
+SCAN_TRY_DOWN . . . .  C ADDR   0543H   R   SEG=RUNNING
+SCAN_TRY_UP . . . . .  C ADDR   0522H   R   SEG=RUNNING
+SCAN_UP_CHK . . . . .  C ADDR   0531H   R   SEG=RUNNING
+SCAN_UP_LOOP. . . . .  C ADDR   0528H   R   SEG=RUNNING
+SCAN_UP_NEXT. . . . .  C ADDR   0536H   R   SEG=RUNNING
+SCDR_FOUND. . . . . .  C ADDR   05CCH   R   SEG=RUNNING
+SCDR_HI . . . . . . .  C ADDR   05B6H   R   SEG=RUNNING
+SCDR_NOTFOUND . . . .  C ADDR   05C8H   R   SEG=RUNNING
+SCUR_FOUND. . . . . .  C ADDR   0598H   R   SEG=RUNNING
+SCUR_HI . . . . . . .  C ADDR   0582H   R   SEG=RUNNING
+SCUR_NOTFOUND . . . .  C ADDR   0594H   R   SEG=RUNNING
+SEDR_HI . . . . . . .  C ADDR   0454H   R   SEG=RUNNING
 SEG_TABLE . . . . . .  C ADDR   0000H   R   SEG=RUNNING
-SET_EXT_DN_REQUEST. .  C ADDR   03DFH   R   SEG=RUNNING
-SET_EXT_UP_REQUEST. .  C ADDR   03BFH   R   SEG=RUNNING
-SET_INT_REQUEST . . .  C ADDR   039FH   R   SEG=RUNNING
-SEUR_HI . . . . . . .  C ADDR   03D1H   R   SEG=RUNNING
-SHOW_OPEN_FLOOR . . .  C ADDR   027DH   R   SEG=RUNNING
-SHOW_OUTSIDE_STATUS .  C ADDR   02D9H   R   SEG=RUNNING
-SIR_HI. . . . . . . .  C ADDR   03B1H   R   SEG=RUNNING
-SOF_NEG . . . . . . .  C ADDR   0298H   R   SEG=RUNNING
-SOS_NONE. . . . . . .  C ADDR   0300H   R   SEG=RUNNING
-SOS_UP. . . . . . . .  C ADDR   02F9H   R   SEG=RUNNING
-UCD_NEG . . . . . . .  C ADDR   0577H   R   SEG=RUNNING
-UPDATE_CUR_DISPLAY. .  C ADDR   056BH   R   SEG=RUNNING
-UPDATE_TGT_DISPLAY. .  C ADDR   0581H   R   SEG=RUNNING
-UTD_NEG . . . . . . .  C ADDR   058DH   R   SEG=RUNNING
+SET_EXT_DN_REQUEST. .  C ADDR   0442H   R   SEG=RUNNING
+SET_EXT_UP_REQUEST. .  C ADDR   0422H   R   SEG=RUNNING
+SET_INT_REQUEST . . .  C ADDR   0402H   R   SEG=RUNNING
+SEUR_HI . . . . . . .  C ADDR   0434H   R   SEG=RUNNING
+SHOW_OPEN_FLOOR . . .  C ADDR   02C5H   R   SEG=RUNNING
+SHOW_OUTSIDE_STATUS .  C ADDR   033CH   R   SEG=RUNNING
+SIR_HI. . . . . . . .  C ADDR   0414H   R   SEG=RUNNING
+SOF_NEG . . . . . . .  C ADDR   02FBH   R   SEG=RUNNING
+SOS_NONE. . . . . . .  C ADDR   0363H   R   SEG=RUNNING
+SOS_UP. . . . . . . .  C ADDR   035CH   R   SEG=RUNNING
+UCD_NEG . . . . . . .  C ADDR   05DCH   R   SEG=RUNNING
+UPDATE_CUR_DISPLAY. .  C ADDR   05D0H   R   SEG=RUNNING
+UPDATE_TGT_DISPLAY. .  C ADDR   05E6H   R   SEG=RUNNING
+UTD_NEG . . . . . . .  C ADDR   05F2H   R   SEG=RUNNING
 
 
 REGISTER BANK(S) USED: 0 

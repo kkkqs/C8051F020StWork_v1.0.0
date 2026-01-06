@@ -1,14 +1,14 @@
-".\Objects\..\..\..\Git\C8051F020StWork\user\main.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\user\Init_Device.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\driver\KeyInput.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\driver\LED6.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\driver\LCD1602.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\Keyboard.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\timer0.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\timer1.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\bsp\Delay.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\Tasks\inputTask.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\Tasks\configurationTask.obj",
-".\Objects\..\..\..\Git\C8051F020StWork\Tasks\runningTask.obj" 
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\user\main.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.obj",
+".\Objects\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.obj" 
 TO ".\Objects\C8051F020" 
 PRINT(".\Listings\C8051F020.m51") RAMSIZE(256) 

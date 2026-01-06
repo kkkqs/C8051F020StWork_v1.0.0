@@ -377,14 +377,14 @@
           <GroupName>user</GroupName>
           <Files>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\user\main.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\main.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\user\Init_Device.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\user\Init_Device.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</FilePath>
             </File>
           </Files>
         </Group>
@@ -392,19 +392,19 @@
           <GroupName>driver</GroupName>
           <Files>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\KeyInput.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\driver\LED6.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LED6.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\driver\LCD1602.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</FilePath>
             </File>
           </Files>
         </Group>
@@ -412,24 +412,24 @@
           <GroupName>bsp</GroupName>
           <Files>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Keyboard.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer0.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\timer1.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\bsp\Delay.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\bsp\Delay.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</FilePath>
             </File>
           </Files>
         </Group>
@@ -440,19 +440,19 @@
           <GroupName>Task</GroupName>
           <Files>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\inputTask.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\configurationTask.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</FilePath>
             </File>
             <File>
-              <FileName>..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</FileName>
+              <FileName>..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</FileName>
               <FileType>2</FileType>
-              <FilePath>$TC_ROOT$\..\..\..\Git\C8051F020StWork\Tasks\runningTask.asm</FilePath>
+              <FilePath>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</FilePath>
             </File>
           </Files>
         </Group>
