@@ -3,6 +3,7 @@ Configuration SEGMENT CODE
 rseg Configuration
 
 $INCLUDE (../user/config.inc)
+$INCLUDE (../driver/LCD1602.inc)
 
 EXTRN CODE(LED6_ApplyTable)
 EXTRN CODE(InputTask_03B)
@@ -10,6 +11,9 @@ EXTRN CODE(InputTask_039)
 
 PUBLIC ConfigurationTask_Init
 PUBLIC ConfigurationTask_Handler
+
+LCD_MSG_CONFIG:
+    DB 'C','o','n','f','i','g','u','r','a','t','i','n','g',' ',' ',' ', 00h
 
 ; Entry: call ConfigurationTask_Init at startup
 ConfigurationTask_Init:
@@ -347,6 +351,12 @@ CONF_PASS_INIT:
     MOV 070h, #PASS_ST
     MOV A, #07h
     LCALL LED6_ApplyTable
+    
+    ; LCD Display
+    LCALL LCD_CLEAR
+    MOV DPTR, #LCD_MSG_CONFIG
+    LCALL LCD_SHOW_STR
+    
     MOV 039h, #01h
     MOV 061h, #00h
     MOV 060h, #00h

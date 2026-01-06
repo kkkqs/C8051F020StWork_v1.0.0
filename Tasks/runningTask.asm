@@ -13,6 +13,8 @@ PUBLIC RunningTask_Handler
 ; LCD Strings
 LCD_MSG_INSIDE:
     DB 'I','n','s','i','d','e',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', 00h
+    LCD_MSG_WELCOME:
+    DB 'W','e','l','c','o','m','e',' ',' ',' ',' ',' ',' ',' ',' ',' ', 00h
 LCD_STR_OUT_PREFIX:
     DB 'O','u','t',':',' ', 00h
 LCD_STR_UP:
@@ -28,6 +30,8 @@ LCD_MSG_CLOSE:
     DB ' ',' ',' ','c','l','o','s','e',' ','d','o','o','r',' ',' ',' ', 00h
 LCD_MSG_RUN:
     DB ' ',' ',' ','R','u','n','n','i','n','g','.','.','.',' ',' ',' ', 00h
+LCD_MSG_FL:
+    DB 'F','L',':',' ', 00h
 
 ; Initialize running task: set up elevator defaults
 RunningTask_Init:
@@ -52,7 +56,7 @@ RunningTask_Init:
     ; Init LCD
     LCALL LCD_INIT
     LCALL LCD_CLEAR
-    MOV DPTR, #LCD_MSG_INSIDE
+    MOV DPTR, #LCD_MSG_WELCOME
     LCALL LCD_SHOW_STR
     RET
 
@@ -131,6 +135,34 @@ ELEV_HANDLER:
     ; 1. Check for new key input and set bitmap
     LCALL CHECK_AND_SET_REQUEST
 
+    ; --- Added: Idle Open Logic ---
+    ; Check Internal Open Key ('C')
+    MOV A, 061h
+    JZ EH_CHECK_CUR_FL
+    MOV A, 060h
+    ANL A, #0Fh
+    CJNE A, #0Ch, EH_CHECK_CUR_FL
+    ; 'C' pressed -> Open
+    SJMP EH_OPEN_NOW
+
+EH_CHECK_CUR_FL:
+    ; Check request at current floor (Int/Ext)
+    MOV R6, CUR_FLr
+    LCALL CHECK_FLOOR_REQUEST
+    JNC EH_SCAN
+    ; Request at current floor -> Open
+    LCALL CLEAR_FLOOR_REQUEST
+    SJMP EH_OPEN_NOW
+    ; ------------------------------
+
+EH_OPEN_NOW:
+    MOV 070h, #ELEV_ARRIVED
+    MOV ELEV_TIMER, #05h
+    MOV ONE_SEC_CNT, #00h
+    MOV 071h, #0FFh
+    RET
+
+EH_SCAN:
     ; 2. Find next target using SCAN algorithm
     LCALL SCAN_FIND_NEXT_TARGET
     JNC ELEV_CHECK_PARK    ; No request, check parking logic
@@ -143,11 +175,7 @@ ELEV_HANDLER:
     
     ; Target == Current -> Clear request and Open Door
     LCALL CLEAR_FLOOR_REQUEST  ; Clear request for R6
-    MOV 070h, #ELEV_ARRIVED
-    MOV ELEV_TIMER, #05h
-    MOV ONE_SEC_CNT, #00h
-    MOV 071h, #0FFh
-    RET
+    SJMP EH_OPEN_NOW
 
 ELEV_START_MOVE:
     ; Target != Current -> Start Moving
@@ -396,11 +424,27 @@ EC_INIT:
     
     RET
 
-; Show open floor helper
+; Show open floor helper (Now shows FL + Floor for Idle)
 SHOW_OPEN_FLOOR:
     LCALL LCD_CLEAR ; Ensure clear
-    MOV 028h, #20          ; '0.'
-    MOV 029h, #17          ; 'P.'
+    
+    ; Line 1: Welcome
+    MOV A, #80h
+    LCALL LCD_WR_CMD
+    MOV DPTR, #LCD_MSG_WELCOME
+    LCALL LCD_SHOW_STR
+
+    ; Line 2: FL: [Floor]
+    MOV A, #0C0h
+    LCALL LCD_WR_CMD
+    MOV DPTR, #LCD_MSG_FL
+    LCALL LCD_SHOW_STR
+    MOV R6, CUR_FLr
+    LCALL LCD_PRINT_FLOOR
+    
+    ; LED6 Update
+    MOV 028h, #15          ; 'F'
+    MOV 029h, #19          ; 'L'
     MOV 02Ah, #37          ; ' '
     MOV 02Bh, #37          ; ' '
     MOV A, CUR_FLr
@@ -782,51 +826,67 @@ CHECK_FLOOR_REQUEST:
     CLR C
     SUBB A, #08h
     JNC CHKFR_HI
-    ; Low byte
+    
+    ; Low Byte
     LCALL GET_BIT_MASK
     ; Check Internal
     MOV A, INT_REQ_LO
     ANL A, R3
     JNZ CHKFR_FOUND
-    ; Check External UP (only if going up)
+    
+    ; Check External - Dir dependent
     MOV A, ELEV_DIR
-    CJNE A, #01h, CHKFR_LO_DN
+    CJNE A, #02h, CFR_LO_CHK_UP  ; If Dir != 2 (0 or 1), check UP
+    SJMP CFR_LO_CHK_DN           ; If Dir == 2, check DOWN only
+    
+CFR_LO_CHK_UP:
     MOV A, EXT_UP_LO
     ANL A, R3
     JNZ CHKFR_FOUND
-    SJMP CHKFR_NOTFOUND
-CHKFR_LO_DN:
-    ; Check External DOWN (only if going down)
+    
+    ; If Dir=1 (Up), we are done (don't check down)
     MOV A, ELEV_DIR
-    CJNE A, #02h, CHKFR_NOTFOUND
+    CJNE A, #00h, CHKFR_NOTFOUND ; If Dir != 0 (i.e. 1), Ret Not Found
+    
+    ; If Dir=0, Fall through to check DOWN
+    
+CFR_LO_CHK_DN:
     MOV A, EXT_DN_LO
     ANL A, R3
     JNZ CHKFR_FOUND
     SJMP CHKFR_NOTFOUND
     
 CHKFR_HI:
+    ; High Byte adjustment logic
     MOV A, R4
     CLR C
     SUBB A, #08h
     MOV R4, A
     LCALL GET_BIT_MASK
+    
     ; Check Internal
     MOV A, INT_REQ_HI
     ANL A, R3
     JNZ CHKFR_FOUND
-    ; Check External based on direction
+    
+    ; Check External
     MOV A, ELEV_DIR
-    CJNE A, #01h, CHKFR_HI_DN
+    CJNE A, #02h, CFR_HI_CHK_UP
+    SJMP CFR_HI_CHK_DN
+    
+CFR_HI_CHK_UP:
     MOV A, EXT_UP_HI
     ANL A, R3
     JNZ CHKFR_FOUND
-    SJMP CHKFR_NOTFOUND
-CHKFR_HI_DN:
+    
     MOV A, ELEV_DIR
-    CJNE A, #02h, CHKFR_NOTFOUND
+    CJNE A, #00h, CHKFR_NOTFOUND
+    
+CFR_HI_CHK_DN:
     MOV A, EXT_DN_HI
     ANL A, R3
     JNZ CHKFR_FOUND
+    SJMP CHKFR_NOTFOUND
     
 CHKFR_NOTFOUND:
     CLR C
