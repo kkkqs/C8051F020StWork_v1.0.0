@@ -5,7 +5,7 @@ PUBLIC Timer0_Init
 PUBLIC TIMER0_ISR
 
 Timer0_Init:
-    ; 设置 Timer0 初始值（与 original main.ASM 保持一致）
+    ; 设置 Timer0 初始值（�? original main.ASM 保持一致）
     MOV TH0, #0D8h
     MOV TL0, #0F0h
     SETB TR0
@@ -48,7 +48,7 @@ T0_LONG_REACHED:
     SJMP T0_ELEV_TIMING
 
 T0_ELEV_TIMING:
-    ; 电梯计时：仅在 ELEV_RUN/ELEV_ARRIVED/ELEV_CLOSE 状态下执行
+    ; 电梯计时：仅�? ELEV_RUN/ELEV_ARRIVED/ELEV_CLOSE 状态下执行
     MOV A, 070h
     CJNE A, #021h, T0_CHK_ARR    ; ELEV_RUN = 21h
     SJMP T0_DO_TIMING
@@ -56,7 +56,11 @@ T0_CHK_ARR:
     CJNE A, #022h, T0_CHK_CLS    ; ELEV_ARRIVED = 22h
     SJMP T0_DO_TIMING
 T0_CHK_CLS:
-    CJNE A, #023h, T0_EXIT       ; ELEV_CLOSE = 23h
+    CJNE A, #023h, T0_CHK_IDLE   ; ELEV_CLOSE = 23h
+    SJMP T0_DO_TIMING
+T0_CHK_IDLE:
+    CJNE A, #020h, T0_EXIT       ; ELEV_ST = 20h
+    SJMP T0_DO_TIMING
 
 T0_DO_TIMING:
     INC 059h                     ; ONE_SEC_CNT++
@@ -99,7 +103,7 @@ T0_CHK_TIMER_NZ:
 T0_TIME_UP_HANDLE:
     MOV A, 070h
     CJNE A, #021h, T0_CHK_END_ARR  ; ELEV_RUN
-    ; 运行结束 -> 开门 (5s)
+    ; 运行结束 -> 开�? (5s)
     MOV 070h, #022h              ; ELEV_ARRIVED
     MOV 057h, #05h               ; ELEV_TIMER = 5
     MOV 059h, #00h
@@ -110,7 +114,7 @@ T0_TIME_UP_HANDLE:
 
 T0_CHK_END_ARR:
     CJNE A, #022h, T0_CHK_END_CLS  ; ELEV_ARRIVED
-    ; 开门结束 -> 关门 (2s)
+    ; 开门结�? -> 关门 (2s)
     MOV 070h, #023h              ; ELEV_CLOSE
     MOV 057h, #02h
     MOV 059h, #00h
@@ -118,8 +122,11 @@ T0_CHK_END_ARR:
     SJMP T0_EXIT
 
 T0_CHK_END_CLS:
+    CJNE A, #023h, T0_EXIT       ; If not CLOSE (and not RUN/ARRIVED), Exit. (Handles ELEV_ST expiration)
     ; 关门结束 -> 待机
     MOV 070h, #020h              ; ELEV_ST
+    MOV 057h, #05h               ; ELEV_TIMER = 5s (Idle Wait)
+    MOV 059h, #00h
     MOV 071h, #0FFh
     SJMP T0_EXIT
 
