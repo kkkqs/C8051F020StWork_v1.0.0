@@ -165,7 +165,7 @@ EH_OPEN_NOW:
 EH_SCAN:
     ; 2. Find next target using SCAN algorithm
     LCALL SCAN_FIND_NEXT_TARGET
-    JNC ELEV_CHECK_PARK    ; No request, check parking logic
+    JNC ELEV_NO_REQ        ; No request, check wait/park
     
     ; R6 has target floor
     MOV A, R6
@@ -176,6 +176,13 @@ EH_SCAN:
     ; Target == Current -> Clear request and Open Door
     LCALL CLEAR_FLOOR_REQUEST  ; Clear request for R6
     SJMP EH_OPEN_NOW
+
+ELEV_NO_REQ:
+    ; No requests found. Check 5s Wait.
+    MOV A, ELEV_TIMER
+    JZ ELEV_CHECK_PARK     ; Timer expired (0) -> Check Parking
+    MOV ELEV_DIR, #00h     ; Stay Idle
+    RET
 
 ELEV_START_MOVE:
     ; Target != Current -> Start Moving
