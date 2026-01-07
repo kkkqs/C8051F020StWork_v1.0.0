@@ -1018,6 +1018,10 @@ SCAN_CHECK_UP_REQUEST:
     MOV A, EXT_UP_LO
     ANL A, R3
     JNZ SCUR_FOUND
+    ; 【新增】检查外呼下 (EXT_DN) 如果在上方有下行请求，我也得上去接他
+    MOV A, EXT_DN_LO 
+    ANL A, R3
+    JNZ SCUR_FOUND
     SJMP SCUR_NOTFOUND
 SCUR_HI:
     MOV A, R4
@@ -1029,6 +1033,9 @@ SCUR_HI:
     ANL A, R3
     JNZ SCUR_FOUND
     MOV A, EXT_UP_HI
+    ANL A, R3
+    JNZ SCUR_FOUND
+    MOV A, EXT_DN_HI  ;【新增】
     ANL A, R3
     JNZ SCUR_FOUND
 SCUR_NOTFOUND:
@@ -1058,6 +1065,9 @@ SCAN_CHECK_DN_REQUEST:
     MOV A, EXT_DN_LO
     ANL A, R3
     JNZ SCDR_FOUND
+    MOV A, EXT_UP_LO  ; 【新增】检查下方的上行请求
+    ANL A, R3
+    JNZ SCDR_FOUND    
     SJMP SCDR_NOTFOUND
 SCDR_HI:
     MOV A, R4
@@ -1071,6 +1081,9 @@ SCDR_HI:
     MOV A, EXT_DN_HI
     ANL A, R3
     JNZ SCDR_FOUND
+    MOV A, EXT_UP_HI  ;【新增】
+    ANL A, R3
+    JNZ SCUR_FOUND
 SCDR_NOTFOUND:
     POP 04h
     CLR C
