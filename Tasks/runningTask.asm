@@ -159,6 +159,8 @@ EH_OPEN_NOW:
     MOV 070h, #ELEV_ARRIVED
     MOV ELEV_TIMER, #05h
     MOV ONE_SEC_CNT, #00h
+    ; Consume key to prevent double-trigger (Fix: Blinking 10 times bug)
+    MOV 061h, #00h
     MOV 071h, #0FFh
     RET
 
@@ -309,6 +311,13 @@ ER_INIT:
     RET
 
 ELEV_ARRIVED_HANDLER:
+    ; Fix race condition: check if state changed by ISR
+    MOV A, 070h
+    CJNE A, #ELEV_ARRIVED, EA_CHECK_INIT
+    SJMP EA_CHECK_INIT_OK
+EA_CHECK_INIT:
+    RET
+EA_CHECK_INIT_OK:
     MOV A, 071h
     CJNE A, 070h, EA_INIT
     
@@ -375,6 +384,13 @@ EA_INIT:
     RET
 
 ELEV_CLOSE_HANDLER:
+    ; Fix race condition: check if state changed by ISR
+    MOV A, 070h
+    CJNE A, #ELEV_CLOSE, EC_CHECK_INIT
+    SJMP EC_CHECK_INIT_OK
+EC_CHECK_INIT:
+    RET
+EC_CHECK_INIT_OK:
     MOV A, 071h
     CJNE A, 070h, EC_INIT
     
