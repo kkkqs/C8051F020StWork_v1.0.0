@@ -977,22 +977,23 @@ SUS_NEXT:
     MOV A, R4
     CJNE A, #11, SCAN_UP_LOOP_STRICT
     
-    ; 【第二轮：宽松扫描】找外呼下 (反向截车)
-    ; 只有当上面没有顺路的人了，才看有没有逆路的人
-    MOV A, R5
-    MOV R4, A
+    ; 【第二轮：宽松扫描】由远及近扫描 (从顶层向下扫到当前层)
+    MOV R4, #0Ah          ; Start from Index 10 (Floor 8)
 SCAN_UP_LOOP_LOOSE:
-    LCALL INDEX_TO_FLOOR
-    MOV A, R6
-    CJNE A, CUR_FLr, SUL_CHECK
-    SJMP SUL_NEXT
-SUL_CHECK:
-    LCALL SCAN_CHECK_UP_LOOSE ; <--- 调用宽松检查 (只查 EXT_DN)
-    JC SCAN_FOUND
-SUL_NEXT:
-    INC R4
     MOV A, R4
-    CJNE A, #11, SCAN_UP_LOOP_LOOSE
+    CLR C
+    SUBB A, R5            ; Check if R4 <= Current Index (R5)
+    JC SUL_DONE           ; If R4 < Current, Stop
+    JZ SUL_DONE           ; If R4 == Current, Stop
+
+    LCALL INDEX_TO_FLOOR
+    LCALL SCAN_CHECK_UP_LOOSE ; Check EXT_DN
+    JC SCAN_FOUND
+
+    DEC R4
+    SJMP SCAN_UP_LOOP_LOOSE
+
+SUL_DONE:
 
     ; No request above, check if we already tried down
     MOV A, R2
@@ -1021,19 +1022,23 @@ SCAN_DN_LOOP_STRICT:
     JC SCAN_FOUND
     SJMP SCAN_DN_LOOP_STRICT
 SCAN_DN_STRICT_DONE:
- ; 【第二轮：宽松扫描】找外呼上 (反向截车)
-    MOV A, R5
-    MOV R4, A
+ ; 【第二轮：宽松扫描】由远及近扫描 (从底层向上扫到当前层)
+    MOV R4, #00h          ; Start from Index 0 (Floor -2)
 SCAN_DN_LOOP_LOOSE:
-    MOV A, R4
-    JZ SCAN_DN_LOOSE_DONE
-    DEC R4
+    MOV A, R5
+    CLR C
+    SUBB A, R4            ; Check if Current <= R4
+    JC SCAN_DN_LOOSE_DONE ; If Current < R4 (Should not happen if logic correct), Stop
+    JZ SCAN_DN_LOOSE_DONE ; If Current == R4, Stop
+
     LCALL INDEX_TO_FLOOR
-    LCALL SCAN_CHECK_DN_LOOSE  ; <--- 调用宽松检查 (EXT_UP)
+    LCALL SCAN_CHECK_DN_LOOSE  ; Check EXT_UP
     JC SCAN_FOUND
+    
+    INC R4
     SJMP SCAN_DN_LOOP_LOOSE
 
-SCAN_DN_DONE:
+SCAN_DN_LOOSE_DONE:
     ; No request below, check if we already tried up
     MOV A, R2
     ANL A, #01h
