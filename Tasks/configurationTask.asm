@@ -14,10 +14,6 @@ PUBLIC ConfigurationTask_Handler
 
 LCD_MSG_CONFIG:
     DB 'C','o','n','f','i','g','u','r','a','t','i','n','g',' ',' ',' ', 00h
-LCD_MSG_RESET:
-    DB 'R','e','s','e','t',' ','P','a','s','s','?',' ',' ',' ',' ',' ', 00h
-LCD_MSG_NEWPASS:
-    DB 'N','e','w',' ','P','a','s','s',' ',' ',' ',' ',' ',' ',' ',' ', 00h
 
 ; Entry: call ConfigurationTask_Init at startup
 ConfigurationTask_Init:
@@ -61,16 +57,8 @@ CHECK_OPT3:
     LCALL CONF_OPT3_HANDLER
     RET
 CHECK_PASS:
-    CJNE A, #PASS_ST, CHECK_RESET_CHOICE
+    CJNE A, #PASS_ST, CONF_DEFAULT
     LCALL CONF_PASS_HANDLER
-    RET
-CHECK_RESET_CHOICE:
-    CJNE A, #RESET_CHOICE_ST, CHECK_NEW_PASS
-    LCALL CONF_RESET_CHOICE_HANDLER
-    RET
-CHECK_NEW_PASS:
-    CJNE A, #NEW_PASS_ST, CONF_DEFAULT
-    LCALL CONF_NEW_PASS_HANDLER
     RET
 CONF_DEFAULT:
     ; default: show OPT menu
@@ -499,114 +487,6 @@ PASS_ERROR_LOCKED:
 
 PASS_SHOW_SUCCESS:
     MOV 070h, PASS_NEXT_ST ; Jump to requested state
-    RET
-
-; --------------------
-; RESET CHOICE handler
-; --------------------
-CONF_RESET_CHOICE_HANDLER:
-    MOV A, 071h
-    CJNE A, 070h, CRC_INIT
-    
-    MOV A, 061h
-    JZ CRC_RET
-    MOV A, 060h
-    ANL A, #0Fh
-    
-    ; 'A' -> Reset Password
-    CJNE A, #0Ah, CRC_CHECK_B
-    MOV 070h, #NEW_PASS_ST
-    MOV 061h, #00h
-    RET
-
-CRC_CHECK_B:
-    ; 'b' -> Set Params
-    CJNE A, #0Bh, CRC_DONE
-    MOV 070h, #OPT_ST
-    MOV 061h, #00h
-    RET
-
-CRC_DONE:
-    MOV 061h, #00h
-CRC_RET:
-    RET
-
-CRC_INIT:
-    MOV A, 070h
-    MOV 071h, A
-    LCALL LCD_CLEAR
-    MOV DPTR, #LCD_MSG_RESET
-    LCALL LCD_SHOW_STR
-    MOV A, #00h 
-    LCALL LED6_ApplyTable
-    RET
-
-; --------------------
-; NEW PASS handler
-; --------------------
-CONF_NEW_PASS_HANDLER:
-    MOV A, 071h
-    CJNE A, 070h, CNP_INIT
-    MOV A, 061h
-    CJNE A, #00h, CNP_HANDLE_KEY
-    RET
-
-CNP_HANDLE_KEY:
-    MOV 020h, #01h
-    MOV 021h, #05h
-    LCALL InputTask_039
-    
-    ; Check if Confirm pressed (A=0Ah)
-    CJNE A, #0Ah, CNP_DONE
-    ; Confirm Pressed
-    MOV A, 039h
-    CJNE A, #05h, CNP_INCOMPLETE
-    ; Check if 5th digit is filled (not 0x10)
-    MOV A, 02Dh
-    CJNE A, #010h, CNP_DO_SAVE
-    SJMP CNP_INCOMPLETE
-
-CNP_DO_SAVE:
-    LCALL SAVE_NEW_PASSWORD
-    MOV 070h, #OPT_ST     ; Back to Config or Run as desired. Config seems safe.
-    MOV PASS_NEXT_ST, #OPT_ST
-    MOV 061h, #00h
-    RET
-
-CNP_INCOMPLETE:
-    MOV 061h, #00h
-    RET
-
-CNP_DONE:
-    MOV 061h, #00h
-    RET
-
-CNP_INIT:
-    MOV A, 070h
-    MOV 071h, A
-    LCALL LCD_CLEAR
-    MOV DPTR, #LCD_MSG_NEWPASS
-    LCALL LCD_SHOW_STR
-    MOV 039h, #01h
-    MOV 029h, #010h
-    MOV 02Ah, #010h
-    MOV 02Bh, #010h
-    MOV 02Ch, #010h
-    MOV 02Dh, #010h
-    MOV A, #07h
-    LCALL LED6_ApplyTable
-    RET
-
-SAVE_NEW_PASSWORD:
-    MOV R0, #029h
-    MOV R1, #CURRENT_PASS
-    MOV R7, #05h
-SNP_LOOP:
-    MOV A, @R0
-    MOV @R1, A
-    INC R0
-    INC R1
-    DJNZ R7, SNP_LOOP
     RET
 
 ; End of configuration task
