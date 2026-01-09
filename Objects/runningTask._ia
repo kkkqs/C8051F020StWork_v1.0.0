@@ -1,0 +1,1 @@
+"Tasks\runningTask.asm" NOMOD51 SET (SMALL) DEBUG PRINT(.\Listings\runningTask.lst) OBJECT(.\Objects\runningTask.obj) EP

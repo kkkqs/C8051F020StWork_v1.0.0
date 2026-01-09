@@ -1,0 +1,385 @@
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\inputTask.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE Tasks\inputTask.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\Listings\inputTask
+                      .lst) OBJECT(.\Objects\inputTask.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; Input task routines
+                       2     ; Provides InputTask_03B and InputTask_039 to handle cursor-based input
+                       3     ; Calling convention:
+                       4     ; - Caller must set RAM[020h] = startIndex (lowest allowed index)
+                       5     ; - Caller must set RAM[021h] = endIndex   (highest allowed index)
+                       6     ; - Key code is read from 060h (low nibble). Routine clears 061h when consumed.
+                       7     ; - Return in A: 0x0A = confirm pressed, 0x0B = backspace handled, 0x01 = digit written
+                       8     
+                       9     ; include system constants (RUN_ST, PASS_ST, etc.)
+                      10     Input SEGMENT CODE
+----                  11     rseg Input
+                      12     
+                      13     
+                      14     ;$include (../user/config.inc)
+                +1    15     ; 索引从 0 开始，供 main.ASM 中通过偏移访问 (MOVC @A+DPTR)
+                +1    16     ; 00 - '0'  - 0C0h
+                +1    17     ; 01 - '1'  - 0F9h
+                +1    18     ; 02 - '2'  - 0A4h
+                +1    19     ; 03 - '3'  - 0B0h
+                +1    20     ; 04 - '4'  - 099h
+                +1    21     ; 05 - '5'  - 092h
+                +1    22     ; 06 - '6'  - 082h
+                +1    23     ; 07 - '7'  - 0F8h
+                +1    24     ; 08 - '8'  - 080h
+                +1    25     ; 09 - '9'  - 090h
+                +1    26     ; 10 - 'A'  - 088h
+                +1    27     ; 11 - 'b'  - 083h
+                +1    28     ; 12 - 'C'  - 0C6h
+                +1    29     ; 13 - 'd'  - 0A1h
+                +1    30     ; 14 - 'E'  - 086h
+                +1    31     ; 15 - 'F'  - 08Eh
+                +1    32     ; 16 - '_'  - 0F7h
+                +1    33     ; 17 - 'P.' - 00Ch
+                +1    34     ; 18 - 'r'  - 0AFh
+                +1    35     ; 19 - 'L'  - 047h
+                +1    36     ; 20 - '0.' - 040h
+                +1    37     ; 21 - '1.' - 079h
+                +1    38     ; 22 - '2.' - 024h
+                +1    39     ; 23 - '3.' - 030h
+                +1    40     ; 24 - '4.' - 019h
+                +1    41     ; 25 - '5.' - 012h
+                +1    42     ; 26 - '6.' - 002h
+                +1    43     ; 27 - '7.' - 078h
+                +1    44     ; 28 - '8.' - 000h
+                +1    45     ; 29 - '9.' - 010h
+                +1    46     ; 30 - 'n'  - 0ABh
+                +1    47     ; 31 - 'o'  - 0A3h
+                +1    48     ; 32 - 'o.' - 023h
+                +1    49     ; 33 - OFF  - 0FFh    ; 熄灭 (全部段关闭)
+                +1    50     ; 34 - 'C.' - 046h    ; 自定义 C 带小数点
+                +1    51     ; 35 - 'U'  - 0C1h
+                +1    52     ; 36 - '-'  - 0BFh
+                +1    53     ; 37 - ' '  - 0FFh
+                +1    54     
+0000            +1    55     SEG_TABLE:
+0000 C0F9A4B0   +1    56         DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,0F7h
+                             ,00Ch,0AFh,047h
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     2
+
+0004 999282F8                
+0008 80908883                
+000C C6A1868E                
+0010 F70CAF47                
+0014 40792430   +1    57         DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
+0018 19120278                
+001C 0010                    
+001E ABA323FF   +1    58         DB 0ABh,0A3h,023h,0FFh,046h,0C1h,0BFh,0FFh
+0022 46C1BFFF                
+                +1    59     
+0026            +1    60     BITMASK_TABLE:
+0026 80402010   +1    61         DB 080h,040h,020h,010h,008h,004h
+002A 0804                    
+                +1    62     
+002C            +1    63     PASSWORD_TABLE:
+002C 01020304   +1    64         DB 01h,02h,03h,04h,05h
+0030 05                      
+                +1    65     
+                +1    66     ; RUN_ST, OPT_ST, PASS_ST, OPT1_ST, OPT2_ST, OPT3_ST
+  0000          +1    67     RUN_ST  EQU     00h
+  0001          +1    68     OPT_ST  EQU     01h
+  0002          +1    69     PASS_ST EQU     02h
+  0011          +1    70     OPT1_ST EQU     11h
+  0012          +1    71     OPT2_ST EQU     12h
+  0013          +1    72     OPT3_ST EQU     13h
+                +1    73     
+                +1    74     ; Elevator states
+  0020          +1    75     ELEV_ST EQU 20h
+  0021          +1    76     ELEV_RUN EQU 21h
+  0022          +1    77     ELEV_ARRIVED EQU 22h
+  0023          +1    78     ELEV_CLOSE EQU 23h
+                +1    79     
+                +1    80     ; Elevator variables (RAM)
+  0056          +1    81     CUR_FLr      EQU 056h
+  0057          +1    82     ELEV_TIMER   EQU 057h
+  0058          +1    83     ELEV_TARGET  EQU 058h
+  0059          +1    84     ONE_SEC_CNT  EQU 059h
+  005A          +1    85     BLINK_TIMER  EQU 05Ah
+  005B          +1    86     BLINK_TOGGLE EQU 05Bh
+                +1    87     
+                +1    88     ; Queue variables (BITMAP based - 11 floors: -2 to 8)
+                +1    89     ; Bit 0 = Floor -2, Bit 1 = Floor -1, Bit 2 = Floor 1, ... Bit 10 = Floor 8
+                +1    90     ; Use 2 bytes: Low byte (bits 0-7), High byte (bits 8-10)
+  005C          +1    91     INT_REQ_LO     EQU 05Ch  ; Internal request bitmap low (floors -2 to 5)
+  005D          +1    92     INT_REQ_HI     EQU 05Dh  ; Internal request bitmap high (floors 6 to 8)
+  005E          +1    93     EXT_UP_LO      EQU 05Eh  ; External UP request bitmap low
+  005F          +1    94     EXT_UP_HI      EQU 05Fh  ; External UP request bitmap high
+  0062          +1    95     EXT_DN_LO      EQU 062h  ; External DOWN request bitmap low
+  0063          +1    96     EXT_DN_HI      EQU 063h  ; External DOWN request bitmap high
+  0064          +1    97     ELEV_DIR       EQU 064h  ; Current direction: 0=停止, 1=上, 2=下
+                +1    98     
+                +1    99     ; Input Mode variables
+  0065          +1   100     INPUT_MODE     EQU 065h ; 0=Inside, 1=Outside
+  0066          +1   101     OUT_SEL_VAL    EQU 066h ; Temp storage for outside floor selection
+  0067          +1   102     DEBUG_ON       EQU 067h ; Global debug flag: 0=normal, 1=jump to debug task
+                +1   103     
+                +1   104     ; Floor to Bit Index mapping:
+                +1   105     ; Floor -2 -> Index 0
+                +1   106     ; Floor -1 -> Index 1
+                +1   107     ; Floor  1 -> Index 2
+                +1   108     ; Floor  2 -> Index 3
+                +1   109     ; ...
+                +1   110     ; Floor  8 -> Index 10
+                +1   111     ; Formula: Index = Floor + 2 (if Floor >= 1, Index = Floor + 1)
+                     112     
+                     113     
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     3
+
+                     114     EXTRN CODE(LED6_ApplyTable)
+                     115     EXTRN CODE(PASS_VERIFY_PASSWORD)
+                     116     
+                     117     PUBLIC InputTask_03B
+                     118     PUBLIC InputTask_039
+                     119     
+                     120     ; Handle input where cursor is stored at 03Bh
+0031                 121     InputTask_03B:
+0031 C0F0            122         PUSH B
+                     123     
+0033 E560            124         MOV A, 060h
+0035 540F            125         ANL A, #0Fh
+0037 FF              126         MOV R7, A       ; save key
+                     127     
+0038 B40A03          128         CJNE A, #0Ah, L_CHECK_BK
+                     129         ; confirm: return A=0x0A, do NOT clear 061h here (caller handles)
+003B D0F0            130         POP B
+003D 22              131         RET
+                     132     
+003E                 133     L_CHECK_BK:
+003E B40B21          134         CJNE A, #0Bh, L_DIGIT
+                     135         ; backspace with empty-check logic (left-to-right input)
+0041 E53B            136         MOV A, 03Bh
+0043 2428            137         ADD A, #028h
+0045 F8              138         MOV R0, A
+0046 E6              139         MOV A, @R0
+0047 B4100E          140         CJNE A, #010h, L_BACK_CLEAR_CURRENT ; if current has data, clear here
+                     141     
+                     142         ; current is empty, attempt to move back one position if not at startIndex
+004A E53B            143         MOV A, 03Bh
+004C B52002          144         CJNE A, 020h, L_BACK_DEC
+004F 8009            145         SJMP L_BACK_DONE
+                     146     
+0051                 147     L_BACK_DEC:
+0051 153B            148         DEC 03Bh
+0053 E53B            149         MOV A, 03Bh
+0055 2428            150         ADD A, #028h
+0057 F8              151         MOV R0, A
+                     152         ; fall through to clear
+                     153     
+0058                 154     L_BACK_CLEAR_CURRENT:
+0058 7610            155         MOV @R0, #010h
+                     156     
+005A                 157     L_BACK_DONE:
+005A 756100          158         MOV 061h, #00h
+005D 740B            159         MOV A, #0Bh
+005F D0F0            160         POP B
+0061 22              161         RET
+                     162     
+0062                 163     L_DIGIT:
+                     164         ; write digit only if current position empty (0x10); otherwise ignore to avoid overwrite
+0062 E53B            165         MOV A, 03Bh
+0064 2428            166         ADD A, #028h
+0066 F8              167         MOV R0, A
+0067 E6              168         MOV A, @R0
+0068 B41013          169         CJNE A, #010h, L_DIGIT_IGNORED
+                     170     
+006B EF              171         MOV A, R7
+006C F6              172         MOV @R0, A
+                     173         ; if cursor == endIndex then done else INC cursor (left-to-right)
+006D E53B            174         MOV A, 03Bh
+006F B52102          175         CJNE A, 021h, L_INC_CURSOR
+0072 8002            176         SJMP L_DIGIT_DONE
+0074                 177     L_INC_CURSOR:
+0074 053B            178         INC 03Bh
+0076                 179     L_DIGIT_DONE:
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     4
+
+0076 756100          180         MOV 061h, #00h
+0079 7401            181         MOV A, #01h
+007B D0F0            182         POP B
+007D 22              183         RET
+007E                 184     L_DIGIT_IGNORED:
+007E 756100          185         MOV 061h, #00h
+0081 7400            186         MOV A, #00h
+0083 D0F0            187         POP B
+0085 22              188         RET
+                     189     
+                     190     ; Handle input where cursor is stored at 039h (password)
+0086                 191     InputTask_039:
+0086 C0F0            192         PUSH B
+                     193     
+0088 E560            194         MOV A, 060h
+008A 540F            195         ANL A, #0Fh
+008C FF              196         MOV R7, A       ; save key
+                     197     
+008D B40A23          198         CJNE A, #0Ah, L2_CHECK_BK
+                     199         ; confirm: if system in PASS state, invoke password verify directly
+0090 E570            200         MOV A, 070h
+0092 B4021B          201         CJNE A, #PASS_ST, L2_RETURN_CONFIRM
+                     202         ; call PASS_VERIFY_PASSWORD
+0095 C0E0            203         PUSH ACC
+0097 C0F0            204         PUSH B
+0099 C082            205         PUSH DPL
+009B C083            206         PUSH DPH
+009D 120000   F      207         LCALL PASS_VERIFY_PASSWORD
+00A0 D083            208         POP DPH
+00A2 D082            209         POP DPL
+00A4 D0F0            210         POP B
+00A6 D0E0            211         POP ACC
+                     212         ; ensure key consumed; return non-confirm so caller won't decrement cursor
+00A8 756100          213         MOV 061h, #00h
+00AB 7400            214         MOV A, #00h
+00AD D0F0            215         POP B
+00AF 22              216         RET
+00B0                 217     L2_RETURN_CONFIRM:
+                     218         ; not PASS state: return confirm to caller (do not clear 061h here)
+00B0 D0F0            219         POP B
+00B2 22              220         RET
+                     221     
+00B3                 222     L2_CHECK_BK:
+00B3 B40B21          223         CJNE A, #0Bh, L2_DIGIT
+                     224         ; Backspace Logic (left-to-right input: backspace moves left)
+                     225         ; Check if current cursor position has a digit (Full case)
+00B6 E539            226         MOV A, 039h
+00B8 2428            227         ADD A, #028h
+00BA F8              228         MOV R0, A
+00BB E6              229         MOV A, @R0
+00BC B4100E          230         CJNE A, #010h, L2_BK_CLEAR_CURRENT ; If not empty (0x10), clear it
+                     231     
+                     232         ; Current is empty, try to move back (DEC because we fill left-to-right)
+00BF E539            233         MOV A, 039h
+00C1 B52002          234         CJNE A, 020h, L2_BK_DEC ; If not at StartIndex, DEC
+                     235         ; At StartIndex and Empty -> Nothing to do
+00C4 8009            236         SJMP L2_BK_DONE
+                     237     
+00C6                 238     L2_BK_DEC:
+00C6 1539            239         DEC 039h
+00C8 E539            240         MOV A, 039h
+00CA 2428            241         ADD A, #028h
+00CC F8              242         MOV R0, A
+                     243         ; Fall through to clear
+                     244     
+00CD                 245     L2_BK_CLEAR_CURRENT:
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     5
+
+00CD 7610            246         MOV @R0, #010h
+                     247     
+00CF                 248     L2_BK_DONE:
+00CF 756100          249         MOV 061h, #00h
+00D2 740B            250         MOV A, #0Bh
+00D4 D0F0            251         POP B
+00D6 22              252         RET
+                     253     
+00D7                 254     L2_DIGIT:
+                     255         ; Check if current position is empty. If not (Full), ignore input.
+00D7 E539            256         MOV A, 039h
+00D9 2428            257         ADD A, #028h
+00DB F8              258         MOV R0, A
+00DC E6              259         MOV A, @R0
+00DD B41013          260         CJNE A, #010h, L2_DIGIT_IGNORED
+                     261     
+                     262         ; Write digit
+00E0 EF              263         MOV A, R7
+00E1 F6              264         MOV @R0, A
+                     265         
+                     266         ; Move cursor (INC) if not at EndIndex (left-to-right)
+00E2 E539            267         MOV A, 039h
+00E4 B52102          268         CJNE A, 021h, L2_INC_CURSOR
+00E7 8002            269         SJMP L2_DIGIT_DONE
+                     270     
+00E9                 271     L2_INC_CURSOR:
+00E9 0539            272         INC 039h
+                     273     
+00EB                 274     L2_DIGIT_DONE:
+00EB 756100          275         MOV 061h, #00h
+00EE 7401            276         MOV A, #01h
+00F0 D0F0            277         POP B
+00F2 22              278         RET
+                     279     
+00F3                 280     L2_DIGIT_IGNORED:
+00F3 756100          281         MOV 061h, #00h
+00F6 7400            282         MOV A, #00h
+00F8 D0F0            283         POP B
+00FA 22              284         RET
+                     285     
+                     286     END
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E               T Y P E  V A L U E   ATTRIBUTES
+
+ACC. . . . . . . . .  D ADDR   00E0H   A   
+B. . . . . . . . . .  D ADDR   00F0H   A   
+BITMASK_TABLE. . . .  C ADDR   0026H   R   SEG=INPUT
+BLINK_TIMER. . . . .  N NUMB   005AH   A   
+BLINK_TOGGLE . . . .  N NUMB   005BH   A   
+CUR_FLR. . . . . . .  N NUMB   0056H   A   
+DEBUG_ON . . . . . .  N NUMB   0067H   A   
+DPH. . . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . . .  D ADDR   0082H   A   
+ELEV_ARRIVED . . . .  N NUMB   0022H   A   
+ELEV_CLOSE . . . . .  N NUMB   0023H   A   
+ELEV_DIR . . . . . .  N NUMB   0064H   A   
+ELEV_RUN . . . . . .  N NUMB   0021H   A   
+ELEV_ST. . . . . . .  N NUMB   0020H   A   
+ELEV_TARGET. . . . .  N NUMB   0058H   A   
+ELEV_TIMER . . . . .  N NUMB   0057H   A   
+EXT_DN_HI. . . . . .  N NUMB   0063H   A   
+EXT_DN_LO. . . . . .  N NUMB   0062H   A   
+EXT_UP_HI. . . . . .  N NUMB   005FH   A   
+EXT_UP_LO. . . . . .  N NUMB   005EH   A   
+INPUT. . . . . . . .  C SEG    00FBH       REL=UNIT
+INPUTTASK_039. . . .  C ADDR   0086H   R   SEG=INPUT
+INPUTTASK_03B. . . .  C ADDR   0031H   R   SEG=INPUT
+INPUT_MODE . . . . .  N NUMB   0065H   A   
+INT_REQ_HI . . . . .  N NUMB   005DH   A   
+INT_REQ_LO . . . . .  N NUMB   005CH   A   
+L2_BK_CLEAR_CURRENT.  C ADDR   00CDH   R   SEG=INPUT
+L2_BK_DEC. . . . . .  C ADDR   00C6H   R   SEG=INPUT
+L2_BK_DONE . . . . .  C ADDR   00CFH   R   SEG=INPUT
+L2_CHECK_BK. . . . .  C ADDR   00B3H   R   SEG=INPUT
+L2_DIGIT . . . . . .  C ADDR   00D7H   R   SEG=INPUT
+L2_DIGIT_DONE. . . .  C ADDR   00EBH   R   SEG=INPUT
+L2_DIGIT_IGNORED . .  C ADDR   00F3H   R   SEG=INPUT
+L2_INC_CURSOR. . . .  C ADDR   00E9H   R   SEG=INPUT
+L2_RETURN_CONFIRM. .  C ADDR   00B0H   R   SEG=INPUT
+LED6_APPLYTABLE. . .  C ADDR   -----       EXT
+L_BACK_CLEAR_CURRENT  C ADDR   0058H   R   SEG=INPUT
+L_BACK_DEC . . . . .  C ADDR   0051H   R   SEG=INPUT
+L_BACK_DONE. . . . .  C ADDR   005AH   R   SEG=INPUT
+L_CHECK_BK . . . . .  C ADDR   003EH   R   SEG=INPUT
+L_DIGIT. . . . . . .  C ADDR   0062H   R   SEG=INPUT
+L_DIGIT_DONE . . . .  C ADDR   0076H   R   SEG=INPUT
+L_DIGIT_IGNORED. . .  C ADDR   007EH   R   SEG=INPUT
+L_INC_CURSOR . . . .  C ADDR   0074H   R   SEG=INPUT
+ONE_SEC_CNT. . . . .  N NUMB   0059H   A   
+OPT1_ST. . . . . . .  N NUMB   0011H   A   
+OPT2_ST. . . . . . .  N NUMB   0012H   A   
+OPT3_ST. . . . . . .  N NUMB   0013H   A   
+OPT_ST . . . . . . .  N NUMB   0001H   A   
+OUT_SEL_VAL. . . . .  N NUMB   0066H   A   
+PASSWORD_TABLE . . .  C ADDR   002CH   R   SEG=INPUT
+PASS_ST. . . . . . .  N NUMB   0002H   A   
+PASS_VERIFY_PASSWORD  C ADDR   -----       EXT
+RUN_ST . . . . . . .  N NUMB   0000H   A   
+SEG_TABLE. . . . . .  C ADDR   0000H   R   SEG=INPUT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
+A51 MACRO ASSEMBLER  INPUTTASK                                                            01/09/2026 14:55:25 PAGE     7
+

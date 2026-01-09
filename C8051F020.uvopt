@@ -199,8 +199,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\user\Init_Device.asm</FilenameWithoutPath>
+      <PathWithFileName>.\user\Init_Device.asm</PathWithFileName>
+      <FilenameWithoutPath>Init_Device.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -211,8 +211,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\user\main.ASM</FilenameWithoutPath>
+      <PathWithFileName>.\user\main.ASM</PathWithFileName>
+      <FilenameWithoutPath>main.ASM</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -231,8 +231,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\LCD1602.asm</FilenameWithoutPath>
+      <PathWithFileName>.\driver\KeyInput.asm</PathWithFileName>
+      <FilenameWithoutPath>KeyInput.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -243,8 +243,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\KeyInput.asm</FilenameWithoutPath>
+      <PathWithFileName>.\driver\LCD1602.asm</PathWithFileName>
+      <FilenameWithoutPath>LCD1602.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -252,11 +252,23 @@
       <GroupNumber>2</GroupNumber>
       <FileNumber>5</FileNumber>
       <FileType>2</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\driver\LED6.asm</FilenameWithoutPath>
+      <PathWithFileName>.\driver\LED6.asm</PathWithFileName>
+      <FilenameWithoutPath>LED6.asm</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>2</GroupNumber>
+      <FileNumber>6</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>1</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\driver\singer.asm</PathWithFileName>
+      <FilenameWithoutPath>singer.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -270,25 +282,13 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>6</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\Delay.asm</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>3</GroupNumber>
       <FileNumber>7</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\Keyboard.asm</FilenameWithoutPath>
+      <PathWithFileName>.\bsp\buzzer.asm</PathWithFileName>
+      <FilenameWithoutPath>buzzer.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -299,8 +299,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\timer0.asm</FilenameWithoutPath>
+      <PathWithFileName>.\bsp\Delay.asm</PathWithFileName>
+      <FilenameWithoutPath>Delay.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -311,8 +311,44 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\bsp\timer1.asm</FilenameWithoutPath>
+      <PathWithFileName>.\bsp\Keyboard.asm</PathWithFileName>
+      <FilenameWithoutPath>Keyboard.asm</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>10</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\bsp\timer0.asm</PathWithFileName>
+      <FilenameWithoutPath>timer0.asm</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>11</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\bsp\timer1.asm</PathWithFileName>
+      <FilenameWithoutPath>timer1.asm</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>12</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\bsp\timer2.asm</PathWithFileName>
+      <FilenameWithoutPath>timer2.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -334,37 +370,37 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>10</FileNumber>
+      <FileNumber>13</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\configurationTask.asm</FilenameWithoutPath>
+      <PathWithFileName>.\Tasks\configurationTask.asm</PathWithFileName>
+      <FilenameWithoutPath>configurationTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>11</FileNumber>
+      <FileNumber>14</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\inputTask.asm</FilenameWithoutPath>
+      <PathWithFileName>.\Tasks\inputTask.asm</PathWithFileName>
+      <FilenameWithoutPath>inputTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>12</FileNumber>
+      <FileNumber>15</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>$TC_ROOT$\..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</PathWithFileName>
-      <FilenameWithoutPath>..\..\C8051F020StWork_v1.0.0-main\Tasks\runningTask.asm</FilenameWithoutPath>
+      <PathWithFileName>.\Tasks\runningTask.asm</PathWithFileName>
+      <FilenameWithoutPath>runningTask.asm</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

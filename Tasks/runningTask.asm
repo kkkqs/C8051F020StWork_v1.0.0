@@ -6,6 +6,7 @@ $INCLUDE (../user/config.inc)
 $INCLUDE (../driver/LCD1602.inc)
 
 EXTRN CODE(LED6_ApplyTable)
+EXTRN CODE(Singer_PlayNote) ; Import Singer_PlayNote
 
 PUBLIC RunningTask_Init
 PUBLIC RunningTask_Handler
@@ -369,13 +370,24 @@ ARR_NEG:
     MOV 02Dh, A
     RET
 EA_INIT:
+    ; Play sound only if not reopening from CLOSE state
+    MOV A, 071h
+    CJNE A, #ELEV_CLOSE, EA_PLAY_SOUND
+    SJMP EA_OFFSET_UPDATE
+
+EA_PLAY_SOUND:
+    ; Sound the Arrival Tone
+    MOV R7, CUR_FLr
+    LCALL Singer_PlayNote
+
+EA_OFFSET_UPDATE:
     MOV A, 070h
     MOV 071h, A
     
     ; Clear request for current floor (arrived at target)
     MOV R6, CUR_FLr
     LCALL CLEAR_FLOOR_REQUEST
-    
+
     ; LCD Update
     LCALL LCD_CLEAR
     MOV DPTR, #LCD_MSG_OPEN
@@ -960,22 +972,41 @@ SCAN_TRY_UP:
     MOV R2, A
     
     ; Try to find request above or at current floor
+    ; 【第一轮：严格扫描】找内选和外呼上
     MOV A, R5
     MOV R4, A         ; Start from current index
-SCAN_UP_LOOP:
+SCAN_UP_LOOP_STRICT:
     ; Check if there's request at R4
     LCALL INDEX_TO_FLOOR
     MOV A, R6
-    CJNE A, CUR_FLr, SCAN_UP_CHK
-    SJMP SCAN_UP_NEXT  ; Skip current floor
-SCAN_UP_CHK:
-    LCALL SCAN_CHECK_UP_REQUEST
+    CJNE A, CUR_FLr, SUS_CHECK
+    SJMP SUS_NEXT  ; Skip current floor
+SUS_CHECK:
+    LCALL SCAN_CHECK_UP_STRICT ; <--- 调用严格检查
     JC SCAN_FOUND
-SCAN_UP_NEXT:
+SUS_NEXT:
     INC R4
     MOV A, R4
-    CJNE A, #11, SCAN_UP_LOOP
+    CJNE A, #11, SCAN_UP_LOOP_STRICT
     
+    ; 【第二轮：宽松扫描】由远及近扫描 (从顶层向下扫到当前层)
+    MOV R4, #0Ah          ; Start from Index 10 (Floor 8)
+SCAN_UP_LOOP_LOOSE:
+    MOV A, R4
+    CLR C
+    SUBB A, R5            ; Check if R4 <= Current Index (R5)
+    JC SUL_DONE           ; If R4 < Current, Stop
+    JZ SUL_DONE           ; If R4 == Current, Stop
+
+    LCALL INDEX_TO_FLOOR
+    LCALL SCAN_CHECK_UP_LOOSE ; Check EXT_DN
+    JC SCAN_FOUND
+
+    DEC R4
+    SJMP SCAN_UP_LOOP_LOOSE
+
+SUL_DONE:
+
     ; No request above, check if we already tried down
     MOV A, R2
     ANL A, #02h
@@ -990,20 +1021,36 @@ SCAN_TRY_DOWN:
     MOV A, R2
     ORL A, #02h
     MOV R2, A
-    
+    ; 【第一轮：严格扫描】找内选和外呼下
     ; Try to find request below current floor
     MOV A, R5
     MOV R4, A         ; Start from current index
-SCAN_DN_LOOP:
+SCAN_DN_LOOP_STRICT:
     MOV A, R4
-    JZ SCAN_DN_DONE   ; Reached bottom
+    JZ SCAN_DN_STRICT_DONE   ; Reached bottom
     DEC R4
     LCALL INDEX_TO_FLOOR
-    LCALL SCAN_CHECK_DN_REQUEST
+    LCALL SCAN_CHECK_DN_STRICT ; <--- 调用严格检查
     JC SCAN_FOUND
-    SJMP SCAN_DN_LOOP
+    SJMP SCAN_DN_LOOP_STRICT
+SCAN_DN_STRICT_DONE:
+ ; 【第二轮：宽松扫描】由远及近扫描 (从底层向上扫到当前层)
+    MOV R4, #00h          ; Start from Index 0 (Floor -2)
+SCAN_DN_LOOP_LOOSE:
+    MOV A, R5
+    CLR C
+    SUBB A, R4            ; Check if Current <= R4
+    JC SCAN_DN_LOOSE_DONE ; If Current < R4 (Should not happen if logic correct), Stop
+    JZ SCAN_DN_LOOSE_DONE ; If Current == R4, Stop
 
-SCAN_DN_DONE:
+    LCALL INDEX_TO_FLOOR
+    LCALL SCAN_CHECK_DN_LOOSE  ; Check EXT_UP
+    JC SCAN_FOUND
+    
+    INC R4
+    SJMP SCAN_DN_LOOP_LOOSE
+
+SCAN_DN_LOOSE_DONE:
     ; No request below, check if we already tried up
     MOV A, R2
     ANL A, #01h
@@ -1041,10 +1088,6 @@ SCAN_CHECK_UP_REQUEST:
     MOV A, EXT_UP_LO
     ANL A, R3
     JNZ SCUR_FOUND
-    ; 【新增】检查外呼下 (EXT_DN) 如果在上方有下行请求，我也得上去接他
-    MOV A, EXT_DN_LO 
-    ANL A, R3
-    JNZ SCUR_FOUND
     SJMP SCUR_NOTFOUND
 SCUR_HI:
     MOV A, R4
@@ -1058,9 +1101,7 @@ SCUR_HI:
     MOV A, EXT_UP_HI
     ANL A, R3
     JNZ SCUR_FOUND
-    MOV A, EXT_DN_HI  ;【新增】
-    ANL A, R3
-    JNZ SCUR_FOUND
+
 SCUR_NOTFOUND:
     POP 04h
     CLR C
@@ -1088,9 +1129,6 @@ SCAN_CHECK_DN_REQUEST:
     MOV A, EXT_DN_LO
     ANL A, R3
     JNZ SCDR_FOUND
-    MOV A, EXT_UP_LO  ; 【新增】检查下方的上行请求
-    ANL A, R3
-    JNZ SCDR_FOUND    
     SJMP SCDR_NOTFOUND
 SCDR_HI:
     MOV A, R4
@@ -1104,14 +1142,150 @@ SCDR_HI:
     MOV A, EXT_DN_HI
     ANL A, R3
     JNZ SCDR_FOUND
-    MOV A, EXT_UP_HI  ;【新增】
-    ANL A, R3
-    JNZ SCUR_FOUND
+
 SCDR_NOTFOUND:
     POP 04h
     CLR C
     RET
 SCDR_FOUND:
+    POP 04h
+    SETB C
+    RET
+; 修改上面的逻辑，原函数保留没动，新增两个宽松检查函数
+; ------------------------------------------
+; 1. 严格检查：只查 内选 + 同向 (用于第一轮扫描)
+; ------------------------------------------
+
+; 向下严查：查 INT + EXT_DN
+SCAN_CHECK_DN_STRICT:
+    PUSH 04h
+    LCALL FLOOR_TO_INDEX
+    MOV A, R4
+    CLR C
+    SUBB A, #08h
+    JNC SCDS_HI
+    ; Low Byte
+    LCALL GET_BIT_MASK
+    MOV A, INT_REQ_LO
+    ANL A, R3
+    JNZ SCDS_FOUND
+    MOV A, EXT_DN_LO
+    ANL A, R3
+    JNZ SCDS_FOUND
+    SJMP SCDS_NOTFOUND    
+SCDS_HI:
+    ; High Byte
+    MOV R4, A        
+    LCALL GET_BIT_MASK
+    MOV A, INT_REQ_HI
+    ANL A, R3
+    JNZ SCDS_FOUND
+    MOV A, EXT_DN_HI
+    ANL A, R3
+    JNZ SCDS_FOUND  
+SCDS_NOTFOUND:
+    POP 04h
+    CLR C
+    RET
+SCDS_FOUND:
+    POP 04h
+    SETB C
+    RET
+
+; 向上严查：查 INT + EXT_UP
+SCAN_CHECK_UP_STRICT:
+    PUSH 04h
+    LCALL FLOOR_TO_INDEX
+    MOV A, R4
+    CLR C
+    SUBB A, #08h
+    JNC SCUS_HI
+    ; Low Byte
+    LCALL GET_BIT_MASK
+    MOV A, INT_REQ_LO
+    ANL A, R3
+    JNZ SCUS_FOUND
+    MOV A, EXT_UP_LO
+    ANL A, R3
+    JNZ SCUS_FOUND
+    SJMP SCUS_NOTFOUND
+SCUS_HI:
+    ; High Byte
+    MOV R4, A 
+    LCALL GET_BIT_MASK
+    MOV A, INT_REQ_HI
+    ANL A, R3
+    JNZ SCUS_FOUND
+    MOV A, EXT_UP_HI
+    ANL A, R3
+    JNZ SCUS_FOUND
+SCUS_NOTFOUND:
+    POP 04h
+    CLR C
+    RET
+SCUS_FOUND:
+    POP 04h
+    SETB C
+    RET
+; ------------------------------------------
+; 2. 宽松检查：只查 反向 (用于第二轮扫描)
+; ------------------------------------------
+; 向下松查：只查 EXT_UP
+SCAN_CHECK_DN_LOOSE:
+    PUSH 04h
+    LCALL FLOOR_TO_INDEX
+    MOV A, R4
+    CLR C
+    SUBB A, #08h
+    JNC SCDL_HI
+    ; Low Byte
+    LCALL GET_BIT_MASK
+    MOV A, EXT_UP_LO
+    ANL A, R3
+    JNZ SCDL_FOUND
+    SJMP SCDL_NOTFOUND
+SCDL_HI:
+    ; High Byte
+    MOV R4, A
+    LCALL GET_BIT_MASK
+    MOV A, EXT_UP_HI
+    ANL A, R3
+    JNZ SCDL_FOUND 
+SCDL_NOTFOUND:
+    POP 04h
+    CLR C
+    RET
+SCDL_FOUND:
+    POP 04h
+    SETB C
+    RET
+
+; 向上松查：只查 EXT_DN
+SCAN_CHECK_UP_LOOSE:
+    PUSH 04h
+    LCALL FLOOR_TO_INDEX
+    MOV A, R4
+    CLR C
+    SUBB A, #08h
+    JNC SCUL_HI 
+    ; Low Byte
+    LCALL GET_BIT_MASK
+    MOV A, EXT_DN_LO
+    ANL A, R3
+    JNZ SCUL_FOUND
+    SJMP SCUL_NOTFOUND
+SCUL_HI:
+    ; High Byte
+    MOV R4, A
+    LCALL GET_BIT_MASK
+    MOV A, EXT_DN_HI
+    ANL A, R3
+    JNZ SCUL_FOUND
+SCUL_NOTFOUND:
+    POP 04h
+    CLR C
+    RET
+SCUL_FOUND:
     POP 04h
     SETB C
     RET
