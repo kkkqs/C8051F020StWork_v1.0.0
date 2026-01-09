@@ -6,6 +6,7 @@ $INCLUDE (../user/config.inc)
 $INCLUDE (../driver/LCD1602.inc)
 
 EXTRN CODE(LED6_ApplyTable)
+EXTRN CODE(Singer_PlayNote) ; Import Singer_PlayNote
 
 PUBLIC RunningTask_Init
 PUBLIC RunningTask_Handler
@@ -369,13 +370,24 @@ ARR_NEG:
     MOV 02Dh, A
     RET
 EA_INIT:
+    ; Play sound only if not reopening from CLOSE state
+    MOV A, 071h
+    CJNE A, #ELEV_CLOSE, EA_PLAY_SOUND
+    SJMP EA_OFFSET_UPDATE
+
+EA_PLAY_SOUND:
+    ; Sound the Arrival Tone
+    MOV R7, CUR_FLr
+    LCALL Singer_PlayNote
+
+EA_OFFSET_UPDATE:
     MOV A, 070h
     MOV 071h, A
     
     ; Clear request for current floor (arrived at target)
     MOV R6, CUR_FLr
     LCALL CLEAR_FLOOR_REQUEST
-    
+
     ; LCD Update
     LCALL LCD_CLEAR
     MOV DPTR, #LCD_MSG_OPEN

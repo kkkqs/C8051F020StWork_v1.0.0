@@ -1,0 +1,742 @@
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\configurationTask.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE Tasks\configurationTask.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\Listings\c
+                      onfigurationTask.lst) OBJECT(.\Objects\configurationTask.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; Configuration task: handles OPT, OPT1, OPT2, OPT3 and PASS flows
+                       2     Configuration SEGMENT CODE
+----                   3     rseg Configuration
+                       4     
+                       5     ;$include (../user/config.inc)
+                +1     6     ; 索引从 0 开始，供 main.ASM 中通过偏移访问 (MOVC @A+DPTR)
+                +1     7     ; 00 - '0'  - 0C0h
+                +1     8     ; 01 - '1'  - 0F9h
+                +1     9     ; 02 - '2'  - 0A4h
+                +1    10     ; 03 - '3'  - 0B0h
+                +1    11     ; 04 - '4'  - 099h
+                +1    12     ; 05 - '5'  - 092h
+                +1    13     ; 06 - '6'  - 082h
+                +1    14     ; 07 - '7'  - 0F8h
+                +1    15     ; 08 - '8'  - 080h
+                +1    16     ; 09 - '9'  - 090h
+                +1    17     ; 10 - 'A'  - 088h
+                +1    18     ; 11 - 'b'  - 083h
+                +1    19     ; 12 - 'C'  - 0C6h
+                +1    20     ; 13 - 'd'  - 0A1h
+                +1    21     ; 14 - 'E'  - 086h
+                +1    22     ; 15 - 'F'  - 08Eh
+                +1    23     ; 16 - '_'  - 0F7h
+                +1    24     ; 17 - 'P.' - 00Ch
+                +1    25     ; 18 - 'r'  - 0AFh
+                +1    26     ; 19 - 'L'  - 047h
+                +1    27     ; 20 - '0.' - 040h
+                +1    28     ; 21 - '1.' - 079h
+                +1    29     ; 22 - '2.' - 024h
+                +1    30     ; 23 - '3.' - 030h
+                +1    31     ; 24 - '4.' - 019h
+                +1    32     ; 25 - '5.' - 012h
+                +1    33     ; 26 - '6.' - 002h
+                +1    34     ; 27 - '7.' - 078h
+                +1    35     ; 28 - '8.' - 000h
+                +1    36     ; 29 - '9.' - 010h
+                +1    37     ; 30 - 'n'  - 0ABh
+                +1    38     ; 31 - 'o'  - 0A3h
+                +1    39     ; 32 - 'o.' - 023h
+                +1    40     ; 33 - OFF  - 0FFh    ; 熄灭 (全部段关闭)
+                +1    41     ; 34 - 'C.' - 046h    ; 自定义 C 带小数点
+                +1    42     ; 35 - 'U'  - 0C1h
+                +1    43     ; 36 - '-'  - 0BFh
+                +1    44     ; 37 - ' '  - 0FFh
+                +1    45     
+0000            +1    46     SEG_TABLE:
+0000 C0F9A4B0   +1    47         DB 0C0h,0F9h,0A4h,0B0h,099h,092h,082h,0F8h,080h,090h,088h,083h,0C6h,0A1h,086h,08Eh,0F7h
+                             ,00Ch,0AFh,047h
+0004 999282F8                
+0008 80908883                
+000C C6A1868E                
+0010 F70CAF47                
+0014 40792430   +1    48         DB 040h,079h,024h,030h,019h,012h,002h,078h,000h,010h
+0018 19120278                
+001C 0010                    
+001E ABA323FF   +1    49         DB 0ABh,0A3h,023h,0FFh,046h,0C1h,0BFh,0FFh
+0022 46C1BFFF                
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     2
+
+                +1    50     
+0026            +1    51     BITMASK_TABLE:
+0026 80402010   +1    52         DB 080h,040h,020h,010h,008h,004h
+002A 0804                    
+                +1    53     
+002C            +1    54     PASSWORD_TABLE:
+002C 01020304   +1    55         DB 01h,02h,03h,04h,05h
+0030 05                      
+                +1    56     
+                +1    57     ; RUN_ST, OPT_ST, PASS_ST, OPT1_ST, OPT2_ST, OPT3_ST
+  0000          +1    58     RUN_ST  EQU     00h
+  0001          +1    59     OPT_ST  EQU     01h
+  0002          +1    60     PASS_ST EQU     02h
+  0011          +1    61     OPT1_ST EQU     11h
+  0012          +1    62     OPT2_ST EQU     12h
+  0013          +1    63     OPT3_ST EQU     13h
+                +1    64     
+                +1    65     ; Elevator states
+  0020          +1    66     ELEV_ST EQU 20h
+  0021          +1    67     ELEV_RUN EQU 21h
+  0022          +1    68     ELEV_ARRIVED EQU 22h
+  0023          +1    69     ELEV_CLOSE EQU 23h
+                +1    70     
+                +1    71     ; Elevator variables (RAM)
+  0056          +1    72     CUR_FLr      EQU 056h
+  0057          +1    73     ELEV_TIMER   EQU 057h
+  0058          +1    74     ELEV_TARGET  EQU 058h
+  0059          +1    75     ONE_SEC_CNT  EQU 059h
+  005A          +1    76     BLINK_TIMER  EQU 05Ah
+  005B          +1    77     BLINK_TOGGLE EQU 05Bh
+                +1    78     
+                +1    79     ; Queue variables (BITMAP based - 11 floors: -2 to 8)
+                +1    80     ; Bit 0 = Floor -2, Bit 1 = Floor -1, Bit 2 = Floor 1, ... Bit 10 = Floor 8
+                +1    81     ; Use 2 bytes: Low byte (bits 0-7), High byte (bits 8-10)
+  005C          +1    82     INT_REQ_LO     EQU 05Ch  ; Internal request bitmap low (floors -2 to 5)
+  005D          +1    83     INT_REQ_HI     EQU 05Dh  ; Internal request bitmap high (floors 6 to 8)
+  005E          +1    84     EXT_UP_LO      EQU 05Eh  ; External UP request bitmap low
+  005F          +1    85     EXT_UP_HI      EQU 05Fh  ; External UP request bitmap high
+  0062          +1    86     EXT_DN_LO      EQU 062h  ; External DOWN request bitmap low
+  0063          +1    87     EXT_DN_HI      EQU 063h  ; External DOWN request bitmap high
+  0064          +1    88     ELEV_DIR       EQU 064h  ; Current direction: 0=停止, 1=上, 2=下
+                +1    89     
+                +1    90     ; Input Mode variables
+  0065          +1    91     INPUT_MODE     EQU 065h ; 0=Inside, 1=Outside
+  0066          +1    92     OUT_SEL_VAL    EQU 066h ; Temp storage for outside floor selection
+  0067          +1    93     DEBUG_ON       EQU 067h ; Global debug flag: 0=normal, 1=jump to debug task
+                +1    94     
+                +1    95     ; Floor to Bit Index mapping:
+                +1    96     ; Floor -2 -> Index 0
+                +1    97     ; Floor -1 -> Index 1
+                +1    98     ; Floor  1 -> Index 2
+                +1    99     ; Floor  2 -> Index 3
+                +1   100     ; ...
+                +1   101     ; Floor  8 -> Index 10
+                +1   102     ; Formula: Index = Floor + 2 (if Floor >= 1, Index = Floor + 1)
+                     103     
+                     104     ;$include (../driver/LCD1602.inc)
+                +1   105     EXTRN CODE(LCD_INIT)
+                +1   106     EXTRN CODE(LCD_WR_CMD)
+                +1   107     EXTRN CODE(LCD_WR_DAT)
+                +1   108     EXTRN CODE(LCD_CLEAR)
+                +1   109     EXTRN CODE(LCD_SHOW_STR)
+                     110     
+                     111     
+                     112     EXTRN CODE(LED6_ApplyTable)
+                     113     EXTRN CODE(InputTask_03B)
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     3
+
+                     114     EXTRN CODE(InputTask_039)
+                     115     
+                     116     PUBLIC ConfigurationTask_Init
+                     117     PUBLIC ConfigurationTask_Handler
+                     118     
+0031                 119     LCD_MSG_CONFIG:
+0031 436F6E66        120         DB 'C','o','n','f','i','g','u','r','a','t','i','n','g',' ',' ',' ', 00h
+0035 69677572                
+0039 6174696E                
+003D 67202020                
+0041 00                      
+                     121     
+                     122     ; Entry: call ConfigurationTask_Init at startup
+0042                 123     ConfigurationTask_Init:
+                     124         ; 初始化配置参数为空标记 0x10
+0042 755010          125         MOV 050h, #010h
+0045 755110          126         MOV 051h, #010h
+0048 755210          127         MOV 052h, #010h
+004B 755310          128         MOV 053h, #010h
+004E 755410          129         MOV 054h, #010h
+0051 22              130         RET
+                     131     
+                     132     ; Entry: handles any configuration-related state when called from main
+0052                 133     ConfigurationTask_Handler:
+0052 E570            134         MOV A, 070h
+0054 B40104          135         CJNE A, #OPT_ST, CHECK_OPT1
+0057 120000   F      136         LCALL CONF_MODE
+005A 22              137         RET
+005B                 138     CHECK_OPT1:
+005B B41104          139         CJNE A, #OPT1_ST, CHECK_OPT2
+005E 120000   F      140         LCALL CONF_OPT1_HANDLER
+0061 22              141         RET
+0062                 142     CHECK_OPT2:
+0062 B41204          143         CJNE A, #OPT2_ST, CHECK_OPT3
+0065 120000   F      144         LCALL CONF_OPT2_HANDLER
+0068 22              145         RET
+0069                 146     CHECK_OPT3:
+0069 B41304          147         CJNE A, #OPT3_ST, CHECK_PASS
+006C 120000   F      148         LCALL CONF_OPT3_HANDLER
+006F 22              149         RET
+0070                 150     CHECK_PASS:
+0070 B40204          151         CJNE A, #PASS_ST, CONF_DEFAULT
+0073 120000   F      152         LCALL CONF_PASS_HANDLER
+0076 22              153         RET
+0077                 154     CONF_DEFAULT:
+                     155         ; default: show OPT menu
+0077 120000   F      156         LCALL CONF_MODE
+007A 22              157         RET
+                     158     
+                     159     ; OPT handler (show menu)
+007B                 160     CONF_INIT:
+007B E570            161         MOV A, 070h
+007D F571            162         MOV 071h, A
+007F 8000            163         SJMP CONF_MODE
+                     164     
+0081                 165     CONF_MODE:
+0081 7402            166         MOV A, #02h
+0083 120000   F      167         LCALL LED6_ApplyTable
+0086 8000            168         SJMP CONF_MODE_KEYS
+                     169     
+0088                 170     CONF_MODE_KEYS:
+                     171         ; 如果有按键事件，处理菜单选择 1/2/3/A
+0088 E561            172         MOV A, 061h
+008A B40001          173         CJNE A, #00h, CONF_MODE_CHECK_KEY
+008D 22              174         RET
+008E                 175     CONF_MODE_CHECK_KEY:
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     4
+
+008E E560            176         MOV A, 060h
+0090 540F            177         ANL A, #0Fh
+0092 B40107          178         CJNE A, #01h, CONF_MODE_CHECK_2
+0095 757011          179         MOV 070h, #OPT1_ST
+0098 756100          180         MOV 061h, #00h
+009B 22              181         RET
+009C                 182     CONF_MODE_CHECK_2:
+009C B40207          183         CJNE A, #02h, CONF_MODE_CHECK_3
+009F 757012          184         MOV 070h, #OPT2_ST
+00A2 756100          185         MOV 061h, #00h
+00A5 22              186         RET
+00A6                 187     CONF_MODE_CHECK_3:
+00A6 B40307          188         CJNE A, #03h, CONF_MODE_CHECK_A
+00A9 757013          189         MOV 070h, #OPT3_ST
+00AC 756100          190         MOV 061h, #00h
+00AF 22              191         RET
+00B0                 192     CONF_MODE_CHECK_A:
+00B0 B40A04          193         CJNE A, #0Ah, CONF_MODE_IGNORE
+00B3 120000   F      194         LCALL CONF_CHECK_COMPLETION
+00B6 22              195         RET
+00B7                 196     CONF_MODE_IGNORE:
+00B7 756100          197         MOV 061h, #00h
+00BA 22              198         RET
+                     199     
+00BB                 200     CONF_CHECK_COMPLETION:
+00BB 756100          201         MOV 061h, #00h ; Clear key
+                     202         ; Check 050h..054h
+00BE E550            203         MOV A, 050h
+00C0 B41002          204         CJNE A, #010h, CCC_51
+00C3 8020            205         SJMP CCC_ERROR
+00C5                 206     CCC_51:
+00C5 E551            207         MOV A, 051h
+00C7 B41002          208         CJNE A, #010h, CCC_52
+00CA 8019            209         SJMP CCC_ERROR
+00CC                 210     CCC_52:
+00CC E552            211         MOV A, 052h
+00CE B41002          212         CJNE A, #010h, CCC_53
+00D1 8012            213         SJMP CCC_ERROR
+00D3                 214     CCC_53:
+00D3 E553            215         MOV A, 053h
+00D5 B41002          216         CJNE A, #010h, CCC_54
+00D8 800B            217         SJMP CCC_ERROR
+00DA                 218     CCC_54:
+00DA E554            219         MOV A, 054h
+00DC B41002          220         CJNE A, #010h, CCC_OK
+00DF 8004            221         SJMP CCC_ERROR
+                     222     
+00E1                 223     CCC_OK:
+00E1 757000          224         MOV 070h, #RUN_ST
+00E4 22              225         RET
+                     226     
+00E5                 227     CCC_ERROR:
+                     228         ; Show Error (Table 03h - Err011)
+00E5 7403            229         MOV A, #03h
+00E7 120000   F      230         LCALL LED6_ApplyTable
+                     231         
+00EA 7B26            232         MOV R3, #26h
+00EC                 233     CCC_DELAY_OUTER:
+00EC 7CF0            234         MOV R4, #0F0h
+00EE                 235     CCC_DELAY_LOOP:
+00EE 7DFF            236         MOV R5, #0FFh
+00F0                 237     CCC_DELAY_INNER:
+00F0 00              238         NOP
+00F1 00              239         NOP
+00F2 00              240         NOP
+00F3 DDFB            241         DJNZ R5, CCC_DELAY_INNER
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     5
+
+00F5 DCF7            242         DJNZ R4, CCC_DELAY_LOOP
+00F7 DBF3            243         DJNZ R3, CCC_DELAY_OUTER
+00F9 22              244         RET
+                     245     
+                     246     ; --------------------
+                     247     ; OPT1
+                     248     ; --------------------
+00FA                 249     CONF_OPT1_HANDLER:
+00FA E571            250         MOV A, 071h
+00FC B57044          251         CJNE A, 070h, CONF_OPT1_INIT
+00FF E561            252         MOV A, 061h
+0101 B40003          253         CJNE A, #00h, CONF_OPT1_INPUT_HANDLE_KEY
+0104 8000            254         SJMP CONF_OPT1_INPUT_MODE
+                     255     
+0106                 256     CONF_OPT1_INPUT_MODE:
+0106 22              257         RET
+                     258     
+0107                 259     CONF_OPT1_INPUT_HANDLE_KEY:
+0107 752002          260         MOV 020h, #02h
+010A 752103          261         MOV 021h, #03h
+010D 120000   F      262         LCALL InputTask_03B
+0110 B40A06          263         CJNE A, #0Ah, CONF_OPT1_INPUT_DONE
+                     264         ; fall through to CONF_OPT1_INPUT_CHECK_CONFIRM
+0113 120000   F      265         LCALL CONF_OPT1_INPUT_CHECK_CONFIRM
+0116 22              266         RET
+                     267     
+0117                 268     CONF_OPT1_INPUT_DEC:
+0117 153B            269         DEC 03Bh
+                     270     
+0119                 271     CONF_OPT1_INPUT_DONE:
+0119 756100          272         MOV 061h, #00h
+011C 22              273         RET
+                     274     
+011D                 275     CONF_OPT1_INPUT_BACKSPACE_LIMIT:
+011D 753B02          276         MOV 03Bh, #02h
+0120 E53B            277         MOV A, 03Bh
+0122 2428            278         ADD A, #028h
+0124 F8              279         MOV R0, A
+0125 7610            280         MOV @R0, #010h
+0127 756100          281         MOV 061h, #00h
+012A 22              282         RET
+                     283     
+012B                 284     CONF_OPT1_INPUT_CHECK_CONFIRM:
+012B E560            285         MOV A, 060h
+012D B40A0F          286         CJNE A, #0Ah, CONF_OPT1_INPUT_SKIP_CONFIRM
+0130 E52A            287         MOV A, 02Ah
+0132 F550            288         MOV 050h, A
+0134 E52B            289         MOV A, 02Bh
+0136 F551            290         MOV 051h, A
+0138 756100          291         MOV 061h, #00h
+013B 757001          292         MOV 070h, #OPT_ST
+013E 22              293         RET
+                     294     
+013F                 295     CONF_OPT1_INPUT_SKIP_CONFIRM:
+013F 756100          296         MOV 061h, #00h
+0142 22              297         RET
+                     298     
+0143                 299     CONF_OPT1_INIT:
+0143 E570            300         MOV A, 070h
+0145 F571            301         MOV 071h, A
+0147 7404            302         MOV A, #04h
+0149 120000   F      303         LCALL LED6_ApplyTable
+014C 753B02          304         MOV 03Bh, #02h
+014F 22              305         RET
+                     306     
+                     307     ; --------------------
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     6
+
+                     308     ; OPT2
+                     309     ; --------------------
+0150                 310     CONF_OPT2_HANDLER:
+0150 E571            311         MOV A, 071h
+0152 B57044          312         CJNE A, 070h, CONF_OPT2_INIT
+0155 E561            313         MOV A, 061h
+0157 B40003          314         CJNE A, #00h, CONF_OPT2_INPUT_HANDLE_KEY
+015A 8000            315         SJMP CONF_OPT2_INPUT_MODE
+                     316     
+015C                 317     CONF_OPT2_INPUT_MODE:
+015C 22              318         RET
+                     319     
+015D                 320     CONF_OPT2_INPUT_HANDLE_KEY:
+015D 752002          321         MOV 020h, #02h
+0160 752104          322         MOV 021h, #04h
+0163 120000   F      323         LCALL InputTask_03B
+0166 B40A06          324         CJNE A, #0Ah, CONF_OPT2_INPUT_DONE
+0169 120000   F      325         LCALL CONF_OPT2_INPUT_CHECK_CONFIRM
+016C 22              326         RET
+                     327     
+016D                 328     CONF_OPT2_INPUT_DEC:
+016D 153B            329         DEC 03Bh
+                     330     
+016F                 331     CONF_OPT2_INPUT_DONE:
+016F 756100          332         MOV 061h, #00h
+0172 22              333         RET
+                     334     
+0173                 335     CONF_OPT2_INPUT_BACKSPACE_LIMIT:
+0173 753B02          336         MOV 03Bh, #02h
+0176 E53B            337         MOV A, 03Bh
+0178 2428            338         ADD A, #028h
+017A F8              339         MOV R0, A
+017B 7610            340         MOV @R0, #010h
+017D 756100          341         MOV 061h, #00h
+0180 22              342         RET
+                     343     
+0181                 344     CONF_OPT2_INPUT_CHECK_CONFIRM:
+0181 E560            345         MOV A, 060h
+0183 B40A0F          346         CJNE A, #0Ah, CONF_OPT2_INPUT_SKIP_CONFIRM
+0186 E52A            347         MOV A, 02Ah
+0188 F552            348         MOV 052h, A
+018A E52B            349         MOV A, 02Bh
+018C F553            350         MOV 053h, A
+018E 756100          351         MOV 061h, #00h
+0191 757001          352         MOV 070h, #OPT_ST
+0194 22              353         RET
+                     354     
+0195                 355     CONF_OPT2_INPUT_SKIP_CONFIRM:
+0195 756100          356         MOV 061h, #00h
+0198 22              357         RET
+                     358     
+0199                 359     CONF_OPT2_INIT:
+0199 E570            360         MOV A, 070h
+019B F571            361         MOV 071h, A
+019D 7405            362         MOV A, #05h
+019F 120000   F      363         LCALL LED6_ApplyTable
+01A2 753B02          364         MOV 03Bh, #02h
+01A5 22              365         RET
+                     366     
+                     367     ; --------------------
+                     368     ; OPT3
+                     369     ; --------------------
+01A6                 370     CONF_OPT3_HANDLER:
+01A6 E571            371         MOV A, 071h
+01A8 B57040          372         CJNE A, 070h, CONF_OPT3_INIT
+01AB E561            373         MOV A, 061h
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     7
+
+01AD B40003          374         CJNE A, #00h, CONF_OPT3_INPUT_HANDLE_KEY
+01B0 8000            375         SJMP CONF_OPT3_INPUT_MODE
+                     376     
+01B2                 377     CONF_OPT3_INPUT_MODE:
+01B2 22              378         RET
+                     379     
+01B3                 380     CONF_OPT3_INPUT_HANDLE_KEY:
+01B3 752001          381         MOV 020h, #01h
+01B6 752101          382         MOV 021h, #01h
+01B9 120000   F      383         LCALL InputTask_03B
+01BC B40A06          384         CJNE A, #0Ah, CONF_OPT3_INPUT_DONE
+01BF 120000   F      385         LCALL CONF_OPT3_INPUT_CHECK_CONFIRM
+01C2 22              386         RET
+                     387     
+01C3                 388     CONF_OPT3_INPUT_DEC:
+01C3 153B            389         DEC 03Bh
+                     390     
+01C5                 391     CONF_OPT3_INPUT_DONE:
+01C5 756100          392         MOV 061h, #00h
+01C8 22              393         RET
+                     394     
+01C9                 395     CONF_OPT3_INPUT_BACKSPACE_LIMIT:
+01C9 753B01          396         MOV 03Bh, #01h
+01CC E53B            397         MOV A, 03Bh
+01CE 2428            398         ADD A, #028h
+01D0 F8              399         MOV R0, A
+01D1 7610            400         MOV @R0, #010h
+01D3 756100          401         MOV 061h, #00h
+01D6 22              402         RET
+                     403     
+01D7                 404     CONF_OPT3_INPUT_CHECK_CONFIRM:
+01D7 E560            405         MOV A, 060h
+01D9 B40A0B          406         CJNE A, #0Ah, CONF_OPT3_INPUT_SKIP_CONFIRM
+01DC E529            407         MOV A, 029h
+01DE F554            408         MOV 054h, A
+01E0 756100          409         MOV 061h, #00h
+01E3 757001          410         MOV 070h, #OPT_ST
+01E6 22              411         RET
+                     412     
+01E7                 413     CONF_OPT3_INPUT_SKIP_CONFIRM:
+01E7 756100          414         MOV 061h, #00h
+01EA 22              415         RET
+                     416     
+01EB                 417     CONF_OPT3_INIT:
+01EB E570            418         MOV A, 070h
+01ED F571            419         MOV 071h, A
+01EF 752817          420         MOV 028h, #017h
+01F2 7406            421         MOV A, #06h
+01F4 120000   F      422         LCALL LED6_ApplyTable
+01F7 753B01          423         MOV 03Bh, #01h
+01FA 22              424         RET
+                     425     
+                     426     ; --------------------
+                     427     ; PASS state
+                     428     ; --------------------
+01FB                 429     CONF_PASS_HANDLER:
+01FB E571            430         MOV A, 071h
+01FD B57024          431         CJNE A, 070h, CONF_PASS_INIT
+0200 E561            432         MOV A, 061h
+0202 B40002          433         CJNE A, #00h, CONF_PASS_HANDLE_KEY
+0205 803C            434         SJMP CONF_PASS_MODE
+                     435     
+0207                 436     CONF_PASS_HANDLE_KEY:
+0207 752001          437         MOV 020h, #01h
+020A 752105          438         MOV 021h, #05h
+020D 120000   F      439         LCALL InputTask_039
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     8
+
+0210 756100          440         MOV 061h, #00h
+0213 802E            441         SJMP CONF_PASS_MODE
+                     442     
+0215                 443     CONF_PASS_BACKSPACE_LIMIT:
+0215 753901          444         MOV 039h, #01h
+0218 E539            445         MOV A, 039h
+021A 2428            446         ADD A, #028h
+021C F8              447         MOV R0, A
+021D 7610            448         MOV @R0, #010h
+021F 756100          449         MOV 061h, #00h
+0222 801F            450         SJMP CONF_PASS_MODE
+                     451     
+0224                 452     CONF_PASS_INIT:
+0224 E570            453         MOV A, 070h
+0226 F571            454         MOV 071h, A
+0228 757002          455         MOV 070h, #PASS_ST
+022B 7407            456         MOV A, #07h
+022D 120000   F      457         LCALL LED6_ApplyTable
+                     458         
+                     459         ; LCD Display
+0230 120000   F      460         LCALL LCD_CLEAR
+0233 900000   F      461         MOV DPTR, #LCD_MSG_CONFIG
+0236 120000   F      462         LCALL LCD_SHOW_STR
+                     463         
+0239 753901          464         MOV 039h, #01h
+023C 756100          465         MOV 061h, #00h
+023F 756000          466         MOV 060h, #00h
+0242 22              467         RET
+                     468     
+0243                 469     CONF_PASS_MODE:
+0243 E561            470         MOV A, 061h
+0245 B40001          471         CJNE A, #00h, CONF_PASS_MODE_CHECK_KEY
+0248 22              472         RET
+                     473     
+0249                 474     CONF_PASS_MODE_CHECK_KEY:
+0249 E560            475         MOV A, 060h
+024B B40A13          476         CJNE A, #0Ah, CONF_PASS_MODE_SKIP_CONFIRM
+024E E539            477         MOV A, 039h
+0250 B40607          478         CJNE A, #06h, CONF_PASS_CONFIRM_INCOMPLETE
+0253 120000   F      479         LCALL PASS_VERIFY_PASSWORD
+0256 756100          480         MOV 061h, #00h
+0259 22              481         RET
+                     482     
+025A                 483     CONF_PASS_CONFIRM_INCOMPLETE:
+025A 120000   F      484         LCALL PASS_SHOW_ERROR
+025D 756100          485         MOV 061h, #00h
+0260 22              486         RET
+                     487     
+0261                 488     CONF_PASS_MODE_SKIP_CONFIRM:
+0261 756100          489         MOV 061h, #00h
+0264 22              490         RET
+                     491     
+                     492     ; Implement PASS verify/show routines (moved from main)
+                     493     PUBLIC PASS_VERIFY_PASSWORD
+0265                 494     PASS_VERIFY_PASSWORD:
+                     495         ; 验证 5 位密码 (Buffer 029h..02Dh) vs Table 0..4
+0265 7801            496         MOV R0, #01h    ; Buffer Index (start from 029h = 028h + 1)
+0267 7B00            497         MOV R3, #00h    ; Table Index
+                     498     
+0269                 499     PASS_VERIFY_LOOP:
+0269 E8              500         MOV A, R0
+026A 2428            501         ADD A, #028h
+026C F9              502         MOV R1, A
+026D E7              503         MOV A, @R1
+026E FA              504         MOV R2, A
+                     505     
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE     9
+
+026F 900000   F      506         MOV DPTR, #PASSWORD_TABLE
+0272 EB              507         MOV A, R3
+0273 93              508         MOVC A, @A+DPTR
+                     509     
+0274 B50202          510         CJNE A, 02h, PASS_VERIFY_FAIL_CHECK
+0277 800B            511         SJMP PASS_VERIFY_NEXT
+                     512     
+0279                 513     PASS_VERIFY_FAIL_CHECK:
+0279 EA              514         MOV A, R2
+027A F5F0            515         MOV B, A
+027C EB              516         MOV A, R3
+027D 900000   F      517         MOV DPTR, #PASSWORD_TABLE
+0280 93              518         MOVC A, @A+DPTR
+0281 B5F00A          519         CJNE A, B, PASS_VERIFY_FAIL
+                     520     
+0284                 521     PASS_VERIFY_NEXT:
+0284 08              522         INC R0
+0285 0B              523         INC R3
+0286 EB              524         MOV A, R3
+0287 B405DF          525         CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
+028A 120000   F      526         LCALL PASS_SHOW_SUCCESS
+028D 22              527         RET
+                     528     
+028E                 529     PASS_VERIFY_FAIL:
+028E 120000   F      530         LCALL PASS_SHOW_ERROR
+0291 22              531         RET
+                     532     
+0292                 533     PASS_SHOW_ERROR:
+0292 153A            534         DEC 03Ah
+0294 E53A            535         MOV A, 03Ah
+0296 601C            536         JZ PASS_ERROR_LOCKED
+                     537     
+                     538         ; 显示 FALSEX (TABLE_PASS_ERROR_FALSEX id=08)，最后一位由剩余次数填充
+0298 7408            539         MOV A, #08h
+029A 120000   F      540         LCALL LED6_ApplyTable
+029D E53A            541         MOV A, 03Ah
+029F F52D            542         MOV 02Dh, A
+                     543     
+02A1 7B26            544         MOV R3, #26h
+02A3                 545     PASS_ERROR_DELAY_OUTER:
+02A3 7CF0            546         MOV R4, #0F0h
+02A5                 547     PASS_ERROR_DELAY_LOOP:
+02A5 7DFF            548         MOV R5, #0FFh
+02A7                 549     PASS_ERROR_DELAY_INNER:
+02A7 00              550         NOP
+02A8 00              551         NOP
+02A9 00              552         NOP
+02AA DDFB            553         DJNZ R5, PASS_ERROR_DELAY_INNER
+02AC DCF7            554         DJNZ R4, PASS_ERROR_DELAY_LOOP
+02AE DBF3            555         DJNZ R3, PASS_ERROR_DELAY_OUTER
+                     556     
+02B0 120000   F      557         LCALL CONF_PASS_INIT
+02B3 22              558         RET
+                     559     
+02B4                 560     PASS_ERROR_LOCKED:
+                     561         ; 锁定显示（TABLE_PASS_ERROR_LOCKED id=09）
+02B4 7409            562         MOV A, #09h
+02B6 120000   F      563         LCALL LED6_ApplyTable
+02B9 0100     F      564         AJMP PASS_ERROR_LOCKED
+                     565     
+02BB                 566     PASS_SHOW_SUCCESS:
+02BB 757001          567         MOV 070h, #OPT_ST
+02BE 22              568         RET
+                     569     
+                     570     ; End of configuration task
+02BF 22              571         RET
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE    10
+
+                     572     
+                     573     END
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE    11
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                          T Y P E  V A L U E   ATTRIBUTES
+
+B . . . . . . . . . . . . . . .  D ADDR   00F0H   A   
+BITMASK_TABLE . . . . . . . . .  C ADDR   0026H   R   SEG=CONFIGURATION
+BLINK_TIMER . . . . . . . . . .  N NUMB   005AH   A   
+BLINK_TOGGLE. . . . . . . . . .  N NUMB   005BH   A   
+CCC_51. . . . . . . . . . . . .  C ADDR   00C5H   R   SEG=CONFIGURATION
+CCC_52. . . . . . . . . . . . .  C ADDR   00CCH   R   SEG=CONFIGURATION
+CCC_53. . . . . . . . . . . . .  C ADDR   00D3H   R   SEG=CONFIGURATION
+CCC_54. . . . . . . . . . . . .  C ADDR   00DAH   R   SEG=CONFIGURATION
+CCC_DELAY_INNER . . . . . . . .  C ADDR   00F0H   R   SEG=CONFIGURATION
+CCC_DELAY_LOOP. . . . . . . . .  C ADDR   00EEH   R   SEG=CONFIGURATION
+CCC_DELAY_OUTER . . . . . . . .  C ADDR   00ECH   R   SEG=CONFIGURATION
+CCC_ERROR . . . . . . . . . . .  C ADDR   00E5H   R   SEG=CONFIGURATION
+CCC_OK. . . . . . . . . . . . .  C ADDR   00E1H   R   SEG=CONFIGURATION
+CHECK_OPT1. . . . . . . . . . .  C ADDR   005BH   R   SEG=CONFIGURATION
+CHECK_OPT2. . . . . . . . . . .  C ADDR   0062H   R   SEG=CONFIGURATION
+CHECK_OPT3. . . . . . . . . . .  C ADDR   0069H   R   SEG=CONFIGURATION
+CHECK_PASS. . . . . . . . . . .  C ADDR   0070H   R   SEG=CONFIGURATION
+CONFIGURATION . . . . . . . . .  C SEG    02C0H       REL=UNIT
+CONFIGURATIONTASK_HANDLER . . .  C ADDR   0052H   R   SEG=CONFIGURATION
+CONFIGURATIONTASK_INIT. . . . .  C ADDR   0042H   R   SEG=CONFIGURATION
+CONF_CHECK_COMPLETION . . . . .  C ADDR   00BBH   R   SEG=CONFIGURATION
+CONF_DEFAULT. . . . . . . . . .  C ADDR   0077H   R   SEG=CONFIGURATION
+CONF_INIT . . . . . . . . . . .  C ADDR   007BH   R   SEG=CONFIGURATION
+CONF_MODE . . . . . . . . . . .  C ADDR   0081H   R   SEG=CONFIGURATION
+CONF_MODE_CHECK_2 . . . . . . .  C ADDR   009CH   R   SEG=CONFIGURATION
+CONF_MODE_CHECK_3 . . . . . . .  C ADDR   00A6H   R   SEG=CONFIGURATION
+CONF_MODE_CHECK_A . . . . . . .  C ADDR   00B0H   R   SEG=CONFIGURATION
+CONF_MODE_CHECK_KEY . . . . . .  C ADDR   008EH   R   SEG=CONFIGURATION
+CONF_MODE_IGNORE. . . . . . . .  C ADDR   00B7H   R   SEG=CONFIGURATION
+CONF_MODE_KEYS. . . . . . . . .  C ADDR   0088H   R   SEG=CONFIGURATION
+CONF_OPT1_HANDLER . . . . . . .  C ADDR   00FAH   R   SEG=CONFIGURATION
+CONF_OPT1_INIT. . . . . . . . .  C ADDR   0143H   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_BACKSPACE_LIMIT  C ADDR   011DH   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_CHECK_CONFIRM .  C ADDR   012BH   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_DEC . . . . . .  C ADDR   0117H   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_DONE. . . . . .  C ADDR   0119H   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_HANDLE_KEY. . .  C ADDR   0107H   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_MODE. . . . . .  C ADDR   0106H   R   SEG=CONFIGURATION
+CONF_OPT1_INPUT_SKIP_CONFIRM. .  C ADDR   013FH   R   SEG=CONFIGURATION
+CONF_OPT2_HANDLER . . . . . . .  C ADDR   0150H   R   SEG=CONFIGURATION
+CONF_OPT2_INIT. . . . . . . . .  C ADDR   0199H   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_BACKSPACE_LIMIT  C ADDR   0173H   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_CHECK_CONFIRM .  C ADDR   0181H   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_DEC . . . . . .  C ADDR   016DH   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_DONE. . . . . .  C ADDR   016FH   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_HANDLE_KEY. . .  C ADDR   015DH   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_MODE. . . . . .  C ADDR   015CH   R   SEG=CONFIGURATION
+CONF_OPT2_INPUT_SKIP_CONFIRM. .  C ADDR   0195H   R   SEG=CONFIGURATION
+CONF_OPT3_HANDLER . . . . . . .  C ADDR   01A6H   R   SEG=CONFIGURATION
+CONF_OPT3_INIT. . . . . . . . .  C ADDR   01EBH   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_BACKSPACE_LIMIT  C ADDR   01C9H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_CHECK_CONFIRM .  C ADDR   01D7H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_DEC . . . . . .  C ADDR   01C3H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_DONE. . . . . .  C ADDR   01C5H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_HANDLE_KEY. . .  C ADDR   01B3H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_MODE. . . . . .  C ADDR   01B2H   R   SEG=CONFIGURATION
+CONF_OPT3_INPUT_SKIP_CONFIRM. .  C ADDR   01E7H   R   SEG=CONFIGURATION
+CONF_PASS_BACKSPACE_LIMIT . . .  C ADDR   0215H   R   SEG=CONFIGURATION
+CONF_PASS_CONFIRM_INCOMPLETE. .  C ADDR   025AH   R   SEG=CONFIGURATION
+CONF_PASS_HANDLER . . . . . . .  C ADDR   01FBH   R   SEG=CONFIGURATION
+A51 MACRO ASSEMBLER  CONFIGURATIONTASK                                                    01/09/2026 14:55:24 PAGE    12
+
+CONF_PASS_HANDLE_KEY. . . . . .  C ADDR   0207H   R   SEG=CONFIGURATION
+CONF_PASS_INIT. . . . . . . . .  C ADDR   0224H   R   SEG=CONFIGURATION
+CONF_PASS_MODE. . . . . . . . .  C ADDR   0243H   R   SEG=CONFIGURATION
+CONF_PASS_MODE_CHECK_KEY. . . .  C ADDR   0249H   R   SEG=CONFIGURATION
+CONF_PASS_MODE_SKIP_CONFIRM . .  C ADDR   0261H   R   SEG=CONFIGURATION
+CUR_FLR . . . . . . . . . . . .  N NUMB   0056H   A   
+DEBUG_ON. . . . . . . . . . . .  N NUMB   0067H   A   
+ELEV_ARRIVED. . . . . . . . . .  N NUMB   0022H   A   
+ELEV_CLOSE. . . . . . . . . . .  N NUMB   0023H   A   
+ELEV_DIR. . . . . . . . . . . .  N NUMB   0064H   A   
+ELEV_RUN. . . . . . . . . . . .  N NUMB   0021H   A   
+ELEV_ST . . . . . . . . . . . .  N NUMB   0020H   A   
+ELEV_TARGET . . . . . . . . . .  N NUMB   0058H   A   
+ELEV_TIMER. . . . . . . . . . .  N NUMB   0057H   A   
+EXT_DN_HI . . . . . . . . . . .  N NUMB   0063H   A   
+EXT_DN_LO . . . . . . . . . . .  N NUMB   0062H   A   
+EXT_UP_HI . . . . . . . . . . .  N NUMB   005FH   A   
+EXT_UP_LO . . . . . . . . . . .  N NUMB   005EH   A   
+INPUTTASK_039 . . . . . . . . .  C ADDR   -----       EXT
+INPUTTASK_03B . . . . . . . . .  C ADDR   -----       EXT
+INPUT_MODE. . . . . . . . . . .  N NUMB   0065H   A   
+INT_REQ_HI. . . . . . . . . . .  N NUMB   005DH   A   
+INT_REQ_LO. . . . . . . . . . .  N NUMB   005CH   A   
+LCD_CLEAR . . . . . . . . . . .  C ADDR   -----       EXT
+LCD_INIT. . . . . . . . . . . .  C ADDR   -----       EXT
+LCD_MSG_CONFIG. . . . . . . . .  C ADDR   0031H   R   SEG=CONFIGURATION
+LCD_SHOW_STR. . . . . . . . . .  C ADDR   -----       EXT
+LCD_WR_CMD. . . . . . . . . . .  C ADDR   -----       EXT
+LCD_WR_DAT. . . . . . . . . . .  C ADDR   -----       EXT
+LED6_APPLYTABLE . . . . . . . .  C ADDR   -----       EXT
+ONE_SEC_CNT . . . . . . . . . .  N NUMB   0059H   A   
+OPT1_ST . . . . . . . . . . . .  N NUMB   0011H   A   
+OPT2_ST . . . . . . . . . . . .  N NUMB   0012H   A   
+OPT3_ST . . . . . . . . . . . .  N NUMB   0013H   A   
+OPT_ST. . . . . . . . . . . . .  N NUMB   0001H   A   
+OUT_SEL_VAL . . . . . . . . . .  N NUMB   0066H   A   
+PASSWORD_TABLE. . . . . . . . .  C ADDR   002CH   R   SEG=CONFIGURATION
+PASS_ERROR_DELAY_INNER. . . . .  C ADDR   02A7H   R   SEG=CONFIGURATION
+PASS_ERROR_DELAY_LOOP . . . . .  C ADDR   02A5H   R   SEG=CONFIGURATION
+PASS_ERROR_DELAY_OUTER. . . . .  C ADDR   02A3H   R   SEG=CONFIGURATION
+PASS_ERROR_LOCKED . . . . . . .  C ADDR   02B4H   R   SEG=CONFIGURATION
+PASS_SHOW_ERROR . . . . . . . .  C ADDR   0292H   R   SEG=CONFIGURATION
+PASS_SHOW_SUCCESS . . . . . . .  C ADDR   02BBH   R   SEG=CONFIGURATION
+PASS_ST . . . . . . . . . . . .  N NUMB   0002H   A   
+PASS_VERIFY_FAIL. . . . . . . .  C ADDR   028EH   R   SEG=CONFIGURATION
+PASS_VERIFY_FAIL_CHECK. . . . .  C ADDR   0279H   R   SEG=CONFIGURATION
+PASS_VERIFY_LOOP. . . . . . . .  C ADDR   0269H   R   SEG=CONFIGURATION
+PASS_VERIFY_NEXT. . . . . . . .  C ADDR   0284H   R   SEG=CONFIGURATION
+PASS_VERIFY_PASSWORD. . . . . .  C ADDR   0265H   R   SEG=CONFIGURATION
+RUN_ST. . . . . . . . . . . . .  N NUMB   0000H   A   
+SEG_TABLE . . . . . . . . . . .  C ADDR   0000H   R   SEG=CONFIGURATION
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

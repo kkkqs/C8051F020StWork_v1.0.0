@@ -5,6 +5,7 @@ EXTRN CODE(Timer1_Init)
 EXTRN CODE(Timer0_Init)
 EXTRN CODE(TIMER0_ISR)
 EXTRN CODE(TIMER1_ISR)
+EXTRN CODE(TIMER2_ISR)
 EXTRN CODE(LED6_ApplyTable)
 EXTRN CODE(LED6_Refresh)
 EXTRN CODE(DELAY_MS)
@@ -15,6 +16,8 @@ EXTRN CODE(RunningTask_Handler)
 EXTRN CODE(ConfigurationTask_Init)
 EXTRN CODE(ConfigurationTask_Handler)
 EXTRN CODE(Init_Device)
+EXTRN CODE(Singer_Init)
+EXTRN CODE(Singer_Play)
 ; DebugTask is implemented inline in this file
 	ORG 0000h
 	LJMP MAIN
@@ -24,6 +27,9 @@ EXTRN CODE(Init_Device)
 
 	ORG 001Bh
 	LJMP TIMER1_ISR
+
+	ORG 002Bh
+	LJMP TIMER2_ISR
 
 	ORG 0200h
 MAIN:
@@ -50,7 +56,9 @@ MAIN:
 
 	LCALL Timer1_Init
 	LCALL Timer0_Init
+	LCALL Singer_Init
 	SETB EA                ; Enable Global Interrupts
+;	LCALL Singer_Play
 	; Setup debug flag (default 0). If set to 1, jump to debug task.
 ;	MOV DEBUG_ON, #00h
 ;	MOV A, DEBUG_ON

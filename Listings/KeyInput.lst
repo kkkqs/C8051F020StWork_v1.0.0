@@ -1,0 +1,108 @@
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\KeyInput.obj
+ASSEMBLER INVOKED BY: C:\Keil_v5\C51\BIN\A51.EXE driver\KeyInput.asm NOMOD51 SET(SMALL) DEBUG PRINT(.\Listings\KeyInput.
+                      lst) OBJECT(.\Objects\KeyInput.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     KBI SEGMENT CODE
+----                   2     rseg KBI
+                       3     PUBLIC KeyInput_Process
+                       4     
+                       5     ; 需要调用底层矩阵键扫描接口
+                       6     EXTRN CODE(MatrixKey)
+                       7     
+                       8     ; KeyInput_Process:
+                       9     ;  - 调用 MatrixKey 得到当前键码 (返回在 A)
+                      10     ;  - 对比上一次样本 (存放在 044h)
+                      11     ;  - 使用 045h 做消抖计数 (稳定计数)
+                      12     ;  - 使用 046h 做已确认按键缓存
+                      13     ;  - 使用 047h/048h 与 060h/061h 与原逻辑保持一致（与 Timer0/Timer1 协作）
+                      14     
+0000                  15     KeyInput_Process:
+0000 120000   F       16         LCALL MatrixKey
+0003 B54404           17         CJNE A,044h, KBI_SAMPLE_CHANGED
+0006 0545             18         INC 045h
+0008 8005             19         SJMP KBI_AFTER_STABLE_CHECK
+                      20     
+000A                  21     KBI_SAMPLE_CHANGED:
+000A F544             22         MOV 044h, A
+000C 754501           23         MOV 045h, #01
+                      24     
+000F                  25     KBI_AFTER_STABLE_CHECK:
+000F E545             26         MOV A, 045h
+0011 B40345           27         CJNE A, #03, KBI_RETURN
+0014 E546             28         MOV A, 046h
+0016 B54402           29         CJNE A, 044h, KBI_CONF_CHANGED
+0019 803E             30         SJMP KBI_RETURN
+                      31     
+001B                  32     KBI_CONF_CHANGED:
+001B E544             33         MOV A, 044h
+001D F546             34         MOV 046h, A
+001F E548             35         MOV A, 048h
+0021 B40208           36         CJNE A, #02h, KBI_CONF_CHECK_RELEASE
+0024 754700           37         MOV 047h, #00h
+0027 754800           38         MOV 048h, #00h
+002A 802D             39         SJMP KBI_RETURN
+                      40     
+002C                  41     KBI_CONF_CHECK_RELEASE:
+002C E544             42         MOV A, 044h
+002E B4FF19           43         CJNE A, #0FFh, KBI_CONF_PRESSED
+0031 E547             44         MOV A, 047h
+0033 C3               45         CLR C
+0034 9464             46         SUBB A, #064h
+0036 5002             47         JNC KBI_LONG_PRESS
+0038 8008             48         SJMP KBI_SHORT_PRESS
+                      49     
+003A                  50     KBI_LONG_PRESS:
+003A 754700           51         MOV 047h, #00h
+003D 754800           52         MOV 048h, #00h
+0040 8017             53         SJMP KBI_RETURN
+                      54     
+0042                  55     KBI_SHORT_PRESS:
+0042 754700           56         MOV 047h, #00h
+0045 754800           57         MOV 048h, #00h
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     2
+
+0048 800F             58         SJMP KBI_RETURN
+                      59     
+004A                  60     KBI_CONF_PRESSED:
+004A E544             61         MOV A, 044h
+004C 540F             62         ANL A, #0Fh
+004E F560             63         MOV 060h, A
+0050 756101           64         MOV 061h, #01h
+0053 754700           65         MOV 047h, #00h
+0056 754800           66         MOV 048h, #00h
+                      67     
+0059                  68     KBI_RETURN:
+0059 22               69         RET
+                      70     
+                      71     END
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                 T Y P E  V A L U E   ATTRIBUTES
+
+KBI. . . . . . . . . .  C SEG    005AH       REL=UNIT
+KBI_AFTER_STABLE_CHECK  C ADDR   000FH   R   SEG=KBI
+KBI_CONF_CHANGED . . .  C ADDR   001BH   R   SEG=KBI
+KBI_CONF_CHECK_RELEASE  C ADDR   002CH   R   SEG=KBI
+KBI_CONF_PRESSED . . .  C ADDR   004AH   R   SEG=KBI
+KBI_LONG_PRESS . . . .  C ADDR   003AH   R   SEG=KBI
+KBI_RETURN . . . . . .  C ADDR   0059H   R   SEG=KBI
+KBI_SAMPLE_CHANGED . .  C ADDR   000AH   R   SEG=KBI
+KBI_SHORT_PRESS. . . .  C ADDR   0042H   R   SEG=KBI
+KEYINPUT_PROCESS . . .  C ADDR   0000H   R   SEG=KBI
+MATRIXKEY. . . . . . .  C ADDR   -----       EXT
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
