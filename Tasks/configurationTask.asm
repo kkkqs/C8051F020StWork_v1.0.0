@@ -17,7 +17,7 @@ LCD_MSG_CONFIG:
 
 ; Entry: call ConfigurationTask_Init at startup
 ConfigurationTask_Init:
-    ; 初始化配置参数为空标记 0x10
+    ; 鍒濆鍖栭厤缃弬鏁颁负绌烘爣璁� 0x10
     MOV 050h, #010h
     MOV 051h, #010h
     MOV 052h, #010h
@@ -64,7 +64,7 @@ CONF_MODE:
     SJMP CONF_MODE_KEYS
 
 CONF_MODE_KEYS:
-    ; 如果有按键事件，处理菜单选择 1/2/3/A
+    ; 濡傛灉鏈夋寜閿簨浠讹紝澶勭悊鑿滃崟閫夋嫨 1/2/3/A
     MOV A, 061h
     CJNE A, #00h, CONF_MODE_CHECK_KEY
     RET
@@ -388,7 +388,7 @@ CONF_PASS_MODE_SKIP_CONFIRM:
 ; Implement PASS verify/show routines (moved from main)
 PUBLIC PASS_VERIFY_PASSWORD
 PASS_VERIFY_PASSWORD:
-    ; 验证 5 位密码 (Buffer 029h..02Dh) vs Table 0..4
+    ; 楠岃瘉 5 浣嶅瘑鐮� (Buffer 029h..02Dh) vs Table 0..4
     MOV R0, #01h    ; Buffer Index (start from 029h = 028h + 1)
     MOV R3, #00h    ; Table Index
 
@@ -418,7 +418,7 @@ PASS_VERIFY_NEXT:
     INC R0
     INC R3
     MOV A, R3
-    CJNE A, #05h, PASS_VERIFY_LOOP ; 5位
+    CJNE A, #05h, PASS_VERIFY_LOOP ; 5浣�
     LCALL PASS_SHOW_SUCCESS
     RET
 
@@ -431,7 +431,7 @@ PASS_SHOW_ERROR:
     MOV A, 03Ah
     JZ PASS_ERROR_LOCKED
 
-    ; 显示 FALSEX (TABLE_PASS_ERROR_FALSEX id=08)，最后一位由剩余次数填充
+    ; 鏄剧ず FALSEX (TABLE_PASS_ERROR_FALSEX id=08)锛屾渶鍚庝竴浣嶇敱鍓╀綑娆℃暟濉厖
     MOV A, #08h
     LCALL LED6_ApplyTable
     MOV A, 03Ah
@@ -454,7 +454,7 @@ PASS_ERROR_DELAY_INNER:
     RET
 
 PASS_ERROR_LOCKED:
-    ; 锁定显示（TABLE_PASS_ERROR_LOCKED id=09）
+    ; 閿佸畾鏄剧ず锛圱ABLE_PASS_ERROR_LOCKED id=09锛�
     MOV A, #09h
     LCALL LED6_ApplyTable
     AJMP PASS_ERROR_LOCKED

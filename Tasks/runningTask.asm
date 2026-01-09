@@ -197,7 +197,7 @@ ELEV_CHECK_PARK:
     MOV R6, CUR_FLr
     LCALL FLOOR_TO_INDEX  ; R4 = Current Index
     MOV A, R4
-    CJNE A, #06h, ECP_TEST
+    CJNE A, #05h, ECP_TEST
 ECP_TEST:
     JNC ECP_GO_8          ; If A >= 6 (Floor 5+), Go Floor 8
     
