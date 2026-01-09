@@ -439,9 +439,10 @@ CONF_PASS_MODE_SKIP_CONFIRM:
 ; Implement PASS verify/show routines (moved from main)
 PUBLIC PASS_VERIFY_PASSWORD
 PASS_VERIFY_PASSWORD:
-    ; 楠岃瘉 5 浣嶅瘑鐮� (Buffer 029h..02Dh) vs Table 0..4
-    MOV R0, #01h    ; Buffer Index (start from 029h = 028h + 1)
-    MOV R3, #00h    ; Table Index
+    ; Verify 5 digits (029h..02Dh) vs CURRENT_PASS (RAM)
+    MOV R0, #029h         ; Input Buffer
+    MOV R1, #CURRENT_PASS ; Target RAM
+    MOV R3, #05h          ; Count
 
 PASS_VERIFY_LOOP:
     MOV A, @R0
@@ -450,9 +451,9 @@ PASS_VERIFY_LOOP:
     CJNE A, B, PASS_VERIFY_FAIL
     
     INC R0
-    INC R3
-    MOV A, R3
-    CJNE A, #05h, PASS_VERIFY_LOOP ; 5浣�
+    INC R1
+    DJNZ R3, PASS_VERIFY_LOOP
+
     LCALL PASS_SHOW_SUCCESS
     RET
 
@@ -465,7 +466,7 @@ PASS_SHOW_ERROR:
     MOV A, 03Ah
     JZ PASS_ERROR_LOCKED
 
-    ; 鏄剧ず FALSEX (TABLE_PASS_ERROR_FALSEX id=08)锛屾渶鍚庝竴浣嶇敱鍓╀綑娆℃暟濉厖
+    ; Show FALSEX (TABLE_PASS_ERROR_FALSEX id=08)
     MOV A, #08h
     LCALL LED6_ApplyTable
     MOV A, 03Ah
@@ -492,7 +493,6 @@ PASS_ERROR_DELAY_INNER:
     RET
 
 PASS_ERROR_LOCKED:
-    ; 閿佸畾鏄剧ず锛圱ABLE_PASS_ERROR_LOCKED id=09锛�
     MOV A, #09h
     LCALL LED6_ApplyTable
     AJMP PASS_ERROR_LOCKED
