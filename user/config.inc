@@ -87,6 +87,14 @@ INPUT_MODE     EQU 065h ; 0=Inside, 1=Outside
 OUT_SEL_VAL    EQU 066h ; Temp storage for outside floor selection
 DEBUG_ON       EQU 067h ; Global debug flag: 0=normal, 1=jump to debug task
 
+; New variables for Reset Password feature
+CURRENT_PASS   EQU 068h ; 5 bytes [068h..06Ch] holding current password in RAM
+PASS_NEXT_ST   EQU 06Dh ; State to jump to after PASS_ST success (allows reuse)
+
+; New States
+RESET_CHOICE_ST EQU 03h
+NEW_PASS_ST     EQU 04h
+
 ; Floor to Bit Index mapping:
 ; Floor -2 -> Index 0
 ; Floor -1 -> Index 1

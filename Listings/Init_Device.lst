@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     1
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A5          +1    55     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    56     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
   00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     2
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     2
 
   00A8          +1    58     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    59     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00EB          +1   121     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   122     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
   00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     3
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     3
 
   00EE          +1   124     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   125     RSTSRC   DATA  0EFH   ; RESET SOURCE 
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C3          +1   187     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   188     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
   00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     4
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     4
 
   00C6          +1   190     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   191     ;
@@ -265,83 +265,84 @@ LOC  OBJ            LINE     SOURCE
 0000                 249     Reset_Sources_Init:
 0000 75FFDE          250         mov  WDTCN,     #0DEh
 0003 75FFAD          251         mov  WDTCN,     #0ADh
-0006 22              252         ret
-                     253     
-0007                 254     Timer_Init:
-0007 758911          255         mov  TMOD,      #011h
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     5
+                     252     
+0006 22              253         ret
+                     254     
+0007                 255     Timer_Init:
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     5
 
-000A 22              256         ret
-                     257     
-000B                 258     Oscillator_Init:
-000B 75B207          259         mov  OSCICN,    #007h
-000E 22              260         ret
-                     261     
-                     262     ; Initialization function for device,
-                     263     ; Call Init_Device from your main program
-                     264     
-000F                 265     Port_IO_Init:
-                     266         ; P0.0  -  Unassigned,  Push-Pull,  Digital
-                     267         ; P0.1  -  Unassigned,  Push-Pull,  Digital
-                     268         ; P0.2  -  Unassigned,  Push-Pull,  Digital
-                     269         ; P0.3  -  Unassigned,  Push-Pull,  Digital
-                     270         ; P0.4  -  Unassigned,  Push-Pull,  Digital
-                     271         ; P0.5  -  Unassigned,  Push-Pull,  Digital
-                     272         ; P0.6  -  Unassigned,  Push-Pull,  Digital
-                     273         ; P0.7  -  Unassigned,  Push-Pull,  Digital
-                     274     
-                     275         ; P1.0  -  Unassigned,  Push-Pull,  Digital (Column Output)
-                     276         ; P1.1  -  Unassigned,  Push-Pull,  Digital (Column Output)
-                     277         ; P1.2  -  Unassigned,  Push-Pull,  Digital (Column Output)
-                     278         ; P1.3  -  Unassigned,  Push-Pull,  Digital (Column Output)
-                     279         ; P1.4  -  Unassigned,  Open-Drain, Digital (Row Input)
-                     280         ; P1.5  -  Unassigned,  Open-Drain, Digital (Row Input)
-                     281         ; P1.6  -  Unassigned,  Open-Drain, Digital (Row Input)
-                     282         ; P1.7  -  Unassigned,  Open-Drain, Digital (Row Input)
-                     283     
-                     284         ; P2.0  -  Unassigned,  Push-Pull,  Digital
-                     285         ; P2.1  -  Unassigned,  Push-Pull,  Digital
-                     286         ; P2.2  -  Unassigned,  Push-Pull,  Digital
-                     287         ; P2.3  -  Unassigned,  Push-Pull,  Digital
-                     288         ; P2.4  -  Unassigned,  Push-Pull,  Digital
-                     289         ; P2.5  -  Unassigned,  Push-Pull,  Digital
-                     290         ; P2.6  -  Unassigned,  Push-Pull,  Digital
-                     291         ; P2.7  -  Unassigned,  Push-Pull,  Digital
-                     292     
-                     293         ; P3.0  -  Unassigned,  Push-Pull,  Digital
-                     294         ; P3.1  -  Unassigned,  Push-Pull,  Digital
-                     295         ; P3.2  -  Unassigned,  Push-Pull,  Digital
-                     296         ; P3.3  -  Unassigned,  Push-Pull,  Digital
-                     297         ; P3.4  -  Unassigned,  Push-Pull,  Digital
-                     298         ; P3.5  -  Unassigned,  Push-Pull,  Digital
-                     299         ; P3.6  -  Unassigned,  Push-Pull,  Digital
-                     300         ; P3.7  -  Unassigned,  Push-Pull,  Digital
-                     301     
-000F 75A4FF          302         mov  P0MDOUT,   #0FFh
-0012 75A50F          303         mov  P1MDOUT,   #00Fh  ; P1.3-P1.0 Push-Pull (Column), P1.7-P1.4 Open-Drain (Row Input)
-0015 75A6FF          304         mov  P2MDOUT,   #0FFh
-0018 75A7FF          305         mov  P3MDOUT,   #0FFh
-001B 75B5FF          306             mov  P74OUT,    #0FFh
-001E 75E340          307         mov  XBR2,      #040h
-                     308         
-                     309         ; Configure External Memory Interface to release P2/P3 for GPIO
-0021 75A300          310         mov  EMI0CF,    #000h  ; Disable EMIF, P2/P3 available as GPIO
-0024 22              311         ret
-                     312     
-                     313     ; Initialization function for device,
-                     314     ; Call Init_Device from your main program
-                     315     
-0025                 316     Init_Device:
-0025 120000   F      317         lcall Reset_Sources_Init
-0028 120000   F      318             lcall Port_IO_Init
-002B 120000   F      319         lcall Timer_Init
-002E 120000   F      320         lcall Oscillator_Init
-0031 22              321         ret
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     6
+0007 758911          256         mov  TMOD,      #011h
+000A 22              257         ret
+                     258     
+000B                 259     Oscillator_Init:
+000B 75B207          260         mov  OSCICN,    #007h
+000E 22              261         ret
+                     262     
+                     263     ; Initialization function for device,
+                     264     ; Call Init_Device from your main program
+                     265     
+000F                 266     Port_IO_Init:
+                     267         ; P0.0  -  Unassigned,  Push-Pull,  Digital
+                     268         ; P0.1  -  Unassigned,  Push-Pull,  Digital
+                     269         ; P0.2  -  Unassigned,  Push-Pull,  Digital
+                     270         ; P0.3  -  Unassigned,  Push-Pull,  Digital
+                     271         ; P0.4  -  Unassigned,  Push-Pull,  Digital
+                     272         ; P0.5  -  Unassigned,  Push-Pull,  Digital
+                     273         ; P0.6  -  Unassigned,  Push-Pull,  Digital
+                     274         ; P0.7  -  Unassigned,  Push-Pull,  Digital
+                     275     
+                     276         ; P1.0  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     277         ; P1.1  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     278         ; P1.2  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     279         ; P1.3  -  Unassigned,  Push-Pull,  Digital (Column Output)
+                     280         ; P1.4  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     281         ; P1.5  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     282         ; P1.6  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     283         ; P1.7  -  Unassigned,  Open-Drain, Digital (Row Input)
+                     284     
+                     285         ; P2.0  -  Unassigned,  Push-Pull,  Digital
+                     286         ; P2.1  -  Unassigned,  Push-Pull,  Digital
+                     287         ; P2.2  -  Unassigned,  Push-Pull,  Digital
+                     288         ; P2.3  -  Unassigned,  Push-Pull,  Digital
+                     289         ; P2.4  -  Unassigned,  Push-Pull,  Digital
+                     290         ; P2.5  -  Unassigned,  Push-Pull,  Digital
+                     291         ; P2.6  -  Unassigned,  Push-Pull,  Digital
+                     292         ; P2.7  -  Unassigned,  Push-Pull,  Digital
+                     293     
+                     294         ; P3.0  -  Unassigned,  Push-Pull,  Digital
+                     295         ; P3.1  -  Unassigned,  Push-Pull,  Digital
+                     296         ; P3.2  -  Unassigned,  Push-Pull,  Digital
+                     297         ; P3.3  -  Unassigned,  Push-Pull,  Digital
+                     298         ; P3.4  -  Unassigned,  Push-Pull,  Digital
+                     299         ; P3.5  -  Unassigned,  Push-Pull,  Digital
+                     300         ; P3.6  -  Unassigned,  Push-Pull,  Digital
+                     301         ; P3.7  -  Unassigned,  Push-Pull,  Digital
+                     302     
+000F 75A4FF          303         mov  P0MDOUT,   #0FFh
+0012 75A50F          304         mov  P1MDOUT,   #00Fh  ; P1.3-P1.0 Push-Pull (Column), P1.7-P1.4 Open-Drain (Row Input)
+0015 75A6FF          305         mov  P2MDOUT,   #0FFh
+0018 75A7FF          306         mov  P3MDOUT,   #0FFh
+001B 75B5FF          307             mov  P74OUT,    #0FFh
+001E 75E340          308         mov  XBR2,      #040h
+                     309         
+                     310         ; Configure External Memory Interface to release P2/P3 for GPIO
+0021 75A300          311         mov  EMI0CF,    #000h  ; Disable EMIF, P2/P3 available as GPIO
+0024 22              312         ret
+                     313     
+                     314     ; Initialization function for device,
+                     315     ; Call Init_Device from your main program
+                     316     
+0025                 317     Init_Device:
+0025 120000   F      318         lcall Reset_Sources_Init
+0028 120000   F      319             lcall Port_IO_Init
+002B 120000   F      320         lcall Timer_Init
+002E 120000   F      321         lcall Oscillator_Init
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     6
 
-                     322     
-                     323     end
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     7
+0031 22              322         ret
+                     323     
+                     324     end
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -409,7 +410,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     8
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     8
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -477,7 +478,7 @@ PT0. . . . . . . .  B ADDR   00B8H.1 A
 PT1. . . . . . . .  B ADDR   00B8H.3 A   
 PT2. . . . . . . .  B ADDR   00B8H.5 A   
 PX0. . . . . . . .  B ADDR   00B8H.0 A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE     9
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     9
 
 PX1. . . . . . . .  B ADDR   00B8H.2 A   
 RB8. . . . . . . .  B ADDR   0098H.2 A   
@@ -545,7 +546,7 @@ TMOD . . . . . . .  D ADDR   0089H   A
 TMR3CN . . . . . .  D ADDR   0091H   A   
 TMR3H. . . . . . .  D ADDR   0095H   A   
 TMR3L. . . . . . .  D ADDR   0094H   A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 14:55:23 PAGE    10
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE    10
 
 TMR3RLH. . . . . .  D ADDR   0093H   A   
 TMR3RLL. . . . . .  D ADDR   0092H   A   

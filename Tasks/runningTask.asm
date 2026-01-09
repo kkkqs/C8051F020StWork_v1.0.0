@@ -78,6 +78,7 @@ RT_HANDLE_KEY:
     MOV A, 060h
     CJNE A, #08Ah, RT_HANDLE_OTHER
     MOV 070h, #PASS_ST
+    MOV PASS_NEXT_ST, #OPT_ST
     MOV 061h, #00h
     SJMP RT_MODE
 
@@ -595,8 +596,19 @@ SOS_NONE:
 
 CHECK_AND_SET_REQUEST:
     MOV A, 061h
-    JZ CASR_RET
+    JNZ CASR_HAS_KEY
+    RET
+
+CASR_HAS_KEY:
+    ; Check Long Press A (08Ah)
     MOV A, 060h
+    CJNE A, #08Ah, CASR_NORMAL
+    MOV 070h, #PASS_ST
+    MOV PASS_NEXT_ST, #RESET_CHOICE_ST
+    MOV 061h, #00h
+    RET
+
+CASR_NORMAL:
     ANL A, #0Fh
     MOV R7, A
     

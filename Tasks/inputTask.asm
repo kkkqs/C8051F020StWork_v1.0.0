@@ -118,6 +118,7 @@ InputTask_039:
     RET
 L2_RETURN_CONFIRM:
     ; not PASS state: return confirm to caller (do not clear 061h here)
+    MOV A, #0Ah  ; Restore A = key code (0Ah)
     POP B
     RET
 
