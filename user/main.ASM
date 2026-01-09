@@ -38,6 +38,10 @@ MAIN:
 	MOV P0, #0FFh
 	MOV P2, #00h
 
+    ; Initialize Stack Pointer to prevent overflow into variables/display buffer
+    ; Variables end around 071h. Set SP to start at 080h.
+    MOV SP, #080h
+
 	; 初始化显示缓冲 (6位) => 使用 LED6 表 00 (DISPLAY_INIT_BLANK)
 	MOV A, #00h
 	LCALL LED6_ApplyTable
@@ -67,6 +71,9 @@ MAIN:
 SKIP_DEBUG:
 	LCALL RunningTask_Init
 	LCALL ConfigurationTask_Init
+
+    ; Init PASS_NEXT_ST to OPT_ST (Default behavior)
+    MOV PASS_NEXT_ST, #OPT_ST
 
 ; -----------------------------
 ; Inline debug task
@@ -134,9 +141,17 @@ CHECK_OPT3:
 	LCALL ConfigurationTask_Handler
 	AJMP LOOP
 CHECK_PASS:
-	CJNE A,#PASS_ST, SKIP_PASS
+	CJNE A,#PASS_ST, CHECK_RESET_CHOICE
 	LCALL ConfigurationTask_Handler
 	AJMP LOOP
+CHECK_RESET_CHOICE:
+    CJNE A, #RESET_CHOICE_ST, CHECK_NEW_PASS_ST
+    LCALL ConfigurationTask_Handler
+    AJMP LOOP
+CHECK_NEW_PASS_ST:
+    CJNE A, #NEW_PASS_ST, SKIP_PASS
+    LCALL ConfigurationTask_Handler
+    AJMP LOOP
 SKIP_PASS:
 	AJMP LOOP
 

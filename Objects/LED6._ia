@@ -1,0 +1,1 @@
+"driver\LED6.asm" NOMOD51 SET (SMALL) DEBUG PRINT(.\Listings\LED6.lst) OBJECT(.\Objects\LED6.obj) EP

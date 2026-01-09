@@ -100,6 +100,7 @@ LBL_DEFAULT:
     MOV DPTR, #TABLE_DISPLAY_INIT_BLANK
 
 LBL_COPY:
+    CLR EA           ; Disable Interrupts to protect R0 and Buffer
     MOV R0, #028h    ; 指向 028h (Leftmost)
     MOV R3, #00h
 LBL_LOOP:
@@ -110,6 +111,7 @@ LBL_LOOP:
     INC R3
     MOV A, R3
     CJNE A, #06, LBL_LOOP
+    SETB EA          ; Restore Interrupts
 
     POP DPH
     POP DPL

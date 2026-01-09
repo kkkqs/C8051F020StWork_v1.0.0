@@ -1,0 +1,1 @@
+"Tasks\inputTask.asm" NOMOD51 SET (SMALL) DEBUG PRINT(.\Listings\inputTask.lst) OBJECT(.\Objects\inputTask.obj) EP

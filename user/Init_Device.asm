@@ -14,6 +14,7 @@ INIT SEGMENT CODE
 Reset_Sources_Init:
     mov  WDTCN,     #0DEh
     mov  WDTCN,     #0ADh
+
     ret
 
 Timer_Init:

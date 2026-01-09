@@ -1,0 +1,1 @@
+"Tasks\configurationTask.asm" NOMOD51 SET (SMALL) DEBUG PRINT(.\Listings\configurationTask.lst) OBJECT(.\Objects\configurationTask.obj) EP
