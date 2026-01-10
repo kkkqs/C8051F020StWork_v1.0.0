@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     1
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A7          +1    55     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    56     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    57     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     2
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     2
 
   00AA          +1    58     ADC1CN  DATA  0AAH   ; ADC 1 CONTROL
   00AB          +1    59     ADC1CF   DATA  0ABH   ; ADC 1 ANALOG MUX CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00ED          +1   121     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   122     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   123     RSTSRC   DATA  0EFH   ; RESET SOURCE 
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     3
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     3
 
   00F0          +1   124     B        DATA  0F0H   ; B REGISTER
   00F1          +1   125     SCON1    DATA  0F1H   ; SERIAL PORT 1 CONTROL
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C5          +1   187     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   188     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   189     ;
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     4
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     4
 
                 +1   190     ; T2CON C8H
   00C8          +1   191     CPRL2    BIT   T2CON.0 ; CAPTURE OR RELOAD SELECT
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
 000D C0F0            253         PUSH B
                      254     
 000F 758CCC          255         MOV TH0, #0CCh
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     5
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     5
 
 0012 758A2B          256         MOV TL0, #02Bh
                      257     
@@ -337,7 +337,7 @@ LOC  OBJ            LINE     SOURCE
 0078 04              319         INC A
 0079 B4000F          320         CJNE A, #00h, T0_UPD_FLR
 007C 7401            321         MOV A, #01h ; Skip 0
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     6
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     6
 
 007E 800B            322         SJMP T0_UPD_FLR
                      323         
@@ -394,7 +394,7 @@ LOC  OBJ            LINE     SOURCE
 00D0 32              373         RETI
                      374     
                      375     END
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     7
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -462,7 +462,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     8
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     8
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -530,7 +530,7 @@ PX1. . . . . . . .  B ADDR   00B8H.2 A
 RB8. . . . . . . .  B ADDR   0098H.2 A   
 RCAP2H . . . . . .  D ADDR   00CBH   A   
 RCAP2L . . . . . .  D ADDR   00CAH   A   
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE     9
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE     9
 
 RCAP4H . . . . . .  D ADDR   00E5H   A   
 RCAP4L . . . . . .  D ADDR   00E4H   A   
@@ -598,7 +598,7 @@ TH0. . . . . . . .  D ADDR   008CH   A
 TH1. . . . . . . .  D ADDR   008DH   A   
 TH2. . . . . . . .  D ADDR   00CDH   A   
 TH4. . . . . . . .  D ADDR   00F5H   A   
-A51 MACRO ASSEMBLER  TIMER0                                                               01/09/2026 14:55:24 PAGE    10
+A51 MACRO ASSEMBLER  TIMER0                                                               01/10/2026 04:18:22 PAGE    10
 
 TI . . . . . . . .  B ADDR   0098H.1 A   
 TIMER0_INIT. . . .  C ADDR   0000H   R   SEG=TMR0

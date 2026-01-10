@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     1
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A7          +1    55     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    56     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    57     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     2
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     2
 
   00AA          +1    58     ADC1CN  DATA  0AAH   ; ADC 1 CONTROL
   00AB          +1    59     ADC1CF   DATA  0ABH   ; ADC 1 ANALOG MUX CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00ED          +1   121     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   122     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   123     RSTSRC   DATA  0EFH   ; RESET SOURCE 
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     3
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     3
 
   00F0          +1   124     B        DATA  0F0H   ; B REGISTER
   00F1          +1   125     SCON1    DATA  0F1H   ; SERIAL PORT 1 CONTROL
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C5          +1   187     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   188     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   189     ;
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     4
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     4
 
                 +1   190     ; T2CON C8H
   00C8          +1   191     CPRL2    BIT   T2CON.0 ; CAPTURE OR RELOAD SELECT
@@ -253,377 +253,338 @@ LOC  OBJ            LINE     SOURCE
   00FF          +1   237     SPIF     BIT   SPI0CN.7 ; SPI 0 INTERRUPT FLAG
                      238     
                      239     
-                     240     ;-----------------------------------------------------------------------------
-                     241     ; External Dependencies
-                     242     ;-----------------------------------------------------------------------------
-                     243     EXTRN CODE(Buzzer_Init)
-                     244     EXTRN CODE(Buzzer_Start)
-                     245     EXTRN CODE(Buzzer_Stop)
-                     246     EXTRN CODE(Buzzer_Set_Frequency)
-                     247     EXTRN CODE(DELAY_MS)
+                     240     EXTRN CODE(Buzzer_Init)
+                     241     EXTRN CODE(Buzzer_Start)
+                     242     EXTRN CODE(Buzzer_Stop)
+                     243     EXTRN CODE(Buzzer_Set_Frequency)
+                     244     EXTRN CODE(DELAY_MS)
+                     245     PUBLIC Singer_Init
+                     246     PUBLIC Singer_Play
+                     247     PUBLIC Singer_PlayNote ; Add new public function
                      248     
-                     249     ;-----------------------------------------------------------------------------
-                     250     ; Public Interface
-                     251     ;-----------------------------------------------------------------------------
-                     252     PUBLIC Singer_Init
-                     253     PUBLIC Singer_Play
-                     254     PUBLIC Singer_PlayNote ; Add new public function
-                     255     
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     5
+0000                 249     Singer_Init:
+0000 120000   F      250         LCALL Buzzer_Init
+0003 22              251         RET
+                     252     
+0004                 253     Singer_PlayNote:
+0004 C0E0            254         PUSH Acc
+0006 C0D0            255         PUSH PSW
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     5
 
-                     256     ;-----------------------------------------------------------------------------
-                     257     ; Singer_Init
-                     258     ;-----------------------------------------------------------------------------
-0000                 259     Singer_Init:
-0000 120000   F      260         LCALL Buzzer_Init
-0003 22              261         RET
-                     262     
-                     263     ;-----------------------------------------------------------------------------
-                     264     ; Singer_PlayNote
-                     265     ;-----------------------------------------------------------------------------
-                     266     ; Description: Plays a single note based on Floor/Number input.
-                     267     ; Input: R7 = Floor Number (signed byte)
-                     268     ;        -2 -> L6, -1 -> L7, 0..7 -> M1..M7, 8 -> H1
-                     269     ;        Uses F-Major scale as defined in table.
-                     270     ;-----------------------------------------------------------------------------
-0004                 271     Singer_PlayNote:
-0004 C0E0            272         PUSH Acc
-0006 C0D0            273         PUSH PSW
+                     256         
+0008 EF              257         MOV A, R7
+0009 B4FE04          258         CJNE A, #0FEh, SPN_CHECK_NM1
+                     259         ; -2
+000C 7A0A            260         MOV R2, #10
+000E 800F            261         SJMP SPN_PLAY
+                     262         
+0010                 263     SPN_CHECK_NM1:
+0010 B4FF04          264         CJNE A, #0FFh, SPN_CHECK_POS
+                     265         ; -1
+0013 7A0B            266         MOV R2, #11
+0015 8008            267         SJMP SPN_PLAY
+                     268         
+0017                 269     SPN_CHECK_POS:
+                     270         ; Check if > 8 (should not happen, but clamp)
+0017 B40900          271         CJNE A, #09h, SPN_LE8
+001A                 272     SPN_LE8:
+001A 502B            273         JNC SPN_RET ; >= 9, ignore
                      274         
-                     275         ; Map Floor to Table Index
-                     276         ; Floor -2 (FEh) -> Index 10 (L6)
-                     277         ; Floor -1 (FFh) -> Index 11 (L7)
-                     278         ; Floor 1  (01h) -> Index 1  (M1)
-                     279         ; ...
-                     280         ; Floor 7  (07h) -> Index 7  (M7)
-                     281         ; Floor 8  (08h) -> Index 8  (H1)
-                     282         
-0008 EF              283         MOV A, R7
-0009 B4FE04          284         CJNE A, #0FEh, SPN_CHECK_NM1
-                     285         ; -2
-000C 7A0A            286         MOV R2, #10
-000E 800F            287         SJMP SPN_PLAY
-                     288         
-0010                 289     SPN_CHECK_NM1:
-0010 B4FF04          290         CJNE A, #0FFh, SPN_CHECK_POS
-                     291         ; -1
-0013 7A0B            292         MOV R2, #11
-0015 8008            293         SJMP SPN_PLAY
-                     294         
-0017                 295     SPN_CHECK_POS:
-                     296         ; Check if > 8 (should not happen, but clamp)
-0017 B40900          297         CJNE A, #09h, SPN_LE8
-001A                 298     SPN_LE8:
-001A 502B            299         JNC SPN_RET ; >= 9, ignore
-                     300         
-                     301         ; Check if < 1 (0 is not a floor in this system, maybe?)
-001C 6029            302         JZ SPN_RET  ; 0, ignore
-                     303         
-                     304         ; 1..8 -> Index = Floor
-001E FA              305         MOV R2, A
-                     306         
-001F                 307     SPN_PLAY:
-                     308         ; Calculate Offset: (Index - 1) * 2
-001F EA              309         MOV A, R2
-0020 14              310         DEC A
-0021 23              311         RL A
-0022 FD              312         MOV R5, A     ; Offset
-                     313         
-                     314         ; Get Reload Value
-0023 C083            315         PUSH DPH
-0025 C082            316         PUSH DPL
-0027 900000   F      317         MOV DPTR, #NOTE_RELOAD_TABLE
-                     318         
-                     319         ; Read High Byte
-002A 93              320         MOVC A, @A+DPTR
-002B FE              321         MOV R6, A
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     6
+                     275         ; Check if < 1 (0 is not a floor in this system, maybe?)
+001C 6029            276         JZ SPN_RET  ; 0, ignore
+                     277         
+                     278         ; 1..8 -> Index = Floor
+001E FA              279         MOV R2, A
+                     280         
+001F                 281     SPN_PLAY:
+                     282         ; Calculate Offset: (Index - 1) * 2
+001F EA              283         MOV A, R2
+0020 14              284         DEC A
+0021 23              285         RL A
+0022 FD              286         MOV R5, A     ; Offset
+                     287         
+                     288         ; Get Reload Value
+0023 C083            289         PUSH DPH
+0025 C082            290         PUSH DPL
+0027 900000   F      291         MOV DPTR, #NOTE_RELOAD_TABLE
+                     292         
+                     293         ; Read High Byte
+002A 93              294         MOVC A, @A+DPTR
+002B FE              295         MOV R6, A
+                     296         
+                     297         ; Read Low Byte
+002C ED              298         MOV A, R5
+002D 04              299         INC A
+002E 93              300         MOVC A, @A+DPTR
+002F FF              301         MOV R7, A
+                     302         
+0030 D082            303         POP DPL
+0032 D083            304         POP DPH
+                     305         
+                     306         ; Play Note for short duration (e.g. 500ms)
+0034 120000   F      307         LCALL Buzzer_Set_Frequency
+0037 120000   F      308         LCALL Buzzer_Start
+                     309         
+003A 7CFA            310         MOV R4, #250
+003C 120000   F      311         LCALL DELAY_MS
+003F 7CFA            312         MOV R4, #250
+0041 120000   F      313         LCALL DELAY_MS
+                     314         
+0044 120000   F      315         LCALL Buzzer_Stop
+                     316         
+0047                 317     SPN_RET:
+0047 D0D0            318         POP PSW
+0049 D0E0            319         POP Acc
+004B 22              320         RET
+                     321     
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     6
 
-                     322         
-                     323         ; Read Low Byte
-002C ED              324         MOV A, R5
-002D 04              325         INC A
-002E 93              326         MOVC A, @A+DPTR
-002F FF              327         MOV R7, A
-                     328         
-0030 D082            329         POP DPL
-0032 D083            330         POP DPH
-                     331         
-                     332         ; Play Note for short duration (e.g. 500ms)
-0034 120000   F      333         LCALL Buzzer_Set_Frequency
-0037 120000   F      334         LCALL Buzzer_Start
-                     335         
-003A 7CFA            336         MOV R4, #250
-003C 120000   F      337         LCALL DELAY_MS
-003F 7CFA            338         MOV R4, #250
-0041 120000   F      339         LCALL DELAY_MS
-                     340         
-0044 120000   F      341         LCALL Buzzer_Stop
-                     342         
-0047                 343     SPN_RET:
-0047 D0D0            344         POP PSW
-0049 D0E0            345         POP Acc
-004B 22              346         RET
-                     347     
-                     348     ;-----------------------------------------------------------------------------
-                     349     ; Singer_Play
-                     350     ;-----------------------------------------------------------------------------
-                     351     ; Description: Plays "Da Dong Bei Wo De Jia Xiang" (Great Northeast My Hometown)
-                     352     ;-----------------------------------------------------------------------------
-004C                 353     Singer_Play:
-004C C083            354         PUSH DPH
-004E C082            355         PUSH DPL
-                     356         
-0050 900000   F      357         MOV DPTR, #SONG_TABLE
-                     358         
-0053                 359     SINGER_LOOP:
-                     360         ; Read Note Index
-0053 E4              361         CLR A
-0054 93              362         MOVC A, @A+DPTR
-0055 FA              363         MOV R2, A          ; R2 = Note Index
-                     364         
-                     365         ; Check for terminator
-0056 BAFF02          366         CJNE R2, #0FFh, READ_DURATION
-0059 8045            367         SJMP SINGER_DONE
-                     368     
-005B                 369     READ_DURATION:
-005B A3              370         INC DPTR
-005C E4              371         CLR A
-005D 93              372         MOVC A, @A+DPTR
-005E FB              373         MOV R3, A          ; R3 = Duration units
-005F A3              374         INC DPTR           ; Advance to next note pair
-                     375         
-                     376         ; Save Song Pointer (DPTR) because we need DPTR for Note Table
-0060 C083            377         PUSH DPH
-0062 C082            378         PUSH DPL
-                     379         
-                     380         ; Check if Rest (0)
-0064 EA              381         MOV A, R2
-0065 6014            382         JZ PLAY_NOTE_REST
-                     383         
-                     384         ; Calculate Offset: (NoteIndex - 1) * 2
-0067 14              385         DEC A              ; 1-based to 0-based
-0068 23              386         RL A               ; A = A * 2
-0069 FD              387         MOV R5, A          ; Save offset
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     7
+004C                 322     Singer_Play:
+004C C083            323         PUSH DPH
+004E C082            324         PUSH DPL
+                     325         
+0050 900000   F      326         MOV DPTR, #SONG_TABLE
+                     327         
+0053                 328     SINGER_LOOP:
+                     329         ; Read Note Index
+0053 E4              330         CLR A
+0054 93              331         MOVC A, @A+DPTR
+0055 FA              332         MOV R2, A          ; R2 = Note Index
+                     333         
+                     334         ; Check for terminator
+0056 BAFF02          335         CJNE R2, #0FFh, READ_DURATION
+0059 8045            336         SJMP SINGER_DONE
+                     337     
+005B                 338     READ_DURATION:
+005B A3              339         INC DPTR
+005C E4              340         CLR A
+005D 93              341         MOVC A, @A+DPTR
+005E FB              342         MOV R3, A          ; R3 = Duration units
+005F A3              343         INC DPTR           ; Advance to next note pair
+                     344         
+                     345         ; Save Song Pointer (DPTR) because we need DPTR for Note Table
+0060 C083            346         PUSH DPH
+0062 C082            347         PUSH DPL
+                     348         
+                     349         ; Check if Rest (0)
+0064 EA              350         MOV A, R2
+0065 6014            351         JZ PLAY_NOTE_REST
+                     352         
+                     353         ; Calculate Offset: (NoteIndex - 1) * 2
+0067 14              354         DEC A              ; 1-based to 0-based
+0068 23              355         RL A               ; A = A * 2
+0069 FD              356         MOV R5, A          ; Save offset
+                     357         
+006A 900000   F      358         MOV DPTR, #NOTE_RELOAD_TABLE
+                     359         
+                     360         ; Read High Byte
+006D 93              361         MOVC A, @A+DPTR
+006E FE              362         MOV R6, A
+                     363         
+                     364         ; Read Low Byte
+006F ED              365         MOV A, R5
+0070 04              366         INC A
+0071 93              367         MOVC A, @A+DPTR
+0072 FF              368         MOV R7, A
+                     369         
+                     370         ; Set Frequency and Start Buzzer
+0073 120000   F      371         LCALL Buzzer_Set_Frequency
+0076 120000   F      372         LCALL Buzzer_Start
+0079 8003            373         SJMP WAIT_DURATION
+                     374     
+007B                 375     PLAY_NOTE_REST:
+007B 120000   F      376         LCALL Buzzer_Stop
+                     377     
+007E                 378     WAIT_DURATION:
+                     379         ; Wait loop based on R3 (Duration units)
+                     380         ; Unit = 16th note approx 120ms
+                     381         ; Tempo: ~128 BPM
+007E EB              382         MOV A, R3
+007F 6019            383         JZ NO_WAIT 
+                     384     
+0081                 385     WAIT_LOOP:
+0081 C0E0            386         PUSH Acc
+0083 7C0F            387         MOV R4, #15     ; Adjusted: 15ms * 2 = 30ms per unit
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     7
 
-                     388         
-006A 900000   F      389         MOV DPTR, #NOTE_RELOAD_TABLE
-                     390         
-                     391         ; Read High Byte
-006D 93              392         MOVC A, @A+DPTR
-006E FE              393         MOV R6, A
+0085 120000   F      388         LCALL DELAY_MS
+0088 7C0F            389         MOV R4, #15     
+008A 120000   F      390         LCALL DELAY_MS
+008D D0E0            391         POP Acc
+008F 14              392         DEC A
+0090 70EF            393         JNZ WAIT_LOOP
                      394         
-                     395         ; Read Low Byte
-006F ED              396         MOV A, R5
-0070 04              397         INC A
-0071 93              398         MOVC A, @A+DPTR
-0072 FF              399         MOV R7, A
-                     400         
-                     401         ; Set Frequency and Start Buzzer
-0073 120000   F      402         LCALL Buzzer_Set_Frequency
-0076 120000   F      403         LCALL Buzzer_Start
-0079 8003            404         SJMP WAIT_DURATION
-                     405     
-007B                 406     PLAY_NOTE_REST:
-007B 120000   F      407         LCALL Buzzer_Stop
-                     408     
-007E                 409     WAIT_DURATION:
-                     410         ; Wait loop based on R3 (Duration units)
-                     411         ; Unit = 16th note approx 120ms
-                     412         ; Tempo: ~128 BPM
-007E EB              413         MOV A, R3
-007F 6019            414         JZ NO_WAIT 
-                     415     
-0081                 416     WAIT_LOOP:
-0081 C0E0            417         PUSH Acc
-0083 7C0F            418         MOV R4, #15     ; Adjusted: 15ms * 2 = 30ms per unit
-0085 120000   F      419         LCALL DELAY_MS
-0088 7C0F            420         MOV R4, #15     
-008A 120000   F      421         LCALL DELAY_MS
-008D D0E0            422         POP Acc
-008F 14              423         DEC A
-0090 70EF            424         JNZ WAIT_LOOP
-                     425         
-                     426         ; Articulation Gap (Staccato)
-0092 120000   F      427         LCALL Buzzer_Stop
-0095 7C0A            428         MOV R4, #10     ; 10ms silence
-0097 120000   F      429         LCALL DELAY_MS
-                     430         
-009A                 431     NO_WAIT:
-                     432         ; Restore Song Pointer
-009A D082            433         POP DPL
-009C D083            434         POP DPH
-                     435         
-009E 80B3            436         SJMP SINGER_LOOP
-                     437     
-00A0                 438     SINGER_DONE:
-00A0 D082            439         POP DPL
-00A2 D083            440         POP DPH
-00A4 120000   F      441         LCALL Buzzer_Stop
-00A7 22              442         RET
-                     443     
-                     444     ;-----------------------------------------------------------------------------
-                     445     ; Tables
-                     446     ;-----------------------------------------------------------------------------
-                     447     ; Timer 2 Reload Values for SYSCLK = 22.1184 MHz
-                     448     ; Formula: Reload = 65536 - (921600 / Frequency)
-                     449     ; Key: F Major (1=F). Root (1) = F5 (698Hz) to transpose UP from C5.
-                     450     
-00A8                 451     NOTE_RELOAD_TABLE:
-00A8 FAD8            452         DB 0FAh, 0D8h ; 1: M1 (F5) 698Hz
-00AA FB69            453         DB 0FBh, 069h ; 2: M2 (G5) 784Hz
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     8
-
-00AC FBE9            454         DB 0FBh, 0E9h ; 3: M3 (A5) 880Hz
-00AE FC24            455         DB 0FCh, 024h ; 4: M4 (Bb5) 932Hz
-00B0 FC8F            456         DB 0FCh, 08Fh ; 5: M5 (C6) 1046Hz
-00B2 FCF0            457         DB 0FCh, 0F0h ; 6: M6 (D6) 1175Hz
-00B4 FD45            458         DB 0FDh, 045h ; 7: M7 (E6) 1318Hz
-00B6 FD6D            459         DB 0FDh, 06Dh ; 8: H1 (F6) 1397Hz
-00B8 F91E            460         DB 0F9h, 01Eh ; 9: L5 (C5) 523Hz
-00BA F9DE            461         DB 0F9h, 0DEh ; 10: L6 (D5) 587Hz
-00BC FA8A            462         DB 0FAh, 08Ah ; 11: L7 (E5) 659Hz
-00BE FDB5            463         DB 0FDh, 0B5h ; 12: H2 (G6) 1568Hz
-00C0 FDF5            464         DB 0FDh, 0F5h ; 13: H3 (A6) 1760Hz
-00C2 F6D1            465         DB 0F6h, 0D1h ; 14: L2 (G4) 392Hz
-00C4 F7D1            466         DB 0F7h, 0D1h ; 15: L3 (A4) 440Hz
-                     467     
-                     468     ; Song: "Da Dong Bei Wo De Jia Xiang" (Intro / First Half)
-                     469     ; Unit: 1 = 16th note (approx 20+10ms ~ 30ms base)
-                     470     ; Quarter note = 4 units
-00C6                 471     SONG_TABLE:
-                     472         ; Line 1, Bar 1
-                     473         ; 6(e) 6(e) 6.(e.) 5(s) 6(e) 3(e) 5(q)
-00C6 06020602        474         DB 6, 2,  6, 2,  6, 3,  5, 1,  6, 2,  3, 2,  5, 4
+                     395         ; Articulation Gap (Staccato)
+0092 120000   F      396         LCALL Buzzer_Stop
+0095 7C0A            397         MOV R4, #10     ; 10ms silence
+0097 120000   F      398         LCALL DELAY_MS
+                     399         
+009A                 400     NO_WAIT:
+                     401         ; Restore Song Pointer
+009A D082            402         POP DPL
+009C D083            403         POP DPH
+                     404         
+009E 80B3            405         SJMP SINGER_LOOP
+                     406     
+00A0                 407     SINGER_DONE:
+00A0 D082            408         POP DPL
+00A2 D083            409         POP DPH
+00A4 120000   F      410         LCALL Buzzer_Stop
+00A7 22              411         RET
+                     412     
+                     413     
+00A8                 414     NOTE_RELOAD_TABLE:
+00A8 FAD8            415         DB 0FAh, 0D8h ; 1: M1 (F5) 698Hz
+00AA FB69            416         DB 0FBh, 069h ; 2: M2 (G5) 784Hz
+00AC FBE9            417         DB 0FBh, 0E9h ; 3: M3 (A5) 880Hz
+00AE FC24            418         DB 0FCh, 024h ; 4: M4 (Bb5) 932Hz
+00B0 FC8F            419         DB 0FCh, 08Fh ; 5: M5 (C6) 1046Hz
+00B2 FCF0            420         DB 0FCh, 0F0h ; 6: M6 (D6) 1175Hz
+00B4 FD45            421         DB 0FDh, 045h ; 7: M7 (E6) 1318Hz
+00B6 FD6D            422         DB 0FDh, 06Dh ; 8: H1 (F6) 1397Hz
+00B8 F91E            423         DB 0F9h, 01Eh ; 9: L5 (C5) 523Hz
+00BA F9DE            424         DB 0F9h, 0DEh ; 10: L6 (D5) 587Hz
+00BC FA8A            425         DB 0FAh, 08Ah ; 11: L7 (E5) 659Hz
+00BE FDB5            426         DB 0FDh, 0B5h ; 12: H2 (G6) 1568Hz
+00C0 FDF5            427         DB 0FDh, 0F5h ; 13: H3 (A6) 1760Hz
+00C2 F6D1            428         DB 0F6h, 0D1h ; 14: L2 (G4) 392Hz
+00C4 F7D1            429         DB 0F7h, 0D1h ; 15: L3 (A4) 440Hz
+                     430     
+                     431     ; Song: "Da Dong Bei Wo De Jia Xiang" (Intro / First Half)
+                     432     ; Unit: 1 = 16th note (approx 20+10ms ~ 30ms base)
+                     433     ; Quarter note = 4 units
+00C6                 434     SONG_TABLE:
+                     435         ; Line 1, Bar 1
+                     436         ; 6(e) 6(e) 6.(e.) 5(s) 6(e) 3(e) 5(q)
+00C6 06020602        437         DB 6, 2,  6, 2,  6, 3,  5, 1,  6, 2,  3, 2,  5, 4
 00CA 06030501                
 00CE 06020302                
 00D2 0504                    
-                     475         
-                     476         ; Bar 2
-                     477         ; 3.(e.) 5(s) 3(e) 7(L)(e) 6(h)
-00D4 03030501        478         DB 3, 3,  5, 1,  3, 2,  11, 2,  6, 8
+                     438         
+                     439         ; Bar 2
+                     440         ; 3.(e.) 5(s) 3(e) 7(L)(e) 6(h)
+00D4 03030501        441         DB 3, 3,  5, 1,  3, 2,  11, 2,  6, 8
 00D8 03020B02                
 00DC 0608                    
-                     479     
-                     480         ; Bar 3
-                     481         ; 6(q) i.(e.) 6(s) 2(H)(e) i(e) i(e) 6(e)
-                     482         ; 2(H) is 12. i is 8.
-00DE 06040803        483         DB 6, 4,  8, 3,  6, 1,  12, 2,  8, 2,  8, 2,  6, 2
+                     442     
+                     443         ; Bar 3
+                     444         ; 6(q) i.(e.) 6(s) 2(H)(e) i(e) i(e) 6(e)
+                     445         ; 2(H) is 12. i is 8.
+00DE 06040803        446         DB 6, 4,  8, 3,  6, 1,  12, 2,  8, 2,  8, 2,  6, 2
 00E2 06010C02                
 00E6 08020802                
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     8
+
 00EA 0602                    
-                     484     
-                     485         ; Bar 4
-                     486         ; 6.(e.) 5(s) 2(e) 5(e) 3(h)
-00EC 06030501        487         DB 6, 3,  5, 1,  2, 2,  5, 2,  3, 8
+                     447     
+                     448         ; Bar 4
+                     449         ; 6.(e.) 5(s) 2(e) 5(e) 3(h)
+00EC 06030501        450         DB 6, 3,  5, 1,  2, 2,  5, 2,  3, 8
 00F0 02020502                
 00F4 0308                    
-                     488     
-                     489         ; Line 2, Bar 5
-                     490         ; 6.(e.) 6(s) 6(e) 5(e) 6(s) 6(s) i(e) 6(e) 5(e)
-                     491         ; 6.6 -> 6(3) 6(1). 65 -> 6(2) 5(2). 66i -> 6(1) 6(1) 8(2). 65 -> 6(2) 5(2).
-00F6 06030601        492         DB 6, 3,  6, 1,  6, 2,  5, 2
+                     451     
+                     452         ; Line 2, Bar 5
+                     453         ; 6.(e.) 6(s) 6(e) 5(e) 6(s) 6(s) i(e) 6(e) 5(e)
+                     454         ; 6.6 -> 6(3) 6(1). 65 -> 6(2) 5(2). 66i -> 6(1) 6(1) 8(2). 65 -> 6(2) 5(2).
+00F6 06030601        455         DB 6, 3,  6, 1,  6, 2,  5, 2
 00FA 06020502                
-00FE 06010601        493         DB 6, 1,  6, 1,  8, 2,  6, 2,  5, 2
+00FE 06010601        456         DB 6, 1,  6, 1,  8, 2,  6, 2,  5, 2
 0102 08020602                
 0106 0502                    
-                     494     
-                     495         ; Bar 6
-                     496         ; 3(s) 3(s) 2(e) 1(s) 5(L)(s) 3(e) 2(h)
-                     497         ; 332 -> 3(1) 3(1) 2(2). 153 -> 1(1) 9(1) 3(2). 2 -> 8.
-0108 03010301        498         DB 3, 1,  3, 1,  2, 2
+                     457     
+                     458         ; Bar 6
+                     459         ; 3(s) 3(s) 2(e) 1(s) 5(L)(s) 3(e) 2(h)
+                     460         ; 332 -> 3(1) 3(1) 2(2). 153 -> 1(1) 9(1) 3(2). 2 -> 8.
+0108 03010301        461         DB 3, 1,  3, 1,  2, 2
 010C 0202                    
-010E 01010901        499         DB 1, 1,  9, 1,  3, 2,  2, 8
+010E 01010901        462         DB 1, 1,  9, 1,  3, 2,  2, 8
 0112 03020208                
-                     500     
-                     501         ; Bar 7
-                     502         ; 5.(e.) 3(s) 5(e) 3(e) 5(e) 5(e) 3(e) i(e)
-                     503         ; 5.3 -> 5(3) 3(1). 53 -> 5(2) 3(2). 55 -> 5(2) 5(2). 3i -> 3(2) 8(2).
-0116 05030301        504         DB 5, 3,  3, 1,  5, 2,  3, 2
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE     9
-
+                     463     
+                     464         ; Bar 7
+                     465         ; 5.(e.) 3(s) 5(e) 3(e) 5(e) 5(e) 3(e) i(e)
+                     466         ; 5.3 -> 5(3) 3(1). 53 -> 5(2) 3(2). 55 -> 5(2) 5(2). 3i -> 3(2) 8(2).
+0116 05030301        467         DB 5, 3,  3, 1,  5, 2,  3, 2
 011A 05020302                
-011E 05020502        505         DB 5, 2,  5, 2,  3, 2,  8, 2
+011E 05020502        468         DB 5, 2,  5, 2,  3, 2,  8, 2
 0122 03020802                
-                     506     
-                     507         ; Bar 8
-                     508         ; 6(w)
-0126 0610            509         DB 6, 16
-                     510     
-                     511         ; Line 3 (Similar to L1 but start is quarter)
-                     512         ; Bar 9
-                     513         ; 6(q) 6.(e.) 5(s) 6(e) 3(e) 5(q)
-0128 06040603        514         DB 6, 4,  6, 3,  5, 1,  6, 2,  3, 2,  5, 4
+                     469     
+                     470         ; Bar 8
+                     471         ; 6(w)
+0126 0610            472         DB 6, 16
+                     473     
+                     474         ; Line 3 (Similar to L1 but start is quarter)
+                     475         ; Bar 9
+                     476         ; 6(q) 6.(e.) 5(s) 6(e) 3(e) 5(q)
+0128 06040603        477         DB 6, 4,  6, 3,  5, 1,  6, 2,  3, 2,  5, 4
 012C 05010602                
 0130 03020504                
-                     515     
-                     516         ; Bar 10 (= Bar 2)
-0134 03030501        517         DB 3, 3,  5, 1,  3, 2,  11, 2,  6, 8
+                     478     
+                     479         ; Bar 10 (= Bar 2)
+0134 03030501        480         DB 3, 3,  5, 1,  3, 2,  11, 2,  6, 8
 0138 03020B02                
 013C 0608                    
-                     518     
-                     519         ; Bar 11 (= Bar 3)
-013E 06040803        520         DB 6, 4,  8, 3,  6, 1,  12, 2,  8, 2,  8, 2,  6, 2
+                     481     
+                     482         ; Bar 11 (= Bar 3)
+013E 06040803        483         DB 6, 4,  8, 3,  6, 1,  12, 2,  8, 2,  8, 2,  6, 2
 0142 06010C02                
 0146 08020802                
 014A 0602                    
-                     521     
-                     522         ; Bar 12 (= Bar 4)
-014C 06030501        523         DB 6, 3,  5, 1,  2, 2,  5, 2,  3, 8
+                     484     
+                     485         ; Bar 12 (= Bar 4)
+014C 06030501        486         DB 6, 3,  5, 1,  2, 2,  5, 2,  3, 8
 0150 02020502                
 0154 0308                    
-                     524     
-                     525         ; Line 4 (Variation)
-                     526         ; Bar 13 (Same as Bar 5)
-0156 06030601        527         DB 6, 3,  6, 1,  6, 2,  5, 2
+                     487     
+                     488         ; Line 4 (Variation)
+                     489         ; Bar 13 (Same as Bar 5)
+0156 06030601        490         DB 6, 3,  6, 1,  6, 2,  5, 2
 015A 06020502                
-015E 06010601        528         DB 6, 1,  6, 1,  8, 2,  6, 2,  5, 2
+015E 06010601        491         DB 6, 1,  6, 1,  8, 2,  6, 2,  5, 2
 0162 08020602                
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE     9
+
 0166 0502                    
-                     529     
-                     530         ; Bar 14
-                     531         ; 3(s) 3(s) 5(e) 1(s) 5(L)(s) 3(e) 2(h)
-                     532         ; 335 -> 3(1) 3(1) 5(2). 153 -> 1(1) 9(1) 3(2).
-0168 03010301        533         DB 3, 1,  3, 1,  5, 2
+                     492     
+                     493         ; Bar 14
+                     494         ; 3(s) 3(s) 5(e) 1(s) 5(L)(s) 3(e) 2(h)
+                     495         ; 335 -> 3(1) 3(1) 5(2). 153 -> 1(1) 9(1) 3(2).
+0168 03010301        496         DB 3, 1,  3, 1,  5, 2
 016C 0502                    
-016E 01010901        534         DB 1, 1,  9, 1,  3, 2,  2, 8
+016E 01010901        497         DB 1, 1,  9, 1,  3, 2,  2, 8
 0172 03020208                
-                     535     
-                     536         ; Bar 15
-                     537         ; 5.(e.) 3(s) 5(e) 3(e) 5(s) 3(s) 5(e) 5(q) ??
-                     538         ; Score: 5.3 53 53(underscored) 5(q)?
-                     539         ; Let's parse image: | 5.3(u) 53(u) 53(uu 5) 5 | 55(u) 3i(u) 6 - |
-                     540         ; Wait, Last bar of 4th line: | 5 5 3 i | 6 - - - | ? No.
-                     541         ; Image Line 4 End: | 5.3 53 53 5 | 55 31 6 - |
-                     542         ; Let's go with:
-                     543         ; 5(3) 3(1) | 5(2) 3(2) | 5(1) 3(1) 5(2) | 5(4) ???
-                     544         ; This fits 4 beats? 1 + 1 + 1 + 1. Yes.
-                     545         ; So: 5.3(1) 53(1) 535(1) ?? No 5s3s5e.
-                     546         ; Last 5 is quarter? No, looking at next bar pickup.
-                     547         ; Let's assume:
-                     548         ; 5.3 -> 5(3) 3(1)
-                     549         ; 53 -> 5(2) 3(2)
-                     550         ; 535 -> 5(1) 3(1) 5(2)
-                     551         ; 5 -> 5(4)
-0176 05030301        552         DB 5, 3,  3, 1,  5, 2,  3, 2,  5, 1,  3, 1,  5, 2,  5, 4
+                     498     
+                     499         ; Bar 15
+                     500         ; 5.(e.) 3(s) 5(e) 3(e) 5(s) 3(s) 5(e) 5(q) ??
+                     501         ; Score: 5.3 53 53(underscored) 5(q)?
+                     502         ; Let's parse image: | 5.3(u) 53(u) 53(uu 5) 5 | 55(u) 3i(u) 6 - |
+                     503         ; Wait, Last bar of 4th line: | 5 5 3 i | 6 - - - | ? No.
+                     504         ; Image Line 4 End: | 5.3 53 53 5 | 55 31 6 - |
+                     505         ; Let's go with:
+                     506         ; 5(3) 3(1) | 5(2) 3(2) | 5(1) 3(1) 5(2) | 5(4) ???
+                     507         ; This fits 4 beats? 1 + 1 + 1 + 1. Yes.
+                     508         ; So: 5.3(1) 53(1) 535(1) ?? No 5s3s5e.
+                     509         ; Last 5 is quarter? No, looking at next bar pickup.
+                     510         ; Let's assume:
+                     511         ; 5.3 -> 5(3) 3(1)
+                     512         ; 53 -> 5(2) 3(2)
+                     513         ; 535 -> 5(1) 3(1) 5(2)
+                     514         ; 5 -> 5(4)
+0176 05030301        515         DB 5, 3,  3, 1,  5, 2,  3, 2,  5, 1,  3, 1,  5, 2,  5, 4
 017A 05020302                
 017E 05010301                
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE    10
-
 0182 05020504                
-                     553     
-                     554         ; Bar 16
-                     555         ; 5 5 3 i 6 -
-                     556         ; 5(2) 5(2) 3(2) 8(2) 6(8)
-0186 05020502        557         DB 5, 2,  5, 2,  3, 2,  8, 2,  6, 8
+                     516     
+                     517         ; Bar 16
+                     518         ; 5 5 3 i 6 -
+                     519         ; 5(2) 5(2) 3(2) 8(2) 6(8)
+0186 05020502        520         DB 5, 2,  5, 2,  3, 2,  8, 2,  6, 8
 018A 03020802                
 018E 0608                    
-                     558     
-0190 FF              559         DB 0FFh ; Terminator
-                     560     
-                     561     END
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE    11
+                     521     
+0190 FF              522         DB 0FFh ; Terminator
+                     523     
+                     524     END
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE    10
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -691,7 +652,7 @@ EIP2 . . . . . . . .  D ADDR   00F7H   A
 EMI0CF . . . . . . .  D ADDR   00A3H   A   
 EMI0CN . . . . . . .  D ADDR   00AFH   A   
 EMI0TC . . . . . . .  D ADDR   00A1H   A   
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE    12
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE    11
 
 ENSMB. . . . . . . .  B ADDR   00C0H.6 A   
 ES . . . . . . . . .  B ADDR   00A8H.4 A   
@@ -759,7 +720,7 @@ PLAY_NOTE_REST . . .  C ADDR   007BH   R   SEG=SINGER_SEGMENT
 PS . . . . . . . . .  B ADDR   00B8H.4 A   
 PSCTL. . . . . . . .  D ADDR   008FH   A   
 PSW. . . . . . . . .  D ADDR   00D0H   A   
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE    13
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE    12
 
 PT0. . . . . . . . .  B ADDR   00B8H.1 A   
 PT1. . . . . . . . .  B ADDR   00B8H.3 A   
@@ -827,7 +788,7 @@ TB8. . . . . . . . .  B ADDR   0098H.3 A
 TCLK . . . . . . . .  B ADDR   00C8H.4 A   
 TCON . . . . . . . .  D ADDR   0088H   A   
 TF0. . . . . . . . .  B ADDR   0088H.5 A   
-A51 MACRO ASSEMBLER  SINGER                                                               01/09/2026 15:56:42 PAGE    14
+A51 MACRO ASSEMBLER  SINGER                                                               01/10/2026 10:21:07 PAGE    13
 
 TF1. . . . . . . . .  B ADDR   0088H.7 A   
 TF2. . . . . . . . .  B ADDR   00C8H.7 A   

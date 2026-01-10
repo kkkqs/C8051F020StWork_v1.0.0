@@ -14,6 +14,10 @@ PUBLIC ConfigurationTask_Handler
 
 LCD_MSG_CONFIG:
     DB 'C','o','n','f','i','g','u','r','a','t','i','n','g',' ',' ',' ', 00h
+LCD_MSG_CHOICE:
+    DB '1','-','N','e','w',' ','2','-','D','e','f',' ',' ',' ',' ',' ', 00h
+LCD_MSG_NEWPASS:
+    DB 'N','e','w',' ','P','a','s','s',' ',' ',' ',' ',' ',' ',' ',' ', 00h
 
 ; Entry: call ConfigurationTask_Init at startup
 ConfigurationTask_Init:
@@ -57,8 +61,16 @@ CHECK_OPT3:
     LCALL CONF_OPT3_HANDLER
     RET
 CHECK_PASS:
-    CJNE A, #PASS_ST, CONF_DEFAULT
+    CJNE A, #PASS_ST, CHECK_RESET_CHOICE
     LCALL CONF_PASS_HANDLER
+    RET
+CHECK_RESET_CHOICE:
+    CJNE A, #RESET_CHOICE_ST, CHECK_NEW_PASS_ST
+    LCALL CONF_RESET_CHOICE_HANDLER
+    RET
+CHECK_NEW_PASS_ST:
+    CJNE A, #NEW_PASS_ST, CONF_DEFAULT
+    LCALL CONF_NEW_PASS_HANDLER
     RET
 CONF_DEFAULT:
     ; default: show OPT menu
@@ -102,8 +114,13 @@ CONF_MODE_CHECK_2:
     MOV 061h, #00h
     RET
 CONF_MODE_CHECK_3:
-    CJNE A, #03h, CONF_MODE_CHECK_A
+    CJNE A, #03h, CONF_MODE_CHECK_4
     MOV 070h, #OPT3_ST
+    MOV 061h, #00h
+    RET
+CONF_MODE_CHECK_4:
+    CJNE A, #04h, CONF_MODE_CHECK_A
+    MOV 070h, #RESET_CHOICE_ST
     MOV 061h, #00h
     RET
 CONF_MODE_CHECK_A:
@@ -422,6 +439,138 @@ CONF_PASS_CONFIRM_INCOMPLETE:
 
 CONF_PASS_MODE_SKIP_CONFIRM:
     MOV 061h, #00h
+    RET
+
+; --------------------
+; RESET CHOICE (Option 4)
+; --------------------
+CONF_RESET_CHOICE_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, CRC_INIT
+    
+    ; Check Input 1 or 2
+    MOV A, 061h
+    JZ CRC_RET
+    MOV A, 060h
+    ANL A, #0Fh
+    
+    CJNE A, #01h, CRC_CHK_2
+    ; 1 -> New Pass
+    MOV 070h, #NEW_PASS_ST
+    MOV 061h, #00h
+    RET
+
+CRC_CHK_2:
+    CJNE A, #02h, CRC_CHK_A
+    ; 2 -> Reset Default
+    LCALL RESTORE_DEFAULT_PASS
+    MOV 070h, #OPT_ST
+    MOV 061h, #00h
+    RET
+
+CRC_CHK_A:
+    CJNE A, #0Ah, CRC_IGNORE
+    ; A -> Back
+    MOV 070h, #OPT_ST
+    MOV 061h, #00h
+    RET
+
+CRC_IGNORE:
+    MOV 061h, #00h
+CRC_RET:
+    RET
+
+CRC_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    
+    LCALL LCD_CLEAR
+    MOV DPTR, #LCD_MSG_CHOICE
+    LCALL LCD_SHOW_STR
+    
+    ; Clear LEDs
+    MOV 028h, #37
+    MOV 029h, #37
+    MOV 02Ah, #37
+    MOV 02Bh, #37
+    MOV 02Ch, #37
+    MOV 02Dh, #37
+    RET
+
+RESTORE_DEFAULT_PASS:
+    ; Copy Default Password from TABLE to RAM
+    MOV DPTR, #PASSWORD_TABLE
+    MOV R0, #CURRENT_PASS
+    MOV R7, #05h
+RDP_LOOP:
+    CLR A
+    MOVC A, @A+DPTR
+    MOV @R0, A
+    INC DPTR
+    INC R0
+    DJNZ R7, RDP_LOOP
+    RET
+
+; --------------------
+; NEW PASS STATE
+; --------------------
+CONF_NEW_PASS_HANDLER:
+    MOV A, 071h
+    CJNE A, 070h, CNP_INIT
+    
+    ; Input Handling
+    MOV A, 061h
+    JZ CNP_RET
+    
+    ; Use InputTask_039 (Password Input)
+    ; Start=1 (029h), End=5 (02Dh) - defined inside InputTask_039 logic implicitly or we set limit
+    ; InputTask_039 uses hardcoded 020h/021h check? Checks 020h/021h.
+    MOV 020h, #01h
+    MOV 021h, #05h
+    LCALL InputTask_039
+    
+    ; Check return A
+    CJNE A, #0Ah, CNP_RET
+    
+    ; Confirm Pressed -> Save
+    LCALL SAVE_NEW_PASS
+    MOV 070h, #OPT_ST
+    MOV 061h, #00h
+    RET
+
+CNP_RET:
+    RET
+
+CNP_INIT:
+    MOV A, 070h
+    MOV 071h, A
+    
+    LCALL LCD_CLEAR
+    MOV DPTR, #LCD_MSG_NEWPASS
+    LCALL LCD_SHOW_STR
+    
+    ; Setup Display P._____
+    MOV 028h, #011h ; 'P.'
+    MOV 029h, #010h
+    MOV 02Ah, #010h
+    MOV 02Bh, #010h
+    MOV 02Ch, #010h
+    MOV 02Dh, #010h
+    
+    MOV 039h, #01h ; Reset Cursor
+    MOV 061h, #00h
+    RET
+
+SAVE_NEW_PASS:
+    MOV R0, #029h
+    MOV R1, #CURRENT_PASS
+    MOV R7, #05h
+SNP_LOOP:
+    MOV A, @R0
+    MOV @R1, A
+    INC R0
+    INC R1
+    DJNZ R7, SNP_LOOP
     RET
 
 ; Implement PASS verify/show routines (moved from main)

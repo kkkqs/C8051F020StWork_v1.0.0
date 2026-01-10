@@ -62,7 +62,7 @@ MAIN:
 	LCALL Timer0_Init
 	LCALL Singer_Init
 	SETB EA                ; Enable Global Interrupts
-;	LCALL Singer_Play
+	LCALL Singer_Play
 	; Setup debug flag (default 0). If set to 1, jump to debug task.
 ;	MOV DEBUG_ON, #00h
 ;	MOV A, DEBUG_ON

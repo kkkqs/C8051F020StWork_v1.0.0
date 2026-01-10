@@ -1,4 +1,4 @@
-; 索引�? 0 开始，�? main.ASM 中通过偏移访问 (MOVC @A+DPTR)
+; 索引�? 0 开始，�? main.ASM 中通过偏移访问 (MOVC @A+DPTR)
 ; 00 - '0'  - 0C0h
 ; 01 - '1'  - 0F9h
 ; 02 - '2'  - 0A4h
@@ -32,8 +32,8 @@
 ; 30 - 'n'  - 0ABh
 ; 31 - 'o'  - 0A3h
 ; 32 - 'o.' - 023h
-; 33 - OFF  - 0FFh    ; 熄灭 (全部段关�?)
-; 34 - 'C.' - 046h    ; 自定�? C 带小数点
+; 33 - OFF  - 0FFh    ; 熄灭 (全部段关�?)
+; 34 - 'C.' - 046h    ; 自定�? C 带小数点
 ; 35 - 'U'  - 0C1h
 ; 36 - '-'  - 0BFh
 ; 37 - ' '  - 0FFh
@@ -53,6 +53,8 @@ PASSWORD_TABLE:
 RUN_ST	EQU	00h
 OPT_ST	EQU	01h
 PASS_ST	EQU	02h
+RESET_CHOICE_ST EQU 03h
+NEW_PASS_ST EQU 04h
 OPT1_ST	EQU	11h
 OPT2_ST	EQU	12h
 OPT3_ST	EQU	13h
@@ -80,7 +82,7 @@ EXT_UP_LO      EQU 05Eh  ; External UP request bitmap low
 EXT_UP_HI      EQU 05Fh  ; External UP request bitmap high
 EXT_DN_LO      EQU 062h  ; External DOWN request bitmap low
 EXT_DN_HI      EQU 063h  ; External DOWN request bitmap high
-ELEV_DIR       EQU 064h  ; Current direction: 0=停止, 1=�?, 2=�?
+ELEV_DIR       EQU 064h  ; Current direction: 0=停止, 1=�?, 2=�?
 
 ; Input Mode variables
 INPUT_MODE     EQU 065h ; 0=Inside, 1=Outside

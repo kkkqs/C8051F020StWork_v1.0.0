@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     1
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/10/2026 04:18:20 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
 0042                  55     KBI_SHORT_PRESS:
 0042 754700           56         MOV 047h, #00h
 0045 754800           57         MOV 048h, #00h
-A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     2
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/10/2026 04:18:20 PAGE     2
 
 0048 800F             58         SJMP KBI_RETURN
                       59     
@@ -81,7 +81,7 @@ LOC  OBJ            LINE     SOURCE
 0059 22               69         RET
                       70     
                       71     END
-A51 MACRO ASSEMBLER  KEYINPUT                                                             01/09/2026 14:55:23 PAGE     3
+A51 MACRO ASSEMBLER  KEYINPUT                                                             01/10/2026 04:18:20 PAGE     3
 
 SYMBOL TABLE LISTING
 ------ ----- -------

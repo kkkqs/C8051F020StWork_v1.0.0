@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     1
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A7          +1    55     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    56     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    57     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     2
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     2
 
   00AA          +1    58     ADC1CN  DATA  0AAH   ; ADC 1 CONTROL
   00AB          +1    59     ADC1CF   DATA  0ABH   ; ADC 1 ANALOG MUX CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00ED          +1   121     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   122     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   123     RSTSRC   DATA  0EFH   ; RESET SOURCE 
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     3
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     3
 
   00F0          +1   124     B        DATA  0F0H   ; B REGISTER
   00F1          +1   125     SCON1    DATA  0F1H   ; SERIAL PORT 1 CONTROL
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C5          +1   187     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   188     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   189     ;
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     4
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     4
 
                 +1   190     ; T2CON C8H
   00C8          +1   191     CPRL2    BIT   T2CON.0 ; CAPTURE OR RELOAD SELECT
@@ -253,67 +253,35 @@ LOC  OBJ            LINE     SOURCE
   00FF          +1   237     SPIF     BIT   SPI0CN.7 ; SPI 0 INTERRUPT FLAG
                      238     
                      239     
-                     240     ;-----------------------------------------------------------------------------
-                     241     ; External Dependencies
-                     242     ;-----------------------------------------------------------------------------
-                     243     EXTRN CODE(Timer2_Init)
-                     244     EXTRN CODE(Timer2_Start)
-                     245     EXTRN CODE(Timer2_Stop)
-                     246     EXTRN CODE(Timer2_Set_Reload)
-                     247     
-                     248     ;-----------------------------------------------------------------------------
-                     249     ; Global Definitions
-                     250     ;-----------------------------------------------------------------------------
-                     251     PUBLIC Buzzer_Init
-                     252     PUBLIC Buzzer_Start
-                     253     PUBLIC Buzzer_Stop
-                     254     PUBLIC Buzzer_Set_Frequency
-                     255     
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     5
+                     240     EXTRN CODE(Timer2_Init)
+                     241     EXTRN CODE(Timer2_Start)
+                     242     EXTRN CODE(Timer2_Stop)
+                     243     EXTRN CODE(Timer2_Set_Reload)
+                     244     PUBLIC Buzzer_Init
+                     245     PUBLIC Buzzer_Start
+                     246     PUBLIC Buzzer_Stop
+                     247     PUBLIC Buzzer_Set_Frequency
+                     248     
+0000                 249     Buzzer_Init:
+0000 120000   F      250         LCALL Timer2_Init
+0003 22              251         RET
+                     252     
+0004                 253     Buzzer_Start:
+0004 120000   F      254         LCALL Timer2_Start
+0007 22              255         RET
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     5
 
-                     256     ;-----------------------------------------------------------------------------
-                     257     ; Code Segment
-                     258     ;-----------------------------------------------------------------------------
-                     259     
-                     260     ;-----------------------------------------------------------------------------
-                     261     ; Buzzer_Init
-                     262     ;-----------------------------------------------------------------------------
-                     263     ; Description: Initializes the buzzer hardware (Timer 2).
-                     264     ;-----------------------------------------------------------------------------
-0000                 265     Buzzer_Init:
-0000 120000   F      266         LCALL Timer2_Init
-0003 22              267         RET
-                     268     
-                     269     ;-----------------------------------------------------------------------------
-                     270     ; Buzzer_Start
-                     271     ;-----------------------------------------------------------------------------
-                     272     ; Description: Starts the buzzer PWM output.
-                     273     ;-----------------------------------------------------------------------------
-0004                 274     Buzzer_Start:
-0004 120000   F      275         LCALL Timer2_Start
-0007 22              276         RET
-                     277     
-                     278     ;-----------------------------------------------------------------------------
-                     279     ; Buzzer_Stop
-                     280     ;-----------------------------------------------------------------------------
-                     281     ; Description: Stops the buzzer PWM output.
-                     282     ;-----------------------------------------------------------------------------
-0008                 283     Buzzer_Stop:
-0008 120000   F      284         LCALL Timer2_Stop
-000B 22              285         RET
-                     286     
-                     287     ;-----------------------------------------------------------------------------
-                     288     ; Buzzer_Set_Frequency
-                     289     ;-----------------------------------------------------------------------------
-                     290     ; Description: Sets the buzzer frequency (via Timer Reload value).
-                     291     ; Input: R6 (RCAP2H), R7 (RCAP2L)
-                     292     ;-----------------------------------------------------------------------------
-000C                 293     Buzzer_Set_Frequency:
-000C 120000   F      294         LCALL Timer2_Set_Reload
-000F 22              295         RET
-                     296     
-                     297     END
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     6
+                     256     
+0008                 257     Buzzer_Stop:
+0008 120000   F      258         LCALL Timer2_Stop
+000B 22              259         RET
+                     260     
+000C                 261     Buzzer_Set_Frequency:
+000C 120000   F      262         LCALL Timer2_Set_Reload
+000F 22              263         RET
+                     264     
+                     265     END
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     6
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -381,7 +349,7 @@ EIP2 . . . . . . . .  D ADDR   00F7H   A
 EMI0CF . . . . . . .  D ADDR   00A3H   A   
 EMI0CN . . . . . . .  D ADDR   00AFH   A   
 EMI0TC . . . . . . .  D ADDR   00A1H   A   
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     7
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     7
 
 ENSMB. . . . . . . .  B ADDR   00C0H.6 A   
 ES . . . . . . . . .  B ADDR   00A8H.4 A   
@@ -449,7 +417,7 @@ PSW. . . . . . . . .  D ADDR   00D0H   A
 PT0. . . . . . . . .  B ADDR   00B8H.1 A   
 PT1. . . . . . . . .  B ADDR   00B8H.3 A   
 PT2. . . . . . . . .  B ADDR   00B8H.5 A   
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     8
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     8
 
 PX0. . . . . . . . .  B ADDR   00B8H.0 A   
 PX1. . . . . . . . .  B ADDR   00B8H.2 A   
@@ -517,7 +485,7 @@ TL1. . . . . . . . .  D ADDR   008BH   A
 TL2. . . . . . . . .  D ADDR   00CCH   A   
 TL4. . . . . . . . .  D ADDR   00F4H   A   
 TMOD . . . . . . . .  D ADDR   0089H   A   
-A51 MACRO ASSEMBLER  BUZZER                                                               01/09/2026 14:55:24 PAGE     9
+A51 MACRO ASSEMBLER  BUZZER                                                               01/10/2026 10:00:12 PAGE     9
 
 TMR3CN . . . . . . .  D ADDR   0091H   A   
 TMR3H. . . . . . . .  D ADDR   0095H   A   

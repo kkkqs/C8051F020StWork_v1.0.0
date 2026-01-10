@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     1
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A3          +1    55     EMI0CF   DATA  0A3H   ; EXTERNAL MEMORY INTERFACE (EMIF) CONFIGURATION
   00A4          +1    56     P0MDOUT  DATA  0A4H   ; PORT 0 OUTPUT MODE CONFIGURATION
   00A5          +1    57     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     2
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     2
 
   00A6          +1    58     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
   00A7          +1    59     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00E9          +1   121     PCA0L    DATA  0E9H   ; PCA 0 TIMER - LOW BYTE
   00EA          +1   122     PCA0CPL0 DATA  0EAH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 0 - LOW BYTE
   00EB          +1   123     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     3
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     3
 
   00EC          +1   124     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
   00ED          +1   125     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C1          +1   187     SMBFTE   BIT   SMB0CN.1 ; SMBUS 0 FREE TIMER ENABLE
   00C2          +1   188     AA       BIT   SMB0CN.2 ; SMBUS 0 ASSERT/ACKNOWLEDGE FLAG
   00C3          +1   189     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     4
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     4
 
   00C4          +1   190     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
   00C5          +1   191     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
                      253     ; Pin Definitions (P4.6=RS, P4.7=E, P3=Data)
                      254     ; P4 is on SFR Page 0x0F
   0040               255     LCD_RS_MASK  EQU 040h    ; P4.6 bit mask
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     5
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     5
 
   0080               256     LCD_E_MASK   EQU 080h    ; P4.7 bit mask
   00B0               257     LCD_BUS      EQU P3      
@@ -337,7 +337,7 @@ LOC  OBJ            LINE     SOURCE
 006E                 319     LCD_WR_DAT:
 006E C0E0            320         PUSH ACC
 0070 120000   F      321         LCALL LCD_SET_RS      ; RS = 1 for data
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     6
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     6
 
 0073 D0E0            322         POP ACC
 0075                 323     LCD_WR_COM:
@@ -366,7 +366,7 @@ LOC  OBJ            LINE     SOURCE
 0095                 346     LCD_STR_END: 
 0095 22              347         RET
                      348     END
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     7
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -434,7 +434,7 @@ ENSMB. . . . . . .  B ADDR   00C0H.6 A
 ES . . . . . . . .  B ADDR   00A8H.4 A   
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     8
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     8
 
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
@@ -502,7 +502,7 @@ PCA0CPL3 . . . . .  D ADDR   00EDH   A
 PCA0CPL4 . . . . .  D ADDR   00EEH   A   
 PCA0CPM0 . . . . .  D ADDR   00DAH   A   
 PCA0CPM1 . . . . .  D ADDR   00DBH   A   
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE     9
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE     9
 
 PCA0CPM2 . . . . .  D ADDR   00DCH   A   
 PCA0CPM3 . . . . .  D ADDR   00DDH   A   
@@ -570,7 +570,7 @@ TCON . . . . . . .  D ADDR   0088H   A
 TF0. . . . . . . .  B ADDR   0088H.5 A   
 TF1. . . . . . . .  B ADDR   0088H.7 A   
 TF2. . . . . . . .  B ADDR   00C8H.7 A   
-A51 MACRO ASSEMBLER  LCD1602                                                              01/09/2026 14:55:23 PAGE    10
+A51 MACRO ASSEMBLER  LCD1602                                                              01/10/2026 04:18:20 PAGE    10
 
 TH0. . . . . . . .  D ADDR   008CH   A   
 TH1. . . . . . . .  D ADDR   008DH   A   

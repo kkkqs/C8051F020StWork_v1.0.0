@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     1
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A4          +1    55     P0MDOUT  DATA  0A4H   ; PORT 0 OUTPUT MODE CONFIGURATION
   00A5          +1    56     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    57     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     2
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     2
 
   00A7          +1    58     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
   00A8          +1    59     IE       DATA  0A8H   ; INTERRUPT ENABLE
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00EA          +1   121     PCA0CPL0 DATA  0EAH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 0 - LOW BYTE
   00EB          +1   122     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   123     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     3
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     3
 
   00ED          +1   124     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
   00EE          +1   125     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C2          +1   187     AA       BIT   SMB0CN.2 ; SMBUS 0 ASSERT/ACKNOWLEDGE FLAG
   00C3          +1   188     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   189     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     4
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     4
 
   00C5          +1   190     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
   00C6          +1   191     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
 000D 209603          253                     JB P1.6,MK_SK2
 0010 020000   F      254                     LJMP MXK_5_CHECK
 0013                 255     MK_SK2:
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     5
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     5
 
 0013 209503          256                     JB P1.5,MK_SK3
 0016 020000   F      257                     LJMP MXK_9_CHECK
@@ -337,7 +337,7 @@ LOC  OBJ            LINE     SOURCE
 008B 22              319                     RET
 008C                 320     MXK_9_CHECK:
 008C 740D            321                     MOV A,#0Dh
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     6
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     6
 
 008E 754001          322                     MOV 040h,#01
 0091 754103          323                     MOV 041h,#03
@@ -405,12 +405,12 @@ LOC  OBJ            LINE     SOURCE
 0101                 385     MXK_16_CHECK:
 0101 7400            386                     MOV A,#00
 0103 754004          387                     MOV 040h,#04
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     7
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     7
 
 0106 754104          388                     MOV 041h,#04
 0109 22              389                     RET
                      390     END
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     8
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     8
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -478,7 +478,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE     9
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE     9
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -546,7 +546,7 @@ P3IF . . . . . . .  D ADDR   00ADH   A
 P3MDOUT. . . . . .  D ADDR   00A7H   A   
 P4 . . . . . . . .  D ADDR   0084H   A   
 P5 . . . . . . . .  D ADDR   0085H   A   
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE    10
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE    10
 
 P6 . . . . . . . .  D ADDR   0086H   A   
 P7 . . . . . . . .  D ADDR   0096H   A   
@@ -614,7 +614,7 @@ SMBFTE . . . . . .  B ADDR   00C0H.1 A
 SMBTOE . . . . . .  B ADDR   00C0H.0 A   
 SP . . . . . . . .  D ADDR   0081H   A   
 SPI0CFG. . . . . .  D ADDR   009AH   A   
-A51 MACRO ASSEMBLER  KEYBOARD                                                             01/09/2026 14:55:24 PAGE    11
+A51 MACRO ASSEMBLER  KEYBOARD                                                             01/10/2026 04:18:21 PAGE    11
 
 SPI0CKR. . . . . .  D ADDR   009DH   A   
 SPI0CN . . . . . .  D ADDR   00F8H   A   

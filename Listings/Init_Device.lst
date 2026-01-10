@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     1
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   00A5          +1    55     P1MDOUT  DATA  0A5H   ; PORT 1 OUTPUT MODE CONFIGURATION
   00A6          +1    56     P2MDOUT  DATA  0A6H   ; PORT 2 OUTPUT MODE CONFIGURATION
   00A7          +1    57     P3MDOUT  DATA  0A7H   ; PORT 3 OUTPUT MODE CONFIGURATION
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     2
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     2
 
   00A8          +1    58     IE       DATA  0A8H   ; INTERRUPT ENABLE
   00A9          +1    59     SADDR0   DATA  0A9H   ; SERIAL PORT 0 SLAVE ADDRESS
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00EB          +1   121     PCA0CPL1 DATA  0EBH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 1 - LOW BYTE
   00EC          +1   122     PCA0CPL2 DATA  0ECH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 2 - LOW BYTE
   00ED          +1   123     PCA0CPL3 DATA  0EDH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 3 - LOW BYTE
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     3
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     3
 
   00EE          +1   124     PCA0CPL4 DATA  0EEH   ; CAPTURE/COMPARE REGISTER FOR PCA 0 MODULE 4 - LOW BYTE
   00EF          +1   125     RSTSRC   DATA  0EFH   ; RESET SOURCE 
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   00C3          +1   187     SI       BIT   SMB0CN.3 ; SMBUS 0 INTERRUPT PENDING FLAG
   00C4          +1   188     STO      BIT   SMB0CN.4 ; SMBUS 0 STOP FLAG
   00C5          +1   189     STA      BIT   SMB0CN.5 ; SMBUS 0 START FLAG
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     4
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     4
 
   00C6          +1   190     ENSMB    BIT   SMB0CN.6 ; SMBUS 0 ENABLE 
                 +1   191     ;
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
 0006 22              253         ret
                      254     
 0007                 255     Timer_Init:
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     5
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     5
 
 0007 758911          256         mov  TMOD,      #011h
 000A 22              257         ret
@@ -337,12 +337,12 @@ LOC  OBJ            LINE     SOURCE
 0028 120000   F      319             lcall Port_IO_Init
 002B 120000   F      320         lcall Timer_Init
 002E 120000   F      321         lcall Oscillator_Init
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     6
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     6
 
 0031 22              322         ret
                      323     
                      324     end
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     7
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     7
 
 SYMBOL TABLE LISTING
 ------ ----- -------
@@ -410,7 +410,7 @@ ES . . . . . . . .  B ADDR   00A8H.4 A
 ET0. . . . . . . .  B ADDR   00A8H.1 A   
 ET1. . . . . . . .  B ADDR   00A8H.3 A   
 ET2. . . . . . . .  B ADDR   00A8H.5 A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     8
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     8
 
 EX0. . . . . . . .  B ADDR   00A8H.0 A   
 EX1. . . . . . . .  B ADDR   00A8H.2 A   
@@ -478,7 +478,7 @@ PT0. . . . . . . .  B ADDR   00B8H.1 A
 PT1. . . . . . . .  B ADDR   00B8H.3 A   
 PT2. . . . . . . .  B ADDR   00B8H.5 A   
 PX0. . . . . . . .  B ADDR   00B8H.0 A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE     9
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE     9
 
 PX1. . . . . . . .  B ADDR   00B8H.2 A   
 RB8. . . . . . . .  B ADDR   0098H.2 A   
@@ -546,7 +546,7 @@ TMOD . . . . . . .  D ADDR   0089H   A
 TMR3CN . . . . . .  D ADDR   0091H   A   
 TMR3H. . . . . . .  D ADDR   0095H   A   
 TMR3L. . . . . . .  D ADDR   0094H   A   
-A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/09/2026 23:10:03 PAGE    10
+A51 MACRO ASSEMBLER  INIT_DEVICE                                                          01/10/2026 04:18:20 PAGE    10
 
 TMR3RLH. . . . . .  D ADDR   0093H   A   
 TMR3RLL. . . . . .  D ADDR   0092H   A   

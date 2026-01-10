@@ -2,48 +2,22 @@ SINGER_SEGMENT SEGMENT CODE
 RSEG SINGER_SEGMENT
 $include (C8051F020.inc)
 
-;-----------------------------------------------------------------------------
-; External Dependencies
-;-----------------------------------------------------------------------------
 EXTRN CODE(Buzzer_Init)
 EXTRN CODE(Buzzer_Start)
 EXTRN CODE(Buzzer_Stop)
 EXTRN CODE(Buzzer_Set_Frequency)
 EXTRN CODE(DELAY_MS)
-
-;-----------------------------------------------------------------------------
-; Public Interface
-;-----------------------------------------------------------------------------
 PUBLIC Singer_Init
 PUBLIC Singer_Play
 PUBLIC Singer_PlayNote ; Add new public function
 
-;-----------------------------------------------------------------------------
-; Singer_Init
-;-----------------------------------------------------------------------------
 Singer_Init:
     LCALL Buzzer_Init
     RET
 
-;-----------------------------------------------------------------------------
-; Singer_PlayNote
-;-----------------------------------------------------------------------------
-; Description: Plays a single note based on Floor/Number input.
-; Input: R7 = Floor Number (signed byte)
-;        -2 -> L6, -1 -> L7, 0..7 -> M1..M7, 8 -> H1
-;        Uses F-Major scale as defined in table.
-;-----------------------------------------------------------------------------
 Singer_PlayNote:
     PUSH Acc
     PUSH PSW
-    
-    ; Map Floor to Table Index
-    ; Floor -2 (FEh) -> Index 10 (L6)
-    ; Floor -1 (FFh) -> Index 11 (L7)
-    ; Floor 1  (01h) -> Index 1  (M1)
-    ; ...
-    ; Floor 7  (07h) -> Index 7  (M7)
-    ; Floor 8  (08h) -> Index 8  (H1)
     
     MOV A, R7
     CJNE A, #0FEh, SPN_CHECK_NM1
@@ -110,11 +84,6 @@ SPN_RET:
     POP Acc
     RET
 
-;-----------------------------------------------------------------------------
-; Singer_Play
-;-----------------------------------------------------------------------------
-; Description: Plays "Da Dong Bei Wo De Jia Xiang" (Great Northeast My Hometown)
-;-----------------------------------------------------------------------------
 Singer_Play:
     PUSH DPH
     PUSH DPL
@@ -206,12 +175,6 @@ SINGER_DONE:
     LCALL Buzzer_Stop
     RET
 
-;-----------------------------------------------------------------------------
-; Tables
-;-----------------------------------------------------------------------------
-; Timer 2 Reload Values for SYSCLK = 22.1184 MHz
-; Formula: Reload = 65536 - (921600 / Frequency)
-; Key: F Major (1=F). Root (1) = F5 (698Hz) to transpose UP from C5.
 
 NOTE_RELOAD_TABLE:
     DB 0FAh, 0D8h ; 1: M1 (F5) 698Hz

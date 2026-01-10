@@ -161,6 +161,7 @@ EH_OPEN_NOW:
     MOV 070h, #ELEV_ARRIVED
     MOV ELEV_TIMER, #05h
     MOV ONE_SEC_CNT, #00h
+    MOV ELEV_DIR, #00h     ; Force Stop for Idle Open
     ; Consume key to prevent double-trigger (Fix: Blinking 10 times bug)
     MOV 061h, #00h
     MOV 071h, #0FFh
@@ -373,8 +374,13 @@ ARR_NEG:
 EA_INIT:
     ; Play sound only if not reopening from CLOSE state
     MOV A, 071h
-    CJNE A, #ELEV_CLOSE, EA_PLAY_SOUND
+    CJNE A, #ELEV_CLOSE, EA_CHECK_MOVE
     SJMP EA_OFFSET_UPDATE
+
+EA_CHECK_MOVE:
+    ; Only play sound if Elevator was moving (DIR != 0)
+    MOV A, ELEV_DIR
+    JZ EA_OFFSET_UPDATE
 
 EA_PLAY_SOUND:
     ; Sound the Arrival Tone
@@ -422,6 +428,7 @@ EC_REOPEN:
     MOV 070h, #ELEV_ARRIVED
     MOV ELEV_TIMER, #05h
     MOV ONE_SEC_CNT, #00h
+    MOV ELEV_DIR, #00h     ; Force Stop for Reopen
     MOV 071h, #0FFh
     MOV 061h, #00h
     RET

@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  DELAY                                                                01/09/2026 14:55:24 PAGE     1
+A51 MACRO ASSEMBLER  DELAY                                                                01/10/2026 04:18:21 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.2.7.0
@@ -25,7 +25,7 @@ LOC  OBJ            LINE     SOURCE
 0010 D000             15         POP 00h 
 0012 22               16         RET
                       17     END
-A51 MACRO ASSEMBLER  DELAY                                                                01/09/2026 14:55:24 PAGE     2
+A51 MACRO ASSEMBLER  DELAY                                                                01/10/2026 04:18:21 PAGE     2
 
 SYMBOL TABLE LISTING
 ------ ----- -------

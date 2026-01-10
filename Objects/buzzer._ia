@@ -1,0 +1,1 @@
+"bsp\buzzer.asm" NOMOD51 SET (SMALL) DEBUG PRINT(.\Listings\buzzer.lst) OBJECT(.\Objects\buzzer.obj) EP
